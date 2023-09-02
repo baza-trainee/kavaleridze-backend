@@ -93,97 +93,97 @@
 
     <module name="TreeWalker">
 
-    <!-- Checks for Javadoc comments.                     -->
-    <!-- See https://checkstyle.org/checks/javadoc/index.html -->
-    <module name="InvalidJavadocPosition"/>
-    <module name="JavadocMethod"/>
-    <module name="JavadocType"/>
-    <module name="JavadocVariable"/>
-    <module name="JavadocStyle"/>
-    <module name="MissingJavadocMethod"/>
+        <!-- Checks for Javadoc comments.                     -->
+        <!-- See https://checkstyle.org/checks/javadoc/index.html -->
+        <module name="InvalidJavadocPosition"/>
+        <module name="JavadocMethod"/>
+        <module name="JavadocType"/>
+        <module name="JavadocVariable"/>
+        <module name="JavadocStyle"/>
+        <module name="MissingJavadocMethod"/>
 
-    <!-- Checks for Naming Conventions.                  -->
-    <!-- See https://checkstyle.org/checks/naming/index.html -->
-    <module name="ConstantName"/>
-    <module name="LocalFinalVariableName"/>
-    <module name="LocalVariableName"/>
-    <module name="MemberName"/>
-    <module name="MethodName"/>
-    <module name="PackageName"/>
-    <module name="ParameterName"/>
-    <module name="StaticVariableName"/>
-    <module name="TypeName"/>
+        <!-- Checks for Naming Conventions.                  -->
+        <!-- See https://checkstyle.org/checks/naming/index.html -->
+        <module name="ConstantName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName"/>
 
-    <!-- Checks for imports                              -->
-    <!-- See https://checkstyle.org/checks/imports/index.html -->
-    <module name="AvoidStarImport"/>
-    <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
-    <module name="RedundantImport"/>
-    <module name="UnusedImports">
-        <property name="processJavadoc" value="false"/>
-    </module>
+        <!-- Checks for imports                              -->
+        <!-- See https://checkstyle.org/checks/imports/index.html -->
+        <module name="AvoidStarImport"/>
+        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <module name="RedundantImport"/>
+        <module name="UnusedImports">
+            <property name="processJavadoc" value="false"/>
+        </module>
 
-    <!-- Checks for Size Violations.                    -->
-    <!-- See https://checkstyle.org/checks/sizes/index.html -->
-    <module name="MethodLength"/>
-    <module name="ParameterNumber"/>
+        <!-- Checks for Size Violations.                    -->
+        <!-- See https://checkstyle.org/checks/sizes/index.html -->
+        <module name="MethodLength"/>
+        <module name="ParameterNumber"/>
 
-    <!-- Checks for whitespace                               -->
-    <!-- See https://checkstyle.org/checks/whitespace/index.html -->
-    <module name="EmptyForIteratorPad"/>
-    <module name="GenericWhitespace"/>
-    <module name="MethodParamPad"/>
-    <module name="NoWhitespaceAfter"/>
-    <module name="NoWhitespaceBefore"/>
-    <module name="OperatorWrap"/>
-    <module name="ParenPad"/>
-    <module name="TypecastParenPad"/>
-    <module name="WhitespaceAfter"/>
-    <module name="WhitespaceAround"/>
+        <!-- Checks for whitespace                               -->
+        <!-- See https://checkstyle.org/checks/whitespace/index.html -->
+        <module name="EmptyForIteratorPad"/>
+        <module name="GenericWhitespace"/>
+        <module name="MethodParamPad"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="OperatorWrap"/>
+        <module name="ParenPad"/>
+        <module name="TypecastParenPad"/>
+        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround"/>
 
-    <!-- Modifier Checks                                    -->
-    <!-- See https://checkstyle.org/checks/modifier/index.html -->
-    <module name="ModifierOrder"/>
-    <module name="RedundantModifier"/>
+        <!-- Modifier Checks                                    -->
+        <!-- See https://checkstyle.org/checks/modifier/index.html -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
 
-    <!-- Checks for blocks. You know, those {}'s         -->
-    <!-- See https://checkstyle.org/checks/blocks/index.html -->
-    <module name="AvoidNestedBlocks"/>
-    <module name="EmptyBlock"/>
-    <module name="LeftCurly"/>
-    <module name="NeedBraces"/>
-    <module name="RightCurly"/>
+        <!-- Checks for blocks. You know, those {}'s         -->
+        <!-- See https://checkstyle.org/checks/blocks/index.html -->
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
+        <module name="LeftCurly"/>
+        <module name="NeedBraces"/>
+        <module name="RightCurly"/>
 
-    <!-- Checks for common coding problems               -->
-    <!-- See https://checkstyle.org/checks/coding/index.html -->
-    <module name="EmptyStatement"/>
-    <module name="EqualsHashCode"/>
-    <module name="HiddenField">
-        <property name="ignoreSetter" value="true"/>
-        <property name="ignoreConstructorParameter" value="true"/>
-    </module>
-    <module name="IllegalInstantiation"/>
-    <module name="InnerAssignment"/>
-    <module name="MagicNumber"/>
-    <module name="MissingSwitchDefault"/>
-    <module name="MultipleVariableDeclarations"/>
-    <module name="SimplifyBooleanExpression"/>
-    <module name="SimplifyBooleanReturn"/>
+        <!-- Checks for common coding problems               -->
+        <!-- See https://checkstyle.org/checks/coding/index.html -->
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <module name="HiddenField">
+            <property name="ignoreSetter" value="true"/>
+            <property name="ignoreConstructorParameter" value="true"/>
+        </module>
+        <module name="IllegalInstantiation"/>
+        <module name="InnerAssignment"/>
+        <module name="MagicNumber"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
 
-    <!-- Miscellaneous other checks.                   -->
-    <!-- See https://checkstyle.org/checks/misc/index.html -->
-    <module name="ArrayTypeStyle"/>
-    <module name="FinalParameters"/>
-    <module name="TodoComment"/>
-    <module name="UpperEll"/>
+        <!-- Miscellaneous other checks.                   -->
+        <!-- See https://checkstyle.org/checks/misc/index.html -->
+        <module name="ArrayTypeStyle"/>
+        <module name="FinalParameters"/>
+        <module name="TodoComment"/>
+        <module name="UpperEll"/>
 
-    <!-- https://checkstyle.org/filters/suppressionxpathfilter.html -->
-    <module name="SuppressionXpathFilter">
-        <property name="file" value="${org.checkstyle.sun.suppressionxpathfilter.config}"
-                  default="checkstyle-xpath-suppressions.xml"/>
-        <property name="optional" value="true"/>
+        <!-- https://checkstyle.org/filters/suppressionxpathfilter.html -->
+        <module name="SuppressionXpathFilter">
+            <property name="file" value="${org.checkstyle.sun.suppressionxpathfilter.config}"
+                      default="checkstyle-xpath-suppressions.xml"/>
+            <property name="optional" value="true"/>
+        </module>
+
     </module>
 
 </module>
-
-        </module>
