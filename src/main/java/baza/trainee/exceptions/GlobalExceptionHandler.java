@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     private final LoggingService loggingService;
 
     @ExceptionHandler(BasicApplicationException.class)
-    private ResponseEntity<ErrorResponse> handleCustomException(
+    public ResponseEntity<ErrorResponse> handleCustomException(
             BasicApplicationException ex) {
         loggingService.logError(ex.getClass().getName(), ex.getMessage());
 
