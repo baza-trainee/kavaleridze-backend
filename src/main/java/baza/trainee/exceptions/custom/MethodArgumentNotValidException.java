@@ -3,6 +3,7 @@ package baza.trainee.exceptions.custom;
 import org.springframework.http.HttpStatus;
 
 public class MethodArgumentNotValidException extends BasicApplicationException {
+
     /**
      * Constructs MethodArgumentNotValidException with the specified error message.
      *

@@ -3,6 +3,7 @@ package baza.trainee.exceptions.custom;
 import org.springframework.http.HttpStatus;
 
 public class EntityNotFoundException extends BasicApplicationException {
+
     /**
      * Constructs a new EntityNotFoundException with the specified
      * entity type and details about the missing entity.

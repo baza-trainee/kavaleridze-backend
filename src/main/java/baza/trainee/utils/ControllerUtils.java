@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import java.util.List;
 
 public class ControllerUtils {
+
     /**
      * Handles field validation errors and
      * throws a MethodArgumentNotValidException if errors are present.

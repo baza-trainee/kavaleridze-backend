@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     /**
      * The LoggingService used for logging errors and exceptions
      * in the global exception handler.

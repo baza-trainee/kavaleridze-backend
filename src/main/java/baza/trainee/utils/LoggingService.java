@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class LoggingService {
+
     /**
      * It`s used to define the length of lines used in the formatted log output.
      */

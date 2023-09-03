@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
  */
 @Getter
 public class BasicApplicationException extends RuntimeException {
+
     /**
      * The HTTP status associated with the exception.
      */
