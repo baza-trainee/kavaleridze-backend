@@ -19,14 +19,21 @@ public class EventController {
 
     private final EventService eventService;
 
+    /**
+     * @return  A list of event previews.
+     */
     @GetMapping
-    public ResponseEntity<List<EventPreviewDto>> getEvents(){
+    public ResponseEntity<List<EventPreviewDto>> getEvents() {
         List<EventPreviewDto> events = eventService.getEvents();
         return ResponseEntity.ok(events);
     }
 
+    /**
+     * @param id The event id for looking a certain event
+     * @return An event dto.
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<EventDto> getEvent(@PathVariable String id){
+    public ResponseEntity<EventDto> getEvent(final @PathVariable String id) {
         EventDto event = eventService.getEventById(id);
         return ResponseEntity.ok(event);
     }
