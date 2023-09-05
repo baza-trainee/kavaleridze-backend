@@ -1,37 +1,35 @@
 package baza.trainee.service;
 
-import baza.trainee.domain.dto.event.EventDto;
-import baza.trainee.domain.dto.event.EventPreviewDto;
-import baza.trainee.domain.dto.event.EventPublicationDto;
+import baza.trainee.domain.model.Event;
 
 import java.util.List;
 
 public interface EventService {
 
     /**
-     * @return A list of event previews (List<EventPreviewDto>).
+     * @return A list of events.
      */
-    List<EventPreviewDto> getEvents();
+    List<Event> getEvents();
 
     /**
      * Retrieve detailed information about a specific event by its id.
      * @param id The unique identifier of the event.
-     * @return An EventDto containing detailed information about the event.
+     * @return An Event containing detailed information about the event.
      */
-    EventDto getEventById(String id);
+    Event getEventById(String id);
 
     /**
      * Create a new event based on the provided EventPublicationDto.
-     * @param event The EventPublicationDto containing information about the event to be created.
+     * @param event The Event containing information about the event to be created.
      */
-    void createEvent(EventPublicationDto event);
+    void createEvent(Event event);
 
     /**
      * Update an existing event identified by id.
-     * @param updatedEvent The EventPublicationDto containing updated information for the event.
+     * @param updatedEvent The Event containing updated information for the event.
      * @param id The unique identifier of the event to be updated.
      */
-    void updateEventById(EventPublicationDto updatedEvent, String id);
+    void updateEventById(Event updatedEvent, String id);
 
     /**
      * Delete an event identified by its id.
