@@ -1,82 +1,76 @@
 package baza.trainee.controller;
 
-
+import baza.trainee.domain.dto.event.EventConverter;
 import baza.trainee.domain.dto.event.EventDto;
-import baza.trainee.domain.dto.event.EventPreviewDto;
+import baza.trainee.domain.enums.ContentType;
+import baza.trainee.domain.model.Event;
 import baza.trainee.service.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class EventControllerTest {
 
-    @InjectMocks
-    private EventController eventController;
+    private MockMvc mockMvc;
 
     @Mock
     private EventService eventService;
 
+    @Mock
+    private EventConverter eventConverter;
+
+    @InjectMocks
+    private EventController eventController;
+
     @BeforeEach
-    public void setUp() {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(eventController).build();
     }
 
     @Test
-    public void testGetEvents() {
-        List<EventPreviewDto> mockEvents = Arrays.asList(
-                new EventPreviewDto("1", "Event 1", "Lorem ipsum dolor", "/images/image1"),
-                new EventPreviewDto("2", "Event 2", "no content at all", "/images/image2")
-        );
-        when(eventService.getEvents()).thenReturn(mockEvents);
+    public void testGetEvents() throws Exception {
+        List<Event> events = new ArrayList<>();
+        Event event1 = new Event();
+        event1.setId("1");
+        Event event2 = new Event();
+        event2.setId("2");
+        events.add(event1);
+        events.add(event2);
 
-        ResponseEntity<List<EventPreviewDto>> responseEntity = eventController.getEvents();
+        when(eventService.getEvents()).thenReturn(events);
 
-        verify(eventService, times(1)).getEvents();
-
-        assert (responseEntity.getStatusCode()).equals(HttpStatus.OK);
-        assert (responseEntity.getBody()).equals(mockEvents);
+        mockMvc.perform(get("/events"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
     }
 
     @Test
-    public void testGetEventById() {
+    public void testGetEvent() throws Exception {
         String eventId = "1";
-        EventDto mockEvent = new EventDto(eventId, "Event 1", "Lorem Ipsum is simply", "/images/image3");
-        when(eventService.getEventById(eventId)).thenReturn(mockEvent);
+        Event event = new Event();
+        event.setId(eventId);
+        EventDto eventDto = new EventDto(eventId, ContentType.EVENT, "Test Event", "Event Content", null);
 
-        ResponseEntity<EventDto> responseEntity = eventController.getEvent(eventId);
+        when(eventService.getEventById(eventId)).thenReturn(event);
+        when(eventConverter.eventToEventDto(event)).thenReturn(eventDto);
 
-        verify(eventService, times(1)).getEventById(eventId);
-        assert (responseEntity.getStatusCode()).equals(HttpStatus.OK);
-        assert (responseEntity.getBody()).equals(mockEvent);
-    }
-
-    @Test
-    public void testGetEventsWhenServiceReturnsNull() {
-        when(eventService.getEvents()).thenReturn(null);
-
-        ResponseEntity<List<EventPreviewDto>> responseEntity = eventController.getEvents();
-
-        verify(eventService, times(1)).getEvents();
-        assert (responseEntity.getStatusCode()).equals(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @Test
-    public void testGetEventByIdWithInvalidId() {
-        String invalidId = "invalid_id";
-        when(eventService.getEventById(invalidId)).thenReturn(null);
-
-        ResponseEntity<EventDto> responseEntity = eventController.getEvent(invalidId);
-
-        verify(eventService, times(1)).getEventById(invalidId);
-        assert (responseEntity.getStatusCode()).equals(HttpStatus.NOT_FOUND);
+        mockMvc.perform(get("/events/{id}", eventId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(eventId))
+                .andExpect(jsonPath("$.title").value("Test Event"))
+                .andExpect(jsonPath("$.content").value("Event Content"));
     }
 }

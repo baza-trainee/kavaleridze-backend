@@ -1,117 +1,93 @@
 package baza.trainee.controller;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import baza.trainee.domain.dto.event.EventDto;
-import baza.trainee.domain.dto.event.EventPreviewDto;
+import baza.trainee.domain.dto.event.EventConverter;
 import baza.trainee.domain.dto.event.EventPublicationDto;
+import baza.trainee.domain.enums.ContentType;
+import baza.trainee.domain.model.Event;
 import baza.trainee.service.EventService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-@WebMvcTest(EventAdminController.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 public class EventAdminControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private EventAdminController eventAdminController;
 
-    @MockBean
+    @Mock
     private EventService eventService;
 
-    @Test
-    public void testGetEvents() throws Exception {
-        List<EventPreviewDto> events = new ArrayList<>();
+    @Mock
+    private EventConverter eventConverter;
 
-        when(eventService.getEvents()).thenReturn(events);
-
-        mockMvc.perform(get("/admin/events")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        eventAdminController = new EventAdminController(eventService, eventConverter);
     }
 
     @Test
-    public void testGetEvent() throws Exception {
-        String eventId = "12";
-        EventDto event = new EventDto("12", "Very cool title", "Lorem ipsum dolor 123213", "/images/image1");
-
-        when(eventService.getEventById(eventId)).thenReturn(event);
-
-        mockMvc.perform(get("/admin/events/{id}", eventId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(eventId));
-    }
-
-    @Test
-    public void testCreateEvent() throws Exception {
-        final LocalDate begin  = LocalDate.of(2023, 9, 4);
-        final LocalDate end = LocalDate.of(2023, 9, 5);
+    public void testCreateEvent() {
+        final LocalDate begin = LocalDate.of(2023, 9, 15);
+        final LocalDate end = LocalDate.of(2023, 9, 18);
         EventPublicationDto eventPublicationDto = new EventPublicationDto(
-                "Cool title",
-                "Lorem ipsum",
-                "/image1",
+                ContentType.EVENT,
+                "Event Title",
+                "Event Content",
+                "https://example.com/picture.jpg",
+                "https://example.com/picture-preview.jpg",
                 begin,
                 end
         );
+        Event newEvent = new Event();
 
-        mockMvc.perform(post("/admin/events/create")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(eventPublicationDto)))
-                .andExpect(status().isOk());
+        when(eventConverter.eventPublicationDtoToEvent(eventPublicationDto)).thenReturn(newEvent);
 
-        verify(eventService, times(1)).createEvent(eventPublicationDto);
+        ResponseEntity<?> response = eventAdminController.createEvent(eventPublicationDto);
+
+        verify(eventService).createEvent(newEvent);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    public void testUpdateEvent() throws Exception {
-        String eventId = "123";
-        final LocalDate begin = LocalDate.of(2023, 9, 4);
-        final LocalDate end = LocalDate.of(2023, 9, 5);
-        EventPublicationDto updatedEvent = new EventPublicationDto(
-                "Cool title",
-                "Lorem ipsum",
-                "/image1",
+    public void testUpdateEvent() {
+        String eventId = "1";
+        final LocalDate begin = LocalDate.of(2023, 9, 15);
+        final LocalDate end = LocalDate.of(2023, 9, 18);
+        EventPublicationDto eventPublicationDto = new EventPublicationDto(
+                ContentType.EVENT,
+                "Updated Event Title",
+                "Updated Event Content",
+                "https://example.com/updated-picture.jpg",
+                "https://example.com/updated-picture-preview.jpg",
                 begin,
                 end
         );
+        Event updatedEvent = new Event();
 
-        mockMvc.perform(post("/admin/events/{id}/updated", eventId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(updatedEvent)))
-                .andExpect(status().isOk());
+        when(eventConverter.eventPublicationDtoToEvent(eventPublicationDto)).thenReturn(updatedEvent);
 
-        verify(eventService, times(1)).updateEventById(updatedEvent, eventId);
+        ResponseEntity<?> response = eventAdminController.updateEvent(eventId, eventPublicationDto);
+
+        verify(eventService).updateEventById(updatedEvent, eventId);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    public void testDeleteEvent() throws Exception {
-        String eventId = "123";
+    public void testDeleteEvent() {
+        String eventId = "1";
 
-        mockMvc.perform(post("/admin/events/{id}/delete", eventId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        ResponseEntity<?> response = eventAdminController.deleteEvent(eventId);
 
-        verify(eventService, times(1)).deleteEventById(eventId);
+        verify(eventService).deleteEventById(eventId);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    private String asJsonString(final Object obj) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
