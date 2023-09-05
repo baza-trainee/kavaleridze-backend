@@ -1,6 +1,5 @@
 package baza.trainee.domain.model;
 
-
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
@@ -9,8 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EventTest {
 
@@ -23,34 +21,27 @@ public class EventTest {
     }
 
     @Test
-    void testEventValidation() {
-        final LocalDate begin = LocalDate.of(2023, 9, 1);
-        final LocalDate end = LocalDate.of(2023, 9, 3);
-        Event event = new Event(
-                "1",
-                "Sample Event",
-                "Sample Content",
-                "https://example.com/image.jpg",
-                begin,
-                end
-        );
+    void testValidEvent() {
+        Event event = new Event();
+        event.setId("1");
+        event.setTitle("Sample Event");
+        event.setContent("Event content");
+        event.setBegin(LocalDate.now());
+        event.setEnd(LocalDate.now().plusDays(1));
 
-        assertTrue(validator.validate(event).isEmpty());
+        assertEquals(0, validator.validate(event).size());
     }
 
     @Test
-    void testEventValidationWithInvalidData() {
-        final LocalDate begin = LocalDate.of(2023, 9, 1);
-        final LocalDate end = LocalDate.of(2023, 8, 30);
-        Event event = new Event(
-                null,
-                "Sample Event",
-                "Sample Content",
-                "not-a-valid-url",
-                begin,
-                end
-        );
+    void testInvalidEvent() {
+        final int three = 3;
+        Event event = new Event();
+        event.setId(null);
+        event.setTitle("");
+        event.setContent(null);
+        event.setBegin(LocalDate.now());
+        event.setEnd(LocalDate.now().minusDays(1));
 
-        assertFalse(validator.validate(event).isEmpty());
+        assertEquals(three, validator.validate(event).size());
     }
 }
