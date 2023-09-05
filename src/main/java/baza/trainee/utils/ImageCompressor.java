@@ -3,6 +3,7 @@ package baza.trainee.utils;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,9 +33,8 @@ public class ImageCompressor {
 
             byte[] data = outputStream.toByteArray();
 
-            return null;
-//            return new MockMultipartFile(inputFile.getName(), inputFile.getOriginalFilename(),
-//                    inputFile.getContentType(), new ByteArrayInputStream(data));
+            return new CustomMultipartFile(inputFile.getName(), inputFile.getOriginalFilename(),
+                    inputFile.getContentType(), new ByteArrayInputStream(data));
         }
     }
 }
