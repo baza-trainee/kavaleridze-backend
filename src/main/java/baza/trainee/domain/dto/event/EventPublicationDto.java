@@ -9,14 +9,19 @@ import java.time.LocalDate;
 public record EventPublicationDto(
         @NotNull
         ContentType contentType,
+
         @NotBlank
         String title,
+
         @NotBlank
         String content,
-        String picture,
-        String picturePreview,
+
+        @NotBlank
+        String shortDescription,
+
         @NotNull
         LocalDate begin,
+
         @NotNull
         LocalDate end
 ) { }
