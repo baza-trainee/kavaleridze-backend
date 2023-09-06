@@ -36,7 +36,7 @@ public class ImageCompressor {
             byte[] webpData = convertToWebp(jpegData);
 
             return new CustomMultipartFile(inputFile.getName(), inputFile.getOriginalFilename(),
-                    inputFile.getContentType(), new ByteArrayInputStream(webpData));
+                    "image/webp", new ByteArrayInputStream(webpData));
         }
     }
 
