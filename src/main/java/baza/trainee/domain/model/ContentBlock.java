@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.URL;
 @Data
 @Document
 public class ContentBlock {
+
     @Indexed
     private String id;
 

@@ -19,6 +19,7 @@ import java.util.List;
 @Data
 @Document
 public class Event {
+
     @Indexed
     @NotNull
     private String id;
