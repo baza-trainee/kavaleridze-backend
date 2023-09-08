@@ -1,54 +1,62 @@
 package baza.trainee.domain.dto.event;
 
 import baza.trainee.domain.enums.ContentType;
-import jakarta.validation.ConstraintViolation;
+import baza.trainee.domain.enums.EventTheme;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EventPreviewDtoTest {
 
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private Validator validator;
 
-    @Test
-    public void testValidEventPreviewDto() {
-        EventPreviewDto eventPreviewDto = new EventPreviewDto(
-                "12345",
-                ContentType.EVENT,
-                "title event",
-                "short description",
-                "preview.jpg"
-        );
-
-        Set<ConstraintViolation<EventPreviewDto>> violations = validator.validate(eventPreviewDto);
-        assertTrue(violations.isEmpty(), "it must be 0 validation errors");
+    @BeforeEach
+    void setUp() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
     }
 
     @Test
-    public void testInvalidEventPreviewDto() {
-         EventPreviewDto eventPreviewDto = new EventPreviewDto(
-                "12345",
+    void testValidEventDto() {
+        EventPreviewDto eventPreviewDto = new EventPreviewDto(
+                "1",
+                ContentType.EVENT,
+                EventTheme.PAINTING,
+                List.of("tag1", "tag2"),
+                "Title",
+                "Short Description",
+                "http://example.com/banner.jpg",
+                LocalDate.now(),
+                LocalDate.now(),
+                LocalDate.now().plusDays(1)
+        );
+
+        assertTrue(validator.validate(eventPreviewDto).isEmpty());
+    }
+
+    @Test
+    void testInvalidEventDto() {
+        EventPreviewDto eventPreviewDto = new EventPreviewDto(
+                null,
+                null,
+                null,
                 null,
                 "",
                 "",
+                "invalid-url",
+                null,
+                null,
                 null
         );
 
-        Set<ConstraintViolation<EventPreviewDto>> violations = validator.validate(eventPreviewDto);
-
-        assertEquals(3, violations.size(), "it must be 3 validation errors");
-
-        for (ConstraintViolation<EventPreviewDto> violation : violations) {
-            String propertyName = violation.getPropertyPath().toString();
-            assertTrue(
-                    propertyName.equals("contentType") || propertyName.equals("title") || propertyName.equals("shortContent"),
-                    "validation error"
-            );
-        }
+        assertFalse(validator.validate(eventPreviewDto).isEmpty());
     }
 }

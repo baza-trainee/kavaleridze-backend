@@ -4,6 +4,7 @@ import baza.trainee.domain.dto.event.EventDto;
 import baza.trainee.domain.dto.event.EventPreviewDto;
 import baza.trainee.domain.enums.ContentType;
 import baza.trainee.domain.enums.EventTheme;
+import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.service.EventService;
 import baza.trainee.utils.LoggingService;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -89,11 +91,13 @@ public class EventControllerTest {
     @Test
     public void testGetEventWithInvalidId() throws Exception {
         final String invalidEventId = "999";
+        final String expectedMessage = "Event with `id: 999` was not found!";
+        when(eventService.getEventById(invalidEventId)).thenThrow(
+                new EntityNotFoundException("Event", "id: " + invalidEventId));
 
-        when(eventService.getEventById(invalidEventId)).thenReturn(null);
-
-        mockMvc.perform(get("/events/{id}", invalidEventId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/events/{id}", invalidEventId))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(expectedMessage));
     }
 }

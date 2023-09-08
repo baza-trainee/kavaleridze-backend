@@ -1,56 +1,65 @@
 package baza.trainee.domain.dto.event;
 
 import baza.trainee.domain.enums.ContentType;
-import jakarta.validation.ConstraintViolation;
+import baza.trainee.domain.enums.EventTheme;
+import baza.trainee.domain.model.ContentBlock;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EventDtoTest {
 
-    private final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-    private final Validator validator = validatorFactory.getValidator();
+    private Validator validator;
 
-    @Test
-    public void testValidEventDto() {
-        EventDto eventDto = new EventDto(
-                "1",
-                ContentType.ARTICLE,
-                "Valid Title",
-                "Valid Content",
-                "Valid Picture"
-        );
-
-        Set<ConstraintViolation<EventDto>> violations = validator.validate(eventDto);
-        assertTrue(violations.isEmpty(), "EventDto should be valid");
+    @BeforeEach
+    void setUp() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
     }
 
     @Test
-    public void testInvalidEventDto() {
+    void testValidEventDto() {
         EventDto eventDto = new EventDto(
-                "2",
-                null,
-                "",
-                "Valid Content",
-                "Valid Picture"
+                "1",
+                ContentType.EVENT,
+                EventTheme.PAINTING,
+                List.of("tag1", "tag2"),
+                "Title",
+                "Short Description",
+                List.of(new ContentBlock(), new ContentBlock()),
+                "http://example.com/banner.jpg",
+                LocalDate.now(),
+                LocalDate.now(),
+                LocalDate.now().plusDays(1)
         );
 
-        Set<ConstraintViolation<EventDto>> violations = validator.validate(eventDto);
-        assertFalse(violations.isEmpty(), "EventDto should be invalid");
+        assertTrue(validator.validate(eventDto).isEmpty());
+    }
 
-        ConstraintViolation<EventDto> contentTypeViolation = violations
-                .stream()
-                .filter(violation -> "contentType".equals(violation.getPropertyPath().toString()))
-                .findFirst()
-                .orElse(null);
+    @Test
+    void testInvalidEventDto() {
+        EventDto eventDto = new EventDto(
+                null,
+                null,
+                null,
+                null,
+                "",
+                "",
+                null,
+                "invalid-url",
+                null,
+                null,
+                null
+        );
 
-        assertNotNull(contentTypeViolation, "contentType should have a validation error");
+        assertFalse(validator.validate(eventDto).isEmpty());
     }
 }

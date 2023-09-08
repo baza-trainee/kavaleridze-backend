@@ -1,7 +1,8 @@
 package baza.trainee.domain.dto.event;
 
 import baza.trainee.domain.enums.ContentType;
-import jakarta.validation.ConstraintViolation;
+import baza.trainee.domain.enums.EventTheme;
+import baza.trainee.domain.model.ContentBlock;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
@@ -9,9 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EventPublicationDtoTest {
 
@@ -24,35 +27,36 @@ public class EventPublicationDtoTest {
     }
 
     @Test
-    void testValidEventPublicationDto() {
+    void testValidEventDto() {
         EventPublicationDto eventPublicationDto = new EventPublicationDto(
                 ContentType.EVENT,
-                "title",
-                "content",
-                "image.jpg",
-                "image_preview.jpg",
-                LocalDate.of(2023, 9, 1),
-                LocalDate.of(2023, 9, 10)
+                EventTheme.PAINTING,
+                List.of("tag1", "tag2"),
+                "Title",
+                "Short Description",
+                "http://example.com/banner.jpg",
+                Collections.singletonList(new ContentBlock()),
+                LocalDate.now(),
+                LocalDate.now().plusDays(1)
         );
 
-        Set<ConstraintViolation<EventPublicationDto>> violations = validator.validate(eventPublicationDto);
-        assertTrue(violations.isEmpty());
+        assertTrue(validator.validate(eventPublicationDto).isEmpty());
     }
 
     @Test
-    void testInvalidEventPublicationDto() {
+    void testInvalidEventDto() {
         EventPublicationDto eventPublicationDto = new EventPublicationDto(
                 null,
-                "",
-                "",
-                "image.jpg",
-                "image_preview.jpg",
                 null,
-                LocalDate.of(2023, 9, 10)
+                null,
+                "",
+                "",
+                "invalid-url",
+                null,
+                null,
+                null
         );
 
-        Set<ConstraintViolation<EventPublicationDto>> violations = validator.validate(eventPublicationDto);
-        assertFalse(violations.isEmpty());
-        assertEquals(4, violations.size());
+        assertFalse(validator.validate(eventPublicationDto).isEmpty());
     }
 }

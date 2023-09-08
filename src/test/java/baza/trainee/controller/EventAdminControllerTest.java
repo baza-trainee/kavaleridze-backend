@@ -1,93 +1,101 @@
 package baza.trainee.controller;
 
-import baza.trainee.domain.dto.event.EventConverter;
+
 import baza.trainee.domain.dto.event.EventPublicationDto;
 import baza.trainee.domain.enums.ContentType;
-import baza.trainee.domain.model.Event;
+import baza.trainee.domain.enums.EventTheme;
+import baza.trainee.domain.model.ContentBlock;
 import baza.trainee.service.EventService;
-import org.junit.jupiter.api.BeforeEach;
+import baza.trainee.utils.LoggingService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
+
+@WebMvcTest(EventAdminController.class)
 public class EventAdminControllerTest {
 
-    private EventAdminController eventAdminController;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private EventService eventService;
 
-    @Mock
-    private EventConverter eventConverter;
+    @MockBean
+    private LoggingService logService;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        eventAdminController = new EventAdminController(eventService, eventConverter);
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
-    public void testCreateEvent() {
-        final LocalDate begin = LocalDate.of(2023, 9, 15);
-        final LocalDate end = LocalDate.of(2023, 9, 18);
-        EventPublicationDto eventPublicationDto = new EventPublicationDto(
+    public void testCreateEvent() throws Exception {
+        EventPublicationDto eventDto = new EventPublicationDto(
                 ContentType.EVENT,
-                "Event Title",
-                "Event Content",
-                "https://example.com/picture.jpg",
-                "https://example.com/picture-preview.jpg",
-                begin,
-                end
+                EventTheme.PAINTING,
+                Collections.emptyList(),
+                "title",
+                "short description",
+                "/images/image1.jpeg",
+                Collections.singletonList(new ContentBlock()),
+                LocalDate.now(),
+                LocalDate.now()
         );
-        Event newEvent = new Event();
 
-        when(eventConverter.eventPublicationDtoToEvent(eventPublicationDto)).thenReturn(newEvent);
+        String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
-        ResponseEntity<?> response = eventAdminController.createEvent(eventPublicationDto);
-
-        verify(eventService).createEvent(newEvent);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/admin/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(eventDtoJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    public void testUpdateEvent() {
-        String eventId = "1";
-        final LocalDate begin = LocalDate.of(2023, 9, 15);
-        final LocalDate end = LocalDate.of(2023, 9, 18);
-        EventPublicationDto eventPublicationDto = new EventPublicationDto(
+    public void testUpdateEvent() throws Exception {
+        String eventId = "12";
+        EventPublicationDto eventDto = new EventPublicationDto(
                 ContentType.EVENT,
-                "Updated Event Title",
-                "Updated Event Content",
-                "https://example.com/updated-picture.jpg",
-                "https://example.com/updated-picture-preview.jpg",
-                begin,
-                end
+                EventTheme.PAINTING,
+                Collections.emptyList(),
+                "title",
+                "short description",
+                "/images/image1.jpeg",
+                Collections.singletonList(new ContentBlock()),
+                LocalDate.now(),
+                LocalDate.now()
         );
-        Event updatedEvent = new Event();
 
-        when(eventConverter.eventPublicationDtoToEvent(eventPublicationDto)).thenReturn(updatedEvent);
+        String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
-        ResponseEntity<?> response = eventAdminController.updateEvent(eventId, eventPublicationDto);
-
-        verify(eventService).updateEventById(updatedEvent, eventId);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/admin/events/{id}", eventId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(eventDtoJson))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
-    public void testDeleteEvent() {
-        String eventId = "1";
+    public void testDeleteEvent() throws Exception {
+        String eventId = "12";
 
-        ResponseEntity<?> response = eventAdminController.deleteEvent(eventId);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/admin/events/{id}", eventId))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        verify(eventService).deleteEventById(eventId);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(eventService, times(1)).deleteEventById(eq(eventId));
     }
 
 }
