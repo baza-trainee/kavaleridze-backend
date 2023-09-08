@@ -35,7 +35,7 @@ public class EventAdminController {
      * @param updatedEvent The EventPublicationDto containing the updated information for the event.
      * @return ResponseEntity with an HTTP status code indicating the result of the operation.
      */
-    @PutMapping("events/{id}")
+    @PutMapping("/events/{id}")
     public ResponseEntity<?> updateEvent(final @PathVariable String id,
                                          final EventPublicationDto updatedEvent) {
         eventService.updateEventById(id, updatedEvent);

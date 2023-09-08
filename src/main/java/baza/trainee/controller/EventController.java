@@ -33,7 +33,6 @@ public class EventController {
      */
     @GetMapping("/{id}")
     public EventDto getEvent(final @PathVariable String id) throws EntityNotFoundException {
-
         return eventService.getEventById(id);
     }
 }

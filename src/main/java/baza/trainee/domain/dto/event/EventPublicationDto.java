@@ -22,14 +22,14 @@ public record EventPublicationDto(
         @NotBlank
         String title,
 
+        @NotBlank
+        String shortDescription,
+
         @URL
         String bannerImage,
 
         @NotNull
         List<ContentBlock> contentBlocks,
-
-        @NotBlank
-        String shortDescription,
 
         @NotNull
         LocalDate begin,
