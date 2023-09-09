@@ -3,8 +3,10 @@ package baza.trainee.controller;
 import baza.trainee.domain.dto.event.EventPublication;
 import baza.trainee.domain.model.Event;
 import baza.trainee.service.EventService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import static baza.trainee.utils.ControllerUtils.handleFieldsErrors;
 
 
 @RestController
@@ -28,7 +32,11 @@ public class EventAdminController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Event createEvent(@RequestBody final EventPublication request) {
+    public Event createEvent(@RequestBody @Valid final EventPublication request,
+                             final BindingResult bindingResult
+    ) {
+        handleFieldsErrors(bindingResult);
+
         return eventService.save(request);
     }
 
@@ -41,7 +49,11 @@ public class EventAdminController {
      */
     @PutMapping("/{id}")
     public Event updateEvent(@PathVariable("id") final String id,
-                             @RequestBody final EventPublication request) {
+                             @RequestBody @Valid final EventPublication request,
+                             final BindingResult bindingResult
+    ) {
+        handleFieldsErrors(bindingResult);
+
         return eventService.update(id, request);
     }
 
