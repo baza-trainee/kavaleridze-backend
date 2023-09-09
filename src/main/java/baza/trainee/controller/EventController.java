@@ -1,16 +1,16 @@
 package baza.trainee.controller;
 
-import baza.trainee.domain.dto.event.EventDto;
-import baza.trainee.domain.dto.event.EventPreviewDto;
+import baza.trainee.domain.model.Event;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.service.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/events")
@@ -20,11 +20,15 @@ public class EventController {
     private final EventService eventService;
 
     /**
-     * @return  A list of event previews.
+     * @return  A page of events.
      */
-    @GetMapping
-    public List<EventPreviewDto> getEvents() {
-        return eventService.getEvents();
+    @GetMapping("/all")
+    public Page<Event> getAll(
+            @RequestParam("size")final int size,
+            @RequestParam("page") final int page
+    ) {
+        var pageable = Pageable.ofSize(size).withPage(page);
+        return eventService.getAll(pageable);
     }
 
     /**
@@ -32,7 +36,7 @@ public class EventController {
      * @return An event dto.
      */
     @GetMapping("/{id}")
-    public EventDto getEvent(final @PathVariable String id) throws EntityNotFoundException {
-        return eventService.getEventById(id);
+    public Event getById(final @PathVariable String id) throws EntityNotFoundException {
+        return eventService.getById(id);
     }
 }
