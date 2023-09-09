@@ -44,7 +44,7 @@ public class EventControllerTest {
         when(eventService.getAll(pageable)).thenReturn(events);
 
         // then:
-        mockMvc.perform(get("/events/all")
+        mockMvc.perform(get("/events")
                         .param("size", "10")
                         .param("page", "0")
                         .contentType(MediaType.APPLICATION_JSON))
