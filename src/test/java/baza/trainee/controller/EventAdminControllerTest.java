@@ -9,6 +9,8 @@ import baza.trainee.service.EventService;
 import baza.trainee.utils.LoggingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,7 +48,7 @@ public class EventAdminControllerTest {
     private LoggingService logService;
 
     @Test
-    public void testCreateEvent() throws Exception {
+    public void testCreateEventStatusIsCreated() throws Exception {
         // given:
         var eventDto = new EventPublication(
                 "Title",
@@ -69,6 +71,34 @@ public class EventAdminControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
                 .andExpect(status().isCreated());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    public void testCreateEventStatusBadRequest(String validatedField) throws Exception {
+        // given:
+        var eventDto = new EventPublication(
+                validatedField,
+                validatedField,
+                validatedField,
+                Set.of("tag1", "tag2"),
+                Set.of(new ContentBlock()),
+                "http://example.com/banner.jpg",
+                LocalDate.now(),
+                LocalDate.now().plusDays(1)
+        );
+        String eventDtoJson = objectMapper.writeValueAsString(eventDto);
+        var event = eventMapper.toEvent(eventDto);
+
+        // when:
+        when(eventService.save(eventDto)).thenReturn(event);
+
+        // then:
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/admin/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(eventDtoJson))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -97,6 +127,36 @@ public class EventAdminControllerTest {
                         .content(eventDtoJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    public void testUpdateEventStatusBadRequest(String validatedField) throws Exception {
+        // given:
+        String id = "12";
+
+        var eventDto = new EventPublication(
+                validatedField,
+                validatedField,
+                validatedField,
+                Set.of("tag1", "tag2"),
+                Set.of(new ContentBlock()),
+                "http://example.com/banner.jpg",
+                LocalDate.now(),
+                LocalDate.now().plusDays(1)
+        );
+        String eventDtoJson = objectMapper.writeValueAsString(eventDto);
+        var event = eventMapper.toEvent(eventDto);
+
+        // when:
+        when(eventService.update(id, eventDto)).thenReturn(event);
+
+        // then:
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/admin/events")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(eventDtoJson))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
