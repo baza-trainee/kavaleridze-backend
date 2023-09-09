@@ -1,9 +1,7 @@
 package baza.trainee.controller;
 
 
-import baza.trainee.domain.dto.event.EventPublicationDto;
-import baza.trainee.domain.enums.ContentType;
-import baza.trainee.domain.enums.EventTheme;
+import baza.trainee.domain.dto.event.EventPublication;
 import baza.trainee.domain.model.ContentBlock;
 import baza.trainee.service.EventService;
 import baza.trainee.utils.LoggingService;
@@ -18,7 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -42,16 +40,15 @@ public class EventAdminControllerTest {
 
     @Test
     public void testCreateEvent() throws Exception {
-        EventPublicationDto eventDto = new EventPublicationDto(
-                ContentType.EVENT,
-                EventTheme.PAINTING,
-                Collections.emptyList(),
-                "title",
-                "short description",
-                "/images/image1.jpeg",
-                Collections.singletonList(new ContentBlock()),
+        EventPublication eventDto = new EventPublication(
+                "Title",
+                "Short Description",
+                "PAINTING",
+                Set.of("tag1", "tag2"),
+                Set.of(new ContentBlock()),
+                "http://example.com/banner.jpg",
                 LocalDate.now(),
-                LocalDate.now()
+                LocalDate.now().plusDays(1)
         );
 
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
@@ -66,16 +63,15 @@ public class EventAdminControllerTest {
     @Test
     public void testUpdateEvent() throws Exception {
         String eventId = "12";
-        EventPublicationDto eventDto = new EventPublicationDto(
-                ContentType.EVENT,
-                EventTheme.PAINTING,
-                Collections.emptyList(),
-                "title",
-                "short description",
-                "/images/image1.jpeg",
-                Collections.singletonList(new ContentBlock()),
+        EventPublication eventDto = new EventPublication(
+                "Title",
+                "Short Description",
+                "PAINTING",
+                Set.of("tag1", "tag2"),
+                Set.of(new ContentBlock()),
+                "http://example.com/banner.jpg",
                 LocalDate.now(),
-                LocalDate.now()
+                LocalDate.now().plusDays(1)
         );
 
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
