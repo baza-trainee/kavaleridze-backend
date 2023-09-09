@@ -26,7 +26,7 @@ public class EventAdminController {
      * @param request The EventPublication containing information about the event to be created.
      * @return ID of saved event.
      */
-    @PostMapping("/events")
+    @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     public Event createEvent(@RequestBody final EventPublication request) {
         return eventService.save(request);
@@ -39,7 +39,7 @@ public class EventAdminController {
      * @param request The EventPublication containing the updated information for the event.
      * @return Updated event.
      */
-    @PutMapping("/events/{id}")
+    @PutMapping("/update/{id}")
     public Event updateEvent(@PathVariable("id") final String id,
                              @RequestBody final EventPublication request) {
         return eventService.update(id, request);
@@ -50,7 +50,7 @@ public class EventAdminController {
      *
      * @param id The unique identifier of the event to be deleted.
      */
-    @DeleteMapping("/events/{id}")
+    @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEvent(final @PathVariable("id") String id) {
         eventService.deleteEventById(id);
