@@ -8,14 +8,14 @@ import org.springframework.data.domain.Pageable;
 public interface EventService {
 
     /**
-     * @return A list of events.
+     * @return A Page of events.
      */
     Page<Event> getAll(Pageable pageable);
 
     /**
      * Retrieve detailed information about a specific event by its id.
      * @param id The unique identifier of the event.
-     * @return An Event containing detailed information about the event.
+     * @return An Event with given ID.
      */
     Event getById(String id);
 

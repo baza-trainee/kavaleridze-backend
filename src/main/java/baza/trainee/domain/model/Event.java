@@ -19,7 +19,10 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import static baza.trainee.constants.EventConstant.*;
+import static baza.trainee.constants.EventConstant.MAX_DESCRIPTION_SIZE;
+import static baza.trainee.constants.EventConstant.MAX_TITLE_SIZE;
+import static baza.trainee.constants.EventConstant.MIN_DESCRIPTION_SIZE;
+import static baza.trainee.constants.EventConstant.MIN_TITLE_SIZE;
 
 @Getter
 @Setter
