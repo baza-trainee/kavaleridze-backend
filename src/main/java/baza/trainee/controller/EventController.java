@@ -1,7 +1,6 @@
 package baza.trainee.controller;
 
 import baza.trainee.domain.model.Event;
-import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,7 +21,7 @@ public class EventController {
     /**
      * @return  A page of events.
      */
-    @GetMapping("/all")
+    @GetMapping
     public Page<Event> getAll(
             @RequestParam("size")final int size,
             @RequestParam("page") final int page
@@ -33,7 +32,7 @@ public class EventController {
 
     /**
      * @param id The event id for looking a certain event
-     * @return An event dto.
+     * @return An event.
      */
     @GetMapping("/{id}")
     public Event getById(final @PathVariable String id) {
