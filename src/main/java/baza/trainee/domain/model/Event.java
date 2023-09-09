@@ -28,7 +28,7 @@ import static baza.trainee.constants.EventConstant.MIN_TITLE_SIZE;
 @Setter
 @NoArgsConstructor
 @Document
-public class Event {
+public class Event implements Post {
 
     @Id
     @Indexed
