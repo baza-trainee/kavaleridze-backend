@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/events")
 @RequiredArgsConstructor
 public class EventAdminController {
 
