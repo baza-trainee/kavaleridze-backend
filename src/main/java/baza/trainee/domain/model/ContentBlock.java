@@ -2,22 +2,28 @@ package baza.trainee.domain.model;
 
 import baza.trainee.domain.enums.BlockType;
 import com.redis.om.spring.annotations.Document;
-import com.redis.om.spring.annotations.Indexed;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import org.hibernate.validator.constraints.URL;
+import jakarta.validation.constraints.Positive;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Document
 public class ContentBlock {
 
-    @Indexed
+    @Id
     private String id;
 
     @NotNull
+    @Positive
     private Integer order;
 
     @NotNull
+    @Positive
     private Integer columns;
 
     @NotNull
@@ -25,7 +31,6 @@ public class ContentBlock {
 
     private String textContent;
 
-    @URL
     private String pictureLink;
 
 }
