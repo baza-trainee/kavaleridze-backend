@@ -6,9 +6,19 @@ import baza.trainee.domain.model.Event;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * Mapper for {@link Event} entity.
+ *
+ */
 @Mapper(componentModel = "spring")
 public interface EventMapper {
 
+    /**
+     * Provides mapping to {@link Event} from {@link EventPublication}.
+     *
+     * @param publication {@link EventPublication} DTO.
+     * @return mapped Event.
+     */
     @Mapping(target = "bannerURI", ignore = true)
     @Mapping(target = "bannerPreviewURI", ignore = true)
     @Mapping(target = "id", ignore = true)
