@@ -36,7 +36,7 @@ public class EventController {
      * @return An event dto.
      */
     @GetMapping("/{id}")
-    public Event getById(final @PathVariable String id) throws EntityNotFoundException {
+    public Event getById(final @PathVariable String id) {
         return eventService.getById(id);
     }
 }
