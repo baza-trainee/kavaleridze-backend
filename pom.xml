@@ -18,6 +18,7 @@
         <redis-om.version>0.8.6</redis-om.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok.version>1.18.28</lombok.version>
+        <testcontainers.redis.junit.version>1.6.3</testcontainers.redis.junit.version>
     </properties>
     <dependencies>
         <dependency>
@@ -63,6 +64,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.redis.testcontainers</groupId>
+            <artifactId>testcontainers-redis-junit</artifactId>
+            <version>${testcontainers.redis.junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
