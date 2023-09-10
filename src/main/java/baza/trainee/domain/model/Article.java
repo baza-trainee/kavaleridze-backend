@@ -28,7 +28,7 @@ import java.util.Set;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(toBuilder = true)
 @Document
-public class Article implements Post {
+public class Article {
 
     /**
      * Unique identifier.

@@ -1,5 +1,7 @@
 package baza.trainee.domain.model;
 
+import java.util.Collection;
+
 /**
  * Interface of the web post.
  *
@@ -27,4 +29,11 @@ public interface Post {
      * @return post description.
      */
     String getDescription();
+
+    /**
+     * Getter for content field.
+     *
+     * @return
+     */
+    Collection<ContentBlock> getContent();
 }

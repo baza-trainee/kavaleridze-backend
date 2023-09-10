@@ -65,11 +65,9 @@ public class Event implements Post {
     @FutureOrPresent
     private LocalDate end;
 
-    @Setter(AccessLevel.PROTECTED)
     @CreatedDate
     private LocalDate created;
 
-    @Setter(AccessLevel.PROTECTED)
     @LastModifiedDate
     private LocalDate updated;
 
