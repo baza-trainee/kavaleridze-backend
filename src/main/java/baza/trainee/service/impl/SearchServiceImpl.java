@@ -2,7 +2,6 @@ package baza.trainee.service.impl;
 
 import baza.trainee.domain.dto.SearchResponse;
 import baza.trainee.domain.enums.ContentType;
-import baza.trainee.domain.model.Article;
 import baza.trainee.domain.model.Event;
 import baza.trainee.domain.model.Post;
 import baza.trainee.service.SearchService;
@@ -38,12 +37,9 @@ public class SearchServiceImpl implements SearchService {
 
         var events = entityStream.of(Event.class)
                 .collect(Collectors.toList());
-        var articles = entityStream.of(Article.class)
-                .collect(Collectors.toList());
 
         var posts = new ArrayList<Post>();
         posts.addAll(events);
-        posts.addAll(articles);
 
         return filterBySequence(posts, sequence);
     }
@@ -60,7 +56,8 @@ public class SearchServiceImpl implements SearchService {
 
     private <T extends Post> Predicate<T> searchPredicate(CharSequence sequence) {
         return post -> matchSequence(post.getTitle(), sequence)
-                || matchSequence(post.getDescription(), sequence);
+                || matchSequence(post.getDescription(), sequence)
+                || post.getContent().stream().anyMatch(c -> matchSequence(c.getTextContent(), sequence));
     }
 
     private boolean matchSequence(String string, CharSequence sequence) {
