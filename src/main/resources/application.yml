@@ -25,3 +25,7 @@ mail:
   museum:
     email: museum@gmail.com
     label: Museum.ua
+
+resources:
+  files:
+    upload-dir: 'files'
