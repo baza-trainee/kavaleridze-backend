@@ -28,4 +28,7 @@ mail:
 
 resources:
   files:
-    upload-dir: 'files'
+    images:
+      root: 'images'
+      original: 'original'
+      compressed: 'compressed'
