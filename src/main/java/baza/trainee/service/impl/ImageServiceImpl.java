@@ -21,6 +21,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link ImageService} interface for managing image-related operations.
+ * This service handles loading, storing, and processing images.
+ *
+ * @author Evhen Malysh
+ */
 @Service
 public class ImageServiceImpl implements ImageService {
 
@@ -33,9 +39,9 @@ public class ImageServiceImpl implements ImageService {
     private final Path tempLocation;
 
     /**
-     * ImageServiceImpl constructor.
+     * Constructs an instance of the ImageServiceImpl class.
      *
-     * @param storageProperties image storage configuration properties.
+     * @param storageProperties Image storage configuration properties.
      */
     public ImageServiceImpl(final StorageProperties storageProperties) {
         this.rootLocation = Paths.get(storageProperties.getRootImageLocation());
@@ -46,18 +52,42 @@ public class ImageServiceImpl implements ImageService {
         FileSystemStorageUtils.init(rootLocation, originalLocation, previewLocation, tempLocation);
     }
 
+    /**
+     * Load a resource (image) by filename and type.
+     *
+     * @param filename The name of the file.
+     * @param type     The type of the resource (either "preview" or "original").
+     * @return A byte array containing the resource data.
+     * @throws StorageFileNotFoundException If the resource file cannot be found or read.
+     */
     @Override
     public byte[] loadResource(final String filename, final String type) {
         var currentPath = type.equals("preview") ? previewLocation : originalLocation;
         return getResourceFromPath(filename, currentPath);
     }
 
+    /**
+     * Load a temporary resource (image) by filename and session ID.
+     *
+     * @param filename  The name of the file.
+     * @param sessionId The ID of the session associated with the temporary resource.
+     * @return A byte array containing the temporary resource data.
+     * @throws StorageFileNotFoundException If the resource file cannot be found or read.
+     */
     @Override
     public byte[] loadTempResource(final String filename, final String sessionId) {
         Path tempPath = tempLocation.resolve(sessionId).normalize();
         return getResourceFromPath(filename, tempPath);
     }
 
+    /**
+     * Store a multipart file as a temporary resource.
+     *
+     * @param file      The {@link MultipartFile} to store.
+     * @param sessionId The ID of the session associated with the temporary resource.
+     * @return The name of the stored file.
+     * @throws StorageException If an error occurs while storing the file.
+     */
     @Override
     public String storeToTemp(final MultipartFile file, final String sessionId) {
         String name = UUID.randomUUID() + ".jpeg";
@@ -79,6 +109,14 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+
+    /**
+     * Persist and process a list of filenames associated with a session.
+     *
+     * @param filenames The list of filenames to persist and process.
+     * @param sessionId The ID of the session associated with the files.
+     * @throws StorageException If an error occurs while persisting or processing the files.
+     */
     @Override
     public void persist(final List<String> filenames, final String sessionId) {
         Path tempPath = tempLocation.resolve(sessionId).normalize();
@@ -111,6 +149,14 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    /**
+     * Retrieve a resource from the specified path and return it as a byte array.
+     *
+     * @param filename    The name of the resource file.
+     * @param currentPath The path where the resource is located.
+     * @return A byte array containing the resource data.
+     * @throws StorageFileNotFoundException If the resource file cannot be found or read.
+     */
     private static byte[] getResourceFromPath(final String filename, final Path currentPath) {
         try {
             var file = FileSystemStorageUtils.loadPath(filename, currentPath);
