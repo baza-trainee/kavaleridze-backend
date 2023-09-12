@@ -5,6 +5,7 @@ import baza.trainee.exceptions.custom.StorageException;
 import baza.trainee.exceptions.custom.StorageFileNotFoundException;
 import baza.trainee.service.ImageService;
 import baza.trainee.utils.CustomMultipartFile;
+import baza.trainee.utils.FileSystemStorageUtils;
 import baza.trainee.utils.ImageCompressor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class ImageServiceImpl implements ImageService {
         this.previewLocation = rootLocation.resolve(storageProperties.getCompressedImagesLocation()).normalize();
         this.tempLocation = rootLocation.resolve(storageProperties.getTempImagesLocation()).normalize();
 
-        FileSystemStorageService.init(rootLocation, originalLocation, previewLocation, tempLocation);
+        FileSystemStorageUtils.init(rootLocation, originalLocation, previewLocation, tempLocation);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class ImageServiceImpl implements ImageService {
                     name,
                     file.getContentType(),
                     file.getInputStream());
-            FileSystemStorageService.storeToPath(updatedFile, sessionTempPath);
+            FileSystemStorageUtils.storeToPath(updatedFile, sessionTempPath);
 
             return name;
         } catch (IOException e) {
@@ -82,7 +83,7 @@ public class ImageServiceImpl implements ImageService {
     public void persist(final List<String> filenames, final String sessionId) {
         Path tempPath = tempLocation.resolve(sessionId).normalize();
         var tempFilePaths = filenames.stream()
-                .map((String filename) -> FileSystemStorageService.loadPath(filename, tempPath))
+                .map((String filename) -> FileSystemStorageUtils.loadPath(filename, tempPath))
                 .collect(Collectors.toList());
         try {
             for (Path fp : tempFilePaths) {
@@ -92,13 +93,13 @@ public class ImageServiceImpl implements ImageService {
                         imageFile.getName(),
                         "image/jpeg",
                         new FileInputStream(imageFile));
-                FileSystemStorageService.storeToPath(inputFile, originalLocation);
+                FileSystemStorageUtils.storeToPath(inputFile, originalLocation);
 
                 var compressedFile = ImageCompressor.compress(
                         inputFile,
                         TARGET_WIDTH,
                         QUALITY);
-                FileSystemStorageService.storeToPath(compressedFile, previewLocation);
+                FileSystemStorageUtils.storeToPath(compressedFile, previewLocation);
             }
         } catch (IOException e) {
             throw new StorageException("Failed to read stored files");
@@ -112,7 +113,7 @@ public class ImageServiceImpl implements ImageService {
 
     private static byte[] getResourceFromPath(final String filename, final Path currentPath) {
         try {
-            var file = FileSystemStorageService.loadPath(filename, currentPath);
+            var file = FileSystemStorageUtils.loadPath(filename, currentPath);
             var resource = new UrlResource(file.toUri());
 
             if (resource.exists() || resource.isReadable()) {

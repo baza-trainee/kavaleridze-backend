@@ -35,3 +35,4 @@ resources:
       root: 'images'
       original: 'original'
       compressed: 'compressed'
+      temporary: 'temp'

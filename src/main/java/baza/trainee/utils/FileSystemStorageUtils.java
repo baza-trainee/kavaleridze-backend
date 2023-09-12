@@ -1,4 +1,4 @@
-package baza.trainee.service.impl;
+package baza.trainee.utils;
 
 import baza.trainee.exceptions.custom.StorageException;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,9 +11,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
-public class FileSystemStorageService {
+public class FileSystemStorageUtils {
 
-    private FileSystemStorageService() {
+    private FileSystemStorageUtils() {
         throw new IllegalStateException("Utility class.");
     }
 
