@@ -1,6 +1,5 @@
 package baza.trainee.domain.model;
 
-import com.redis.om.spring.annotations.Document;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
