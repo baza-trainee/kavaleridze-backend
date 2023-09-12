@@ -1,5 +1,6 @@
 package baza.trainee.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,15 +23,29 @@ public class ImageController {
 
     @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
     byte[] getImage(
-        @RequestParam("filename") final String filename,
-        @RequestParam("quality") final String quality
+            @RequestParam("filename") final String filename,
+            @RequestParam("type") final String type
     ) {
-        return storageService.loadAsResource(filename, quality);
+        return storageService.loadAsResource(filename, type);
+    }
+
+    @GetMapping(value = "/temp", produces = MediaType.IMAGE_JPEG_VALUE)
+    byte[] getTempImage(
+            final HttpSession session,
+            @RequestParam("filename") final String filename
+    ) {
+        String sessionId = session.getId();
+        return storageService.loadAsTempResource(filename, sessionId);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    String saveImage(@RequestParam("file") final MultipartFile file) {
-        return storageService.storeToCache(file);
+    String saveImage(
+            final HttpSession session,
+            @RequestParam("file") final MultipartFile file
+    ) {
+        String sessionId = session.getId();
+
+        return storageService.storeToTemp(file, sessionId);
     }
 }
