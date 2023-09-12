@@ -42,6 +42,8 @@ public class ImageServiceImpl implements ImageService {
         this.originalLocation = rootLocation.resolve(storageProperties.getOriginalImagesLocation()).normalize();
         this.previewLocation = rootLocation.resolve(storageProperties.getCompressedImagesLocation()).normalize();
         this.tempLocation = rootLocation.resolve(TEMP_DIRECTORY).normalize();
+
+        FileSystemStorageService.init(rootLocation, originalLocation, previewLocation, tempLocation);
     }
 
     @Override
