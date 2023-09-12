@@ -13,7 +13,7 @@ public interface ImageService {
      * @param type type of the image.
      * @return image as an array of bytes.
      */
-    byte[] loadAsResource(String filename, String type);
+    byte[] loadResource(String filename, String type);
 
     /**
      * Load image from temporary file storage as array of bytes.
@@ -22,7 +22,7 @@ public interface ImageService {
      * @param sessionId ID of local session.
      * @return image as an array of bytes.
      */
-    byte[] loadAsTempResource(String filename, String sessionId);
+    byte[] loadTempResource(String filename, String sessionId);
 
     /**
      * Store {@link MultipartFile} as File to temporary file storage

@@ -26,7 +26,7 @@ public class ImageController {
             @RequestParam("filename") final String filename,
             @RequestParam("type") final String type
     ) {
-        return storageService.loadAsResource(filename, type);
+        return storageService.loadResource(filename, type);
     }
 
     @GetMapping(value = "/temp", produces = MediaType.IMAGE_JPEG_VALUE)
@@ -35,7 +35,7 @@ public class ImageController {
             @RequestParam("filename") final String filename
     ) {
         String sessionId = session.getId();
-        return storageService.loadAsTempResource(filename, sessionId);
+        return storageService.loadTempResource(filename, sessionId);
     }
 
     @PostMapping

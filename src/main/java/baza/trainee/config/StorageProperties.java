@@ -19,4 +19,7 @@ public class StorageProperties {
     @Value("${resources.files.images.compressed}")
     private String compressedImagesLocation = "compressed";
 
+    @Value("${resources.files.images.temporary}")
+    private String tempImagesLocation = "temp";
+
 }

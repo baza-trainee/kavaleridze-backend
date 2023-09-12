@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Service
 public class ImageServiceImpl implements ImageService {
 
-    private static final String TEMP_DIRECTORY = "temp";
     private static final int TARGET_WIDTH = 680;
     private static final float QUALITY = 0.5F;
 
@@ -35,51 +34,27 @@ public class ImageServiceImpl implements ImageService {
     /**
      * ImageServiceImpl constructor.
      *
-     * @param storageProperties storage configuration properties.
+     * @param storageProperties image storage configuration properties.
      */
     public ImageServiceImpl(final StorageProperties storageProperties) {
         this.rootLocation = Paths.get(storageProperties.getRootImageLocation());
         this.originalLocation = rootLocation.resolve(storageProperties.getOriginalImagesLocation()).normalize();
         this.previewLocation = rootLocation.resolve(storageProperties.getCompressedImagesLocation()).normalize();
-        this.tempLocation = rootLocation.resolve(TEMP_DIRECTORY).normalize();
+        this.tempLocation = rootLocation.resolve(storageProperties.getTempImagesLocation()).normalize();
 
         FileSystemStorageService.init(rootLocation, originalLocation, previewLocation, tempLocation);
     }
 
     @Override
-    public byte[] loadAsResource(final String filename, final String type) {
-        try {
-            var currentPath = type.equals("preview") ? previewLocation : originalLocation;
-            var file = FileSystemStorageService.loadPath(filename, currentPath);
-            var resource = new UrlResource(file.toUri());
-
-            if (resource.exists() || resource.isReadable()) {
-                return resource.getContentAsByteArray();
-            } else {
-                throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);
-            }
-        } catch (IOException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename);
-        }
+    public byte[] loadResource(final String filename, final String type) {
+        var currentPath = type.equals("preview") ? previewLocation : originalLocation;
+        return getResourceFromPath(filename, currentPath);
     }
 
     @Override
-    public byte[] loadAsTempResource(final String filename, final String sessionId) {
-        try {
-            Path tempPath = tempLocation.resolve(sessionId).normalize();
-            var file = FileSystemStorageService.loadPath(filename, tempPath);
-            var resource = new UrlResource(file.toUri());
-
-            if (resource.exists() || resource.isReadable()) {
-                return resource.getContentAsByteArray();
-            } else {
-                throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);
-            }
-        } catch (IOException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename);
-        }
+    public byte[] loadTempResource(final String filename, final String sessionId) {
+        Path tempPath = tempLocation.resolve(sessionId).normalize();
+        return getResourceFromPath(filename, tempPath);
     }
 
     @Override
@@ -132,6 +107,22 @@ public class ImageServiceImpl implements ImageService {
             FileSystemUtils.deleteRecursively(tempPath);
         } catch (IOException e) {
             throw new StorageException("Could not delete session temp folder");
+        }
+    }
+
+    private static byte[] getResourceFromPath(final String filename, final Path currentPath) {
+        try {
+            var file = FileSystemStorageService.loadPath(filename, currentPath);
+            var resource = new UrlResource(file.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return resource.getContentAsByteArray();
+            } else {
+                throw new StorageFileNotFoundException(
+                        "Could not read file: " + filename);
+            }
+        } catch (IOException e) {
+            throw new StorageFileNotFoundException("Could not read file: " + filename);
         }
     }
 
