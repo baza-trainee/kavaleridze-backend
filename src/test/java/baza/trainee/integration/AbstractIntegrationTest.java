@@ -14,7 +14,7 @@ import org.testcontainers.utility.DockerImageName;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
-@Import({ RedisTestConfig.class })
+@Import({ RedisTestConfig.class, MockConfiguration.class })
 class AbstractIntegrationTest {
 
     private static final String REDIS_STACK_IMAGE = "redis/redis-stack:7.2.0-v0";

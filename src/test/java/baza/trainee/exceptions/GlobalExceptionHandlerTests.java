@@ -6,12 +6,11 @@ import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.exceptions.custom.MethodArgumentNotValidException;
 import baza.trainee.exceptions.custom.NullEntityReferenceException;
 import baza.trainee.exceptions.errors.ErrorResponse;
+import baza.trainee.integration.MockConfiguration;
 import baza.trainee.integration.RedisTestConfig;
-import baza.trainee.service.EventService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +18,11 @@ import org.springframework.http.ResponseEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Import({ RedisTestConfig.class })
+@Import({ RedisTestConfig.class, MockConfiguration.class })
 public class GlobalExceptionHandlerTests {
 
     @Autowired
     private GlobalExceptionHandler globalExceptionHandler;
-
-    @MockBean
-    private EventService eventService;
 
     @Test
     public void testNotFoundExceptionHandling() {
