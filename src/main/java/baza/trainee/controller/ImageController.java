@@ -21,9 +21,12 @@ public class ImageController {
 
     private final ImageService storageService;
 
-    @GetMapping(value = "/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
-    byte[] getImage(@PathVariable("filename") String filename) {
-        return storageService.loadAsResource(filename);
+    @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
+    byte[] getImage(
+        @RequestParam("filename") final String filename,
+        @RequestParam("quality") final String quality
+    ) {
+        return storageService.loadAsResource(filename, quality);
     }
 
     @PostMapping

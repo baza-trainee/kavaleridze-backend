@@ -1,20 +1,30 @@
 package baza.trainee.domain.model;
 
+import com.redis.om.spring.annotations.Document;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+
 import java.io.Serializable;
 
-import org.springframework.data.redis.core.RedisHash;
-import org.springframework.web.multipart.MultipartFile;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
+/**
+ * MultipartFile wrapper for images.
+ *
+ * @author Evhen Malysh
+ */
 @Data
-@RedisHash("image")
+@Builder
+@RedisHash
 @AllArgsConstructor
 public class Image implements Serializable {
 
+    @Id
     private String id;
-
-    private MultipartFile value;
+    private String name;
+    private String contentType;
+    private Long size;
+    private byte[] data;
 
 }

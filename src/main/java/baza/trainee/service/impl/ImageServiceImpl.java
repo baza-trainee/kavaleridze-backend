@@ -1,19 +1,16 @@
 package baza.trainee.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
-import org.springframework.data.redis.core.RedisTemplate;
+import baza.trainee.utils.CustomMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import baza.trainee.domain.model.Image;
+import baza.trainee.repository.ImageRepository;
 import baza.trainee.service.ImageService;
 import baza.trainee.service.StorageService;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +20,13 @@ import lombok.RequiredArgsConstructor;
 public class ImageServiceImpl implements ImageService {
 
     private final StorageService storageService;
-    private final RedisTemplate<String, Image> template;
+    private final ImageRepository imageRepository;
 
     @Override
-    public byte[] loadAsResource(final String filename) {
-        return Optional.ofNullable(template.opsForValue().get(filename))
-                .map(Image::getValue)
-                .map(mapFileToByteArrayFunction())
-                .orElseGet(() -> storageService.loadAsResource(filename));
+    public byte[] loadAsResource(final String filename, final String quality) {
+        return imageRepository.findById(filename)
+                .map(Image::getData)
+                .orElseGet(() -> storageService.loadAsResource(filename, quality));
     }
 
     private Function<? super MultipartFile, byte[]> mapFileToByteArrayFunction() {
@@ -45,31 +41,42 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public String storeToCache(final MultipartFile file) {
-        String fileName = file.getName();
-        template.opsForValue().set(fileName, new Image(fileName, file));
+        try {
+            var savedImage = imageRepository.save(Image.builder()
+                    .name(file.getName())
+                    .contentType(file.getContentType())
+                    .size(file.getSize())
+                    .data(file.getBytes())
+                    .build());
+            return savedImage.getId();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        return fileName;
+
     }
 
     @Override
-    public Map<String, String> persist(final Collection<String> filenames) {
-        return Optional.ofNullable(template.opsForValue().multiGet(filenames))
-                .map(storeFilesFromCacheFunction())
-                .orElseGet(loadPathsSupplier(filenames));
+    public void persist(final String filename) {
+        imageRepository.findById(filename)
+                .ifPresent(storeFromCacheConsumer());
+
     }
 
-    private Function<List<Image>, Map<String, String>> storeFilesFromCacheFunction() {
-        return ims -> ims.stream()
-                .map(Image::getValue)
-                .collect(Collectors.toMap(
-                        MultipartFile::getOriginalFilename,
-                        storageService::store));
+    private Consumer<Image> storeFromCacheConsumer() {
+        return im -> {
+            try {
+                var multipart = new CustomMultipartFile(
+                        im.getName(),
+                        im.getName(),
+                        im.getContentType(),
+                        new ByteArrayInputStream(im.getData()));
+
+                storageService.store(multipart);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 
-    private Supplier<Map<String, String>> loadPathsSupplier(final Collection<String> filenames) {
-        return () -> filenames.stream()
-                .collect(Collectors.toMap(
-                        f -> f,
-                        f -> storageService.load(f).toString()));
-    }
 }

@@ -1,45 +1,62 @@
 package baza.trainee.service.impl;
 
+import baza.trainee.exceptions.custom.StorageException;
+import baza.trainee.exceptions.custom.StorageFileNotFoundException;
+import baza.trainee.service.StorageService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.stream.Stream;
-
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
-import org.springframework.web.multipart.MultipartFile;
-
-import baza.trainee.config.StorageProperties;
-import baza.trainee.exceptions.custom.StorageException;
-import baza.trainee.exceptions.custom.StorageFileNotFoundException;
-import baza.trainee.service.StorageService;
 
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    private final Path rootLocation;
+    @Value("${resources.files.images.root}")
+    private String rootImagesLocation = "/images/original";
 
-    public FileSystemStorageService(final StorageProperties properties) {
-        this.rootLocation = Paths.get(properties.getLocation());
+    @Value("${resources.files.images.original}")
+    private String originalImagesLocation = "/images/original";
+
+    @Value("${resources.files.images.compressed}")
+    private String compressedImagesLocation = "/images/compressed";
+
+    private final Path originalLocation;
+    private final Path previewLocation;
+
+    /**
+     * FileSystemStorageService constructor.
+     */
+    public FileSystemStorageService() {
+        Path rootPath = Paths.get(rootImagesLocation);
+        this.originalLocation = Paths.get(originalImagesLocation);
+        this.previewLocation = Paths.get(compressedImagesLocation);
     }
 
     @Override
-    public String store(final MultipartFile file) {
-        String name = file.getOriginalFilename();
+    public void store(final MultipartFile file) {
+        storeToPath(file, originalLocation);
+        storeToPath(file, previewLocation);
+    }
+
+    private String storeToPath(final MultipartFile file, final Path location) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
-            Path destinationFile = this.rootLocation
+            String name = file.getName();
+            Path destinationFile = location
                     .resolve(Paths.get(name))
                     .normalize()
                     .toAbsolutePath();
-            if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+            if (!destinationFile.getParent().equals(location.toAbsolutePath())) {
                 throw new StorageException("Cannot store file outside current directory.");
             }
             try (InputStream inputStream = file.getInputStream()) {
@@ -55,28 +72,29 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public List<String> loadAll() {
-        try (Stream<Path> pathStream = Files.walk(this.rootLocation)) {
+    public Path load(final String filename, final String quality) {
+        if (quality.equals("preview")) {
+            return loadPath(filename, previewLocation);
+        } else {
+            return loadPath(filename, originalLocation);
+        }
+    }
+
+    private Path loadPath(final String filename, final Path location) {
+        try (Stream<Path> pathStream = Files.walk(location)) {
             return pathStream
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(this.rootLocation::relativize)
-                    .map(Path::getFileName)
-                    .map(Path::toString)
-                    .toList();
+                    .filter(path -> path.endsWith(filename))
+                    .findFirst()
+                    .orElseThrow();
         } catch (IOException e) {
             throw new StorageException("Failed to read stored files");
         }
     }
 
     @Override
-    public Path load(final String filename) {
-        return rootLocation.resolve(filename);
-    }
-
-    @Override
-    public byte[] loadAsResource(final String filename) {
+    public byte[] loadAsResource(final String filename, final String quality) {
         try {
-            var file = load(filename);
+            var file = load(filename, quality);
             var resource = new UrlResource(file.toUri());
 
             if (resource.exists() || resource.isReadable()) {
@@ -91,14 +109,10 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
-    }
-
-    @Override
     public void init() {
         try {
-            Files.createDirectories(rootLocation);
+            Files.createDirectories(originalLocation);
+            Files.createDirectories(previewLocation);
         } catch (IOException e) {
             throw new StorageException("Could not initialize storage");
         }
