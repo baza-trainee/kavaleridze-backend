@@ -90,7 +90,7 @@ public class ImageServiceImpl implements ImageService {
      */
     @Override
     public String storeToTemp(final MultipartFile file, final String sessionId) {
-        String name = UUID.randomUUID() + ".jpeg";
+        String name = UUID.randomUUID() + file.getName();
         Path sessionTempPath = this.tempLocation
                 .resolve(Paths.get(sessionId))
                 .normalize();
