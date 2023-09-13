@@ -1,7 +1,8 @@
-package baza.trainee.service.impl;
+package baza.trainee.service;
 
 import baza.trainee.config.StorageProperties;
 import baza.trainee.service.ImageService;
+import baza.trainee.service.impl.ImageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
