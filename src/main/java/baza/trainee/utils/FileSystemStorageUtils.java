@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.stream.Stream;
 
 /**
  * Utility class for managing file system storage operations.
@@ -36,14 +35,14 @@ public class FileSystemStorageUtils {
      * @throws StorageException If an error occurs while reading the stored files.
      */
     public static Path loadPath(final String filename, final Path location) {
-        Path filePath = Paths.get(filename);
-        try (Stream<Path> pathStream = Files.walk(location)) {
+        try (var pathStream = Files.walk(location, Integer.MAX_VALUE)) {
             return pathStream
-                    .filter(path -> path.equals(filePath))
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().equals(Paths.get(filename)))
                     .findFirst()
-                    .orElseThrow();
+                    .orElseThrow(() -> new StorageException("Failed to find files"));
         } catch (IOException e) {
-            throw new StorageException("Failed to read stored files");
+            throw new StorageException("Failed to find files");
         }
     }
 
