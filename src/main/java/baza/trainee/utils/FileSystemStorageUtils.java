@@ -58,14 +58,12 @@ public class FileSystemStorageUtils {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file.");
             }
-            String name = file.getName();
+            Files.createDirectories(location);
+
             Path destinationFile = location
-                    .resolve(Paths.get(name))
+                    .resolve(Paths.get(file.getName()))
                     .normalize()
                     .toAbsolutePath();
-            if (!destinationFile.getParent().equals(location.toAbsolutePath())) {
-                throw new StorageException("Cannot store file outside current directory.");
-            }
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream,
                         destinationFile,
