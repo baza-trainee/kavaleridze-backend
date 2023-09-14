@@ -37,11 +37,17 @@ class EventServiceImplTest extends AbstractIntegrationTest {
      */
     @Test
     @DisplayName("Checking number of pages and objects found.")
-    void getAll() {
+    void getAllTest() {
+
+        // given:
         var pageable = Pageable.ofSize(10).withPage(0);
         Page<Event> result = eventService.getAll(pageable);
+
+        // when:
         int numberPage = result.getTotalPages();
         int numberEvents = (int) result.getTotalElements();
+
+        // then:
         assertEquals(2, numberPage);
         assertEquals(20, numberEvents);
     }
@@ -53,7 +59,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
      */
     @Test
     @DisplayName("Checking correctness of the search by id.")
-    void getById() {
+    void getByIdTest() {
 
         /*
          * TODO: fix dates as in update method below.
@@ -73,6 +79,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
          * in Sep 15 2023 your tests become invalid.
          * 
          */
+        // given:
         EventPublication eventPublication = new EventPublication(
                 "Title1",
                 "Description1",
@@ -80,25 +87,21 @@ class EventServiceImplTest extends AbstractIntegrationTest {
                 null,
                 null,
                 "event/banner1",
-                LocalDate.ofEpochDay(2023 - 5 - 25), // LocalDate.ofEpochDay(long number)
-                LocalDate.ofEpochDay(2023 - 5 - 30));
+                LocalDate.now(), // LocalDate.ofEpochDay(long number)
+                LocalDate.now().plusDays(10));
 
+        // when:
         Event newEvent = eventService.save(eventPublication);
         Event checkEvent = eventService.getById(newEvent.getId());
 
+        // then:
         assertEquals(newEvent, checkEvent);
     }
 
-    /*
-     * TODO: remove commented code before push it to remote.
-     */
-    // @Test
-    // void save() {
-    // }
 
     @Test
     @DisplayName("Checking correctness of update object.")
-    void update() {
+    void updateTest() {
 
         // given:
         var eventPublication = new EventPublication(
@@ -121,11 +124,11 @@ class EventServiceImplTest extends AbstractIntegrationTest {
                 "event/bannerUpdate",
                 LocalDate.now(),
                 LocalDate.now().plusDays(10));
+
+        // when:
         String id = eventToUpdate.getId();
         Event expected = mapper.toEvent(eventPublicationForUpdate);
         expected.setId(id);
-
-        // when:
         Event actual = eventService.update(id, eventPublicationForUpdate);
 
         // then:
@@ -135,8 +138,9 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
     @Test
     @DisplayName("Checking delete object.")
-    void deleteEventById() {
+    void deleteEventByIdTest() {
 
+        // given:
         var eventPublication = new EventPublication(
                 "Title3",
                 "Description3",
@@ -144,14 +148,15 @@ class EventServiceImplTest extends AbstractIntegrationTest {
                 null,
                 null,
                 "event/banner3",
-                LocalDate.ofEpochDay(2023 - 6 - 25),
-                LocalDate.ofEpochDay(2023 - 6 - 30));   // << The same is in other dates. TODO: fix wrong method parameter.
+                LocalDate.now(),
+                LocalDate.now().plusDays(10));   // << The same is in other dates. TODO: fix wrong method parameter.
+
+        // when:
         Event eventDelete = eventService.save(eventPublication);
         String id = eventDelete.getId();
-
         eventService.deleteEventById(id);
 
+        // then:
         Assertions.assertNotNull(eventService.getById(id));
-
     }
 }
