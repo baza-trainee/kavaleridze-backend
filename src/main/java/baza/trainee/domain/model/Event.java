@@ -107,10 +107,12 @@ public class Event implements Post {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (!(obj instanceof Event))
+        }
+        if (!(obj instanceof Event)) {
             return false;
+        }
         Event other = (Event) obj;
         return Objects.equals(id, other.id) && Objects.equals(title, other.title)
                 && Objects.equals(description, other.description) && Objects.equals(type, other.type)
