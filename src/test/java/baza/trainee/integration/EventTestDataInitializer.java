@@ -30,63 +30,47 @@ class EventTestDataInitializer {
                 repository.deleteAll();
 
             IntStream.range(0, EVENT_COUNT).forEach(i -> {
-                var event = getEvent(i);
+                var event = new Event();
 
+                String title = EventTitles.values()[i].getValue();
+                event.setTitle(title);
+
+                String description = EventDescription.values()[i].getValue();
+                event.setDescription(description);
+
+                EventType[] types = EventType.values();
+                int typeIndex = ThreadLocalRandom.current().nextInt(types.length);
+                event.setType(types[typeIndex].getValue());
+
+                event.setBannerPreviewURI("null");
+                event.setBannerURI("null");
+
+                LocalDate begin = LocalDate.now().plusDays(i);
+                event.setBegin(begin);
+                event.setEnd(begin.plusDays(i));
+
+                event.addTag("null");
+
+                IntStream.range(0, CONTENT_BLOCKS_COUNT).forEach(j -> {
+                    var block = new ContentBlock();
+
+                    block.setOrder(j);
+
+                    var type = (j % 2 == 0) ? BlockType.PICTURE_BLOCK
+                            : BlockType.PICTURE_TEXT_BLOCK;
+                    block.setBlockType(type);
+
+                    int column = ThreadLocalRandom.current().nextInt(1) + 1;
+                    block.setColumns(column);
+
+                    block.setPictureLink("https://example.com/api/image/" + j);
+                    block.setTextContent("Унікальний контент " + i + " - " + j);
+
+                    event.addContentBlock(block);
+                });
                 repository.save(event);
             });
         };
-    }
-
-    /**
-     * Generate fake test {@link Event}.
-     *
-     * @param counter from 0 to 19.
-     * @return generated {@link Event}
-     */
-    static Event getEvent(int counter) {
-        if (counter >= 20) {
-            throw new IllegalArgumentException("Counter should be bigger or equal 0 and less then 20.");
-        }
-        
-        var event = new Event();
-
-        String title = EventTitles.values()[counter].getValue();
-        event.setTitle(title);
-
-        String description = EventDescription.values()[counter].getValue();
-        event.setDescription(description);
-
-        EventType[] types = EventType.values();
-        int typeIndex = ThreadLocalRandom.current().nextInt(types.length);
-        event.setType(types[typeIndex].getValue());
-
-        event.setBannerPreviewURI("null");
-        event.setBannerURI("null");
-
-        LocalDate begin = LocalDate.now().plusDays(counter);
-        event.setBegin(begin);
-        event.setEnd(begin.plusDays(counter));
-
-        event.addTag("null");
-
-        IntStream.range(0, CONTENT_BLOCKS_COUNT).forEach(j -> {
-            var block = new ContentBlock();
-
-            block.setOrder(j);
-
-            var type = (j % 2 == 0) ? BlockType.PICTURE_BLOCK
-                    : BlockType.PICTURE_TEXT_BLOCK;
-            block.setBlockType(type);
-
-            int column = ThreadLocalRandom.current().nextInt(1) + 1;
-            block.setColumns(column);
-
-            block.setPictureLink("https://example.com/api/image/" + j);
-            block.setTextContent("Унікальний контент " + counter + " - " + j);
-
-            event.addContentBlock(block);
-        });
-        return event;
     }
 
     @Getter
