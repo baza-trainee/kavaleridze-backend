@@ -21,14 +21,14 @@ import java.time.LocalDate;
 @Import({ EventTestDataInitializer.class })
 class EventServiceImplTest extends AbstractIntegrationTest {
 
-    @MockBean
-    private SearchService searchService;
-
     @Autowired
     private EventService eventService;
-
+    
     @Autowired
-    EventMapper mapper;
+    private EventMapper mapper;
+    
+    @MockBean
+    private SearchService searchService;
 
     /*
      * TODO: fix code style.
