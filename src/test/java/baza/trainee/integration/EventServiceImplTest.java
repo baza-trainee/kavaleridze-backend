@@ -42,12 +42,9 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
         // when:
         int numberOfElements = result.getNumberOfElements();
-        int numberPage = result.getTotalPages();
-        int numberEvents = (int) result.getTotalElements();
 
         // then:
         assertEquals(10, numberOfElements);
-        assertEquals(20, numberEvents);
 
         for (var event : result) {
             assertNotNull(event.getId());

@@ -28,8 +28,4 @@ abstract class AbstractIntegrationTest {
         System.setProperty("spring.data.redis.port", redis.getMappedPort(REDIS_PORT).toString());
     }
 
-    @AfterAll
-    static void tearDown() {
-        redis.stop();
-    }
 }
