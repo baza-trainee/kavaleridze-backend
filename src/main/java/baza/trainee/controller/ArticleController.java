@@ -40,7 +40,7 @@ public class ArticleController {
      * @return {@link Article} object containing an existing article with its full content.
      */
     @Operation(summary = "Find article by title", description = "Returns an article by its title.")
-    @ApiResponses(value = {
+    @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Found the article"),
             @ApiResponse(responseCode = "404", description = "Article not found"),
             @ApiResponse(responseCode = "400", description = "Title request is invalid")

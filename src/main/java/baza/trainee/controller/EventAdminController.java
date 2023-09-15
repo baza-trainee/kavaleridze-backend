@@ -42,7 +42,7 @@ public class EventAdminController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new event", description = "Creates a new event with the provided information.")
-    @ApiResponses(value = {
+    @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Event created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
@@ -67,7 +67,7 @@ public class EventAdminController {
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing event",
             description = "Updates an existing event with the provided information.")
-    @ApiResponses(value = {
+    @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Event updated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "Event not found")
@@ -93,7 +93,7 @@ public class EventAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete an existing event",
             description = "Deletes an existing event by its unique identifier.")
-    @ApiResponses(value = {
+    @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Event deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Event not found")
     })
