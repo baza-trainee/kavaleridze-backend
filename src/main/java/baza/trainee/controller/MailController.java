@@ -42,7 +42,7 @@ public class MailController {
      * @return A ResponseEntity with a status of 200 (OK) if the email sending is successful.
      */
     @PostMapping("/submit")
-    @ApiResponses(value = {
+    @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Email sent successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
