@@ -6,7 +6,6 @@ import baza.trainee.domain.model.Event;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.service.EventService;
 import baza.trainee.service.SearchService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Import({EventTestDataInitializer.class})
 class EventServiceImplTest extends AbstractIntegrationTest {
@@ -31,11 +32,6 @@ class EventServiceImplTest extends AbstractIntegrationTest {
     @MockBean
     private SearchService searchService;
 
-    /*
-     * TODO: fix code style.
-     *
-     * Separate code blocks by stages.
-     */
     @Test
     @DisplayName("Checking number of pages and objects found.")
     void getAllTest() {
@@ -46,49 +42,23 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
         // when:
         int numberOfElements = result.getNumberOfElements();
-        int numberPage = result.getTotalPages();                // This check is redundant.
+        int numberPage = result.getTotalPages();
         int numberEvents = (int) result.getTotalElements();
 
         // then:
         assertEquals(10, numberOfElements);
         assertEquals(20, numberEvents);
 
-        /*
-         * You can check fields that are set by DB, like ID or date of record creation.
-         */
         for (var event : result) {
             assertNotNull(event.getId());
             assertNotNull(event.getCreated());
         }
     }
 
-    /*
-     * TODO: fix naming.
-     *
-     * Add Test postfix to methods names, like 'getByIdTest()'.
-     */
     @Test
     @DisplayName("Checking correctness of the search by id.")
     void getByIdTest() {
 
-        /*
-         * TODO: fix dates as in update method below.
-         *
-         * LocalDate.ofEpochDay(long number) << But you try to pass '2023-5-25' like a
-         * date.
-         *
-         * Assuming that this timestamp is in seconds: 2023525
-         * GMT: Saturday, January 24, 1970 10:05:25 AM
-         * Your time zone: Saturday, January 24, 1970 1:05:25 PM GMT+03:00
-         * Relative: 54 years ago
-         *
-         * And do not try to pass concrete date.
-         * Checks is relative to date of tests execution.
-         * If you provide Sep 14 2023 in date that checked
-         * by {@link FutureOrPresent} annotation,
-         * in Sep 15 2023 your tests become invalid.
-         *
-         */
         // given:
         EventPublication eventPublication = new EventPublication(
                 "Title1",
@@ -97,7 +67,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
                 null,
                 null,
                 "event/banner1",
-                LocalDate.now(), // LocalDate.ofEpochDay(long number)
+                LocalDate.now(),
                 LocalDate.now().plusDays(10));
 
         // when:
@@ -159,7 +129,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
                 null,
                 "event/banner3",
                 LocalDate.now(),
-                LocalDate.now().plusDays(10));   // << The same is in other dates. TODO: fix wrong method parameter.
+                LocalDate.now().plusDays(10));
 
         // when:
         Event eventDelete = eventService.save(eventPublication);
@@ -167,11 +137,6 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         eventService.deleteEventById(id);
 
         // then:
-        /*
-         * You throw an exception in your method when the Event is not found.
-         * And, as we want, it is not found.
-         * So, you should check that an exception is thrown in assertions.
-         */
         assertThrows(EntityNotFoundException.class, () -> eventService.getById(id),
                 "Event with `ID: " + id + "` was not found!");
     }
