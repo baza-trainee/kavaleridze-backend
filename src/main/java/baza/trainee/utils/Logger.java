@@ -2,19 +2,42 @@ package baza.trainee.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * The Logger class provides a simple way to log messages
+ * with different log levels (ERROR, WARNING, INFO) to the console and saves it to file.
+ * It uses SLF4J for actual logging and adds formatting for colorful and styled output in the console.
+ */
 @Slf4j
 public class Logger {
 
     private static final int LINE_LENGTH = 40;
 
+    /**
+     * Logs an error message with the specified title and message.
+     *
+     * @param title   The title of the log entry.
+     * @param message The message to be logged.
+     */
     public static void error(final String title, final String message) {
         logMessage("[ERROR]", title, message);
     }
 
+    /**
+     * Logs a warning message with the specified title and message.
+     *
+     * @param title   The title of the log entry.
+     * @param message The message to be logged.
+     */
     public static void warning(final String title, final String message) {
         logMessage("[WARNING]", title, message);
     }
 
+    /**
+     * Logs an info message with the specified title and message.
+     *
+     * @param title   The title of the log entry.
+     * @param message The message to be logged.
+     */
     public static void info(final String title, final String message) {
         logMessage("[INFO]", title, message);
     }
