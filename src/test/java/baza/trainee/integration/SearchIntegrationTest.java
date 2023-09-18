@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Import({ EventTestDataInitializer.class })
-public class SearchIntegrationTest extends AbstractIntegrationTest {
+class SearchIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private SearchService searchService;

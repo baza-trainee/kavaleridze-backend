@@ -1,23 +1,23 @@
 package baza.trainee.service;
 
-import baza.trainee.integration.MockConfiguration;
-import baza.trainee.integration.RedisTestConfig;
 import baza.trainee.service.impl.MailServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Import({ RedisTestConfig.class, MockConfiguration.class })
-public class MailServiceTest {
+class MailServiceTest {
 
     @Autowired
     private MailServiceImpl mailService;
+
+    @MockBean
+    private EventService eventService;
 
     @Test
     void testBuildMsgForUser() throws IOException {
