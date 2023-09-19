@@ -1,7 +1,6 @@
 package baza.trainee.controller;
 
 import baza.trainee.service.ImageService;
-import baza.trainee.utils.LoggingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ImageController.class)
-public class ImageControllerTest {
+class ImageControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,11 +30,8 @@ public class ImageControllerTest {
     @MockBean
     private ImageService imageService;
 
-    @MockBean
-    private LoggingService loggingService;
-
     @Test
-    public void testGetImage() throws Exception {
+    void testGetImage() throws Exception {
         var file = new File("src/test/resources/test-images/test.jpg");
         var resource = new UrlResource(file.toURI());
         byte[] imageBytes = resource.getContentAsByteArray();
