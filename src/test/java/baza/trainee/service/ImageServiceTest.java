@@ -98,7 +98,9 @@ class ImageServiceTest {
         imageService.persist(List.of(generatedFileName), sessionId);
 
         var createdOriginalFile = originalDirectory.resolve(generatedFileName).toFile();
-        var createdCompressedFile = compressedDirectory.resolve(generatedFileName).toFile();
+        var createdCompressedFile = compressedDirectory
+                .resolve(generatedFileName.replaceFirst("\\..+$", ".webp"))
+                .toFile();
 
         // then:
         assertTrue(createdOriginalFile.exists());
@@ -124,7 +126,9 @@ class ImageServiceTest {
     void loadResourceTest() throws IOException {
 
         // given:
-        var file = new MockMultipartFile(testImage.getName(), new FileInputStream(testImage));
+        var file = new MockMultipartFile(
+                testImage.getName().replaceFirst("\\..+$", ".webp"),
+                new FileInputStream(testImage));
         var sessionId = "fakeSessionId";
 
         // when:
