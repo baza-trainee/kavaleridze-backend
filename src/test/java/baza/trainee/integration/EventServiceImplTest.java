@@ -83,7 +83,6 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
     @Test
     @DisplayName("Checking correctness of update object.")
->>>>>>> dev
     void updateTest() {
 
         // given:
