@@ -1,6 +1,5 @@
 package baza.trainee.integration;
 
-import org.junit.jupiter.api.AfterAll;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -28,8 +27,4 @@ abstract class AbstractIntegrationTest {
         System.setProperty("spring.data.redis.port", redis.getMappedPort(REDIS_PORT).toString());
     }
 
-    @AfterAll
-    static void tearDown() {
-        redis.stop();
-    }
 }
