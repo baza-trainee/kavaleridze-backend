@@ -67,12 +67,20 @@ class ImageServiceTest {
     void storeToTempTest() throws IOException {
 
         // given:
-        var file = new MockMultipartFile(testImage.getName(), new FileInputStream(testImage));
+        var file = new MockMultipartFile(
+                testImage.getName(),
+                testImage.getName(),
+                "image/jpeg",
+                new FileInputStream(testImage));
+
         var sessionId = "fakeSessionId";
+
         var desktopDestDir = rootImageLocation
+                .resolve(tempDir)
                 .resolve(sessionId)
                 .resolve(desktopDir);
         var previewDestDir = rootImageLocation
+                .resolve(tempDir)
                 .resolve(sessionId)
                 .resolve(previewDir);
 
