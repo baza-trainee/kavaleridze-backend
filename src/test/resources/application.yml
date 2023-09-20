@@ -32,7 +32,8 @@ mail:
 resources:
   files:
     images:
-      root: 'images'
+      root: 'files'
+      images: 'images'
       original: 'original'
       compressed: 'compressed'
       temporary: 'temp'
