@@ -1,7 +1,10 @@
 package baza.trainee.service;
 
+import baza.trainee.config.ImageCompressionConfig;
 import baza.trainee.config.StorageProperties;
 import baza.trainee.service.impl.ImageServiceImpl;
+import baza.trainee.service.impl.ImageServiceImpl.ImageType;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -18,25 +21,28 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImageServiceTest {
-    private static final String ORIGINAL_IMAGES_LOCATION = "original";
-    private static final String COMPRESSED_IMAGES_LOCATION = "compressed";
-    private static final String TEMP_IMAGES_LOCATION = "temp";
+
+    private StorageProperties storageProperties = new StorageProperties();
+    private ImageCompressionConfig imageProperties = new ImageCompressionConfig();
 
     @TempDir
     private Path rootImageLocation;
     private File testImage;
 
+    private String desktopDir;
+    private String previewDir;
+    private String tempDir;
+
     private ImageService imageService;
 
     @BeforeEach
     void init() {
-        var properties = new StorageProperties();
-        properties.setRootImageLocation(rootImageLocation.toString());
-        properties.setOriginalImagesLocation(ORIGINAL_IMAGES_LOCATION);
-        properties.setCompressedImagesLocation(COMPRESSED_IMAGES_LOCATION);
-        properties.setTempImagesLocation(TEMP_IMAGES_LOCATION);
+        storageProperties.setRootImageLocation(rootImageLocation.toString());
+        desktopDir = storageProperties.getOriginalImagesLocation();
+        previewDir = storageProperties.getCompressedImagesLocation();
+        tempDir = storageProperties.getTempImagesLocation();
 
-        imageService = new ImageServiceImpl(properties);
+        imageService = new ImageServiceImpl(storageProperties, imageProperties);
 
         testImage = new File("src/test/resources/test-images/test.jpg");
     }
@@ -45,20 +51,15 @@ class ImageServiceTest {
     void initializationTest() {
 
         // given:
-        Path originalPath = rootImageLocation.resolve(ORIGINAL_IMAGES_LOCATION);
-        Path compressedPath = rootImageLocation.resolve(ORIGINAL_IMAGES_LOCATION);
-        Path tempPath = rootImageLocation.resolve(ORIGINAL_IMAGES_LOCATION);
+        Path tempPath = rootImageLocation.resolve(tempDir);
 
-        File originalDirectory = new File(originalPath.toUri());
-        File compressedDirectory = new File(originalPath.toUri());
-        File tempDirectory = new File(originalPath.toUri());
+        File originalDirectory = new File(rootImageLocation.toUri());
+        File tempDirectory = new File(tempPath.toUri());
 
         // expected:
-        assertTrue(Files.isDirectory(originalPath));
-        assertTrue(Files.isDirectory(compressedPath));
+        assertTrue(Files.isDirectory(rootImageLocation));
         assertTrue(Files.isDirectory(tempPath));
         assertTrue(originalDirectory.exists());
-        assertTrue(compressedDirectory.exists());
         assertTrue(tempDirectory.exists());
     }
 
@@ -68,39 +69,55 @@ class ImageServiceTest {
         // given:
         var file = new MockMultipartFile(testImage.getName(), new FileInputStream(testImage));
         var sessionId = "fakeSessionId";
-        var destinationDirectory = rootImageLocation.resolve(TEMP_IMAGES_LOCATION).resolve(sessionId);
+        var desktopDestDir = rootImageLocation
+                .resolve(sessionId)
+                .resolve(desktopDir);
+        var previewDestDir = rootImageLocation
+                .resolve(sessionId)
+                .resolve(previewDir);
 
         // when:
-        String generatedFileName = imageService.storeToTemp(file, sessionId);
+        var generatedFileName = imageService.storeToTemp(file, sessionId);
 
         // then:
         assertFalse(generatedFileName.isBlank());
 
         // when:
-        File createdFile = destinationDirectory.resolve(generatedFileName).toFile();
+        var createdDesktopFile = desktopDestDir.resolve(generatedFileName).toFile();
+        var createdPreviewFile = previewDestDir.resolve(generatedFileName).toFile();
 
         // then:
-        assertTrue(createdFile.exists());
+        assertTrue(createdDesktopFile.exists());
+        assertTrue(createdPreviewFile.exists());
     }
 
     @Test
     void persistTest() throws IOException {
 
         // given:
-        var file = new MockMultipartFile(testImage.getName(), new FileInputStream(testImage));
-        var sessionId = "fakeSessionId";
-        var originalDirectory = rootImageLocation.resolve(ORIGINAL_IMAGES_LOCATION);
-        var compressedDirectory = rootImageLocation.resolve(COMPRESSED_IMAGES_LOCATION);
+        String imageFileName = testImage.getName();
 
+        var file = new MockMultipartFile(imageFileName, new FileInputStream(testImage));
+        var sessionId = "fakeSessionId";
+
+        var generatedFileId = imageService.storeToTemp(file, sessionId);
+
+        // Path => /root/image-UUID/desktop/file.webp
+        var createdOriginalFile = rootImageLocation
+                .resolve(generatedFileId)
+                .resolve(desktopDir)
+                .resolve(imageFileName.replaceFirst("\\..+$", ".webp"))
+                .toFile();
+
+        // Path => /root/image-UUID/preview/file.webp
+        var createdCompressedFile = rootImageLocation
+                .resolve(generatedFileId)
+                .resolve(previewDir)
+                .resolve(imageFileName.replaceFirst("\\..+$", ".webp"))
+                .toFile();
 
         // when:
-        String generatedFileName = imageService.storeToTemp(file, sessionId);
-        imageService.persist(List.of(generatedFileName), sessionId);
-
-        var createdOriginalFile = originalDirectory.resolve(generatedFileName).toFile();
-        var createdCompressedFile = compressedDirectory
-                .resolve(generatedFileName.replaceFirst("\\..+$", ".webp"))
-                .toFile();
+        imageService.persist(List.of(generatedFileId), sessionId);
 
         // then:
         assertTrue(createdOriginalFile.exists());
@@ -115,8 +132,9 @@ class ImageServiceTest {
         var sessionId = "fakeSessionId";
 
         // when:
+        String type = ImageType.PREVIEW.getValue();
         String generatedFileName = imageService.storeToTemp(file, sessionId);
-        byte[] tempResource = imageService.loadTempResource(generatedFileName, sessionId);
+        byte[] tempResource = imageService.loadTempResource(generatedFileName, sessionId, type);
 
         // then:
         assertTrue(tempResource.length > 0);

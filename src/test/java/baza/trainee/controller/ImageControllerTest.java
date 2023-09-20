@@ -53,11 +53,11 @@ class ImageControllerTest {
         var resource = new UrlResource(file.toURI());
         byte[] imageBytes = resource.getContentAsByteArray();
 
-        when(imageService.loadTempResource(anyString(), anyString())).thenReturn(imageBytes);
+        when(imageService.loadTempResource(anyString(), anyString(), anyString())).thenReturn(imageBytes);
 
         MockHttpSession session = new MockHttpSession(null, "session123");
 
-        mockMvc.perform(get("/api/images/temp")
+        mockMvc.perform(get("/api/admin/images/temp")
                         .session(session)
                         .param("filename", "temp.jpg")
                         .contentType(MediaType.IMAGE_JPEG_VALUE))
@@ -78,7 +78,7 @@ class ImageControllerTest {
 
         when(imageService.storeToTemp(eq(mockFile), anyString())).thenReturn("example.jpg");
 
-        mockMvc.perform(multipart("/api/images").file(mockFile).session(session))
+        mockMvc.perform(multipart("/api/admin/images").file(mockFile).session(session))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("example.jpg"));
     }
