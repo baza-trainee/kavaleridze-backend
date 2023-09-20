@@ -2,7 +2,6 @@ package baza.trainee.utils;
 
 import net.coobird.thumbnailator.Thumbnails;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import baza.trainee.exceptions.custom.ImageCompressionException;
