@@ -68,7 +68,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
                 LocalDate.now().plusDays(10));
 
         // when:
-        Event newEvent = eventService.save(eventPublication);
+        Event newEvent = eventService.save(eventPublication, httpSession.getId());
         Event checkEvent = eventService.getById(newEvent.getId());
 
         // then:
@@ -90,7 +90,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
                 "event/banner2",
                 LocalDate.now(),
                 LocalDate.now().plusDays(10));
-        Event eventToUpdate = eventService.save(eventPublication);
+        Event eventToUpdate = eventService.save(eventPublication, httpSession.getId());
 
         var eventPublicationForUpdate = new EventPublication(
                 "TitleUpdate",
@@ -129,7 +129,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
                 LocalDate.now().plusDays(10));
 
         // when:
-        Event eventDelete = eventService.save(eventPublication);
+        Event eventDelete = eventService.save(eventPublication, httpSession.getId());
         String id = eventDelete.getId();
         eventService.deleteEventById(id);
 

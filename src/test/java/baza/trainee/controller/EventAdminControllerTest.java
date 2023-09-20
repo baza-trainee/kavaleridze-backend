@@ -59,7 +59,7 @@ public class EventAdminControllerTest {
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
         // when:
-        when(eventService.save(any(EventPublication.class))).thenReturn(any(Event.class));
+        when(eventService.save(any(EventPublication.class), httpSession.getId())).thenReturn(any(Event.class));
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
@@ -87,7 +87,7 @@ public class EventAdminControllerTest {
         var event = eventMapper.toEvent(eventDto);
 
         // when:
-        when(eventService.save(eventDto)).thenReturn(event);
+        when(eventService.save(eventDto, httpSession.getId())).thenReturn(event);
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
