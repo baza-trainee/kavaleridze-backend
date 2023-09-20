@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ImageController {
 
-    private final ImageService storageService;
+    private final ImageService imageService;
 
     /**
      * Get an image by filename and type.
@@ -34,7 +34,7 @@ public class ImageController {
             @RequestParam("filename") final String filename,
             @RequestParam("type") final String type
     ) {
-        return storageService.loadResource(filename, type);
+        return imageService.loadResource(filename, type);
     }
 
 }

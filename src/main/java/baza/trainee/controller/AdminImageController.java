@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminImageController {
 
-    private final ImageService storageService;
+    private final ImageService imageService;
 
     /**
      * Get a temporary image by filename and session.
@@ -35,7 +35,7 @@ public class AdminImageController {
             @RequestParam("type") final String type
     ) {
         String sessionId = session.getId();
-        return storageService.loadTempResource(filename, sessionId, type);
+        return imageService.loadTempResource(filename, sessionId, type);
     }
 
     /**
@@ -52,7 +52,7 @@ public class AdminImageController {
             @RequestParam("file") final MultipartFile file
     ) {
         String sessionId = session.getId();
-        return storageService.storeToTemp(file, sessionId);
+        return imageService.storeToTemp(file, sessionId);
     }
 
 }
