@@ -29,7 +29,7 @@ public class FileSystemStorageUtils {
     /**
      * Private constructor to prevent instantiation of this utility class.
      *
-     * @throws an {@link IllegalStateException} with the message "Utility class."
+     * @throws IllegalStateException with the message "Utility class."
      */
     private FileSystemStorageUtils() {
         throw new IllegalStateException("Utility class.");
@@ -107,6 +107,7 @@ public class FileSystemStorageUtils {
      *
      * @param src  Source {@link Path}.
      * @param dest Destination {@link Path}.
+     * @throws StorageException in the case of I/O Errors.
      */
     public static void copyRecursively(Path src, Path dest) {
         try {
@@ -121,13 +122,13 @@ public class FileSystemStorageUtils {
      * specified {@link StorageException}.
      *
      * @param root Root {@link Path} to delete.
-     * @throws {@link StorageException} in the case of I/O Errors.
+     * @throws StorageException in the case of I/O Errors.
      */
     public static void deleteRecursively(Path root) {
         try {
             FileSystemUtils.deleteRecursively(root);
         } catch (IOException e) {
-            throw new StorageException("Could not delete session temp folder");
+            throw new StorageException("Could not delete session temp folder: " + root);
         }
     }
 
@@ -136,7 +137,7 @@ public class FileSystemStorageUtils {
      *
      * @param uri {@link URI} to resource.
      * @return {@link UriResource}.
-     * @throws {@link StorageFileNotFoundException} if the given URI path is not
+     * @throws StorageFileNotFoundException if the given URI path is not
      *                valid.
      */
     public static UrlResource getResource(URI uri) {
@@ -152,7 +153,7 @@ public class FileSystemStorageUtils {
      *
      * @param resource {@link Resource} to read.
      * @return content as array of bytes.
-     * @throws {@link StorageFileNotFoundException} if could not read recourse.
+     * @throws StorageFileNotFoundException if could not read recourse.
      */
     public static byte[] getByteArrayFromResource(Resource resource) {
         try {
