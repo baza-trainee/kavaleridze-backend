@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -46,6 +47,7 @@ public class EventAdminControllerTest {
     @Test
     public void testCreateEventStatusIsCreated() throws Exception {
         // given:
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         var eventDto = new EventPublication(
                 "Title",
                 "Short Description",
@@ -59,7 +61,7 @@ public class EventAdminControllerTest {
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
         // when:
-        when(eventService.save(any(EventPublication.class), httpSession.getId())).thenReturn(any(Event.class));
+        when(eventService.save(any(EventPublication.class), session.getId())).thenReturn(any(Event.class));
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
@@ -73,6 +75,7 @@ public class EventAdminControllerTest {
     @NullAndEmptySource
     public void testCreateEventStatusBadRequest(String validatedField) throws Exception {
         // given:
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         var eventDto = new EventPublication(
                 validatedField,
                 validatedField,
@@ -87,7 +90,7 @@ public class EventAdminControllerTest {
         var event = eventMapper.toEvent(eventDto);
 
         // when:
-        when(eventService.save(eventDto, httpSession.getId())).thenReturn(event);
+        when(eventService.save(eventDto, session.getId())).thenReturn(event);
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders

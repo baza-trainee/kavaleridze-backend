@@ -2,6 +2,7 @@ package baza.trainee.integration;
 
 import baza.trainee.domain.dto.event.EventPublication;
 import baza.trainee.domain.mapper.EventMapper;
+import baza.trainee.domain.model.ContentBlock;
 import baza.trainee.domain.model.Event;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.service.EventService;
@@ -13,9 +14,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mock.web.MockHttpSession;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
+import static baza.trainee.domain.enums.BlockType.PICTURE_BLOCK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -57,18 +62,27 @@ class EventServiceImplTest extends AbstractIntegrationTest {
     void getByIdTest() {
 
         // given:
+        ContentBlock cb = new ContentBlock();
+        cb.setId("thisId");
+        cb.setOrder(14);
+        cb.setColumns(5);
+        cb.setBlockType(PICTURE_BLOCK);
+        cb.setTextContent("thisContent");
+        Set<ContentBlock> contentBlocks = new HashSet<>();
+        contentBlocks.add(cb);
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         EventPublication eventPublication = new EventPublication(
                 "Title1",
                 "Description1",
                 "Type1",
                 null,
-                null,
+                contentBlocks,
                 "event/banner1",
                 LocalDate.now(),
                 LocalDate.now().plusDays(10));
 
         // when:
-        Event newEvent = eventService.save(eventPublication, httpSession.getId());
+        Event newEvent = eventService.save(eventPublication, session.getId());
         Event checkEvent = eventService.getById(newEvent.getId());
 
         // then:
@@ -81,16 +95,25 @@ class EventServiceImplTest extends AbstractIntegrationTest {
     void updateTest() {
 
         // given:
+        ContentBlock cb = new ContentBlock();
+        cb.setId("thisId");
+        cb.setOrder(14);
+        cb.setColumns(5);
+        cb.setBlockType(PICTURE_BLOCK);
+        cb.setTextContent("thisContent");
+        Set<ContentBlock> contentBlocks = new HashSet<>();
+        contentBlocks.add(cb);
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         var eventPublication = new EventPublication(
                 "Title2",
                 "Description2",
                 "Type2",
                 null,
-                null,
+                contentBlocks,
                 "event/banner2",
                 LocalDate.now(),
                 LocalDate.now().plusDays(10));
-        Event eventToUpdate = eventService.save(eventPublication, httpSession.getId());
+        Event eventToUpdate = eventService.save(eventPublication, session.getId());
 
         var eventPublicationForUpdate = new EventPublication(
                 "TitleUpdate",
@@ -118,18 +141,27 @@ class EventServiceImplTest extends AbstractIntegrationTest {
     void deleteEventByIdTest() {
 
         // given:
+        ContentBlock cb = new ContentBlock();
+        cb.setId("thisId");
+        cb.setOrder(14);
+        cb.setColumns(5);
+        cb.setBlockType(PICTURE_BLOCK);
+        cb.setTextContent("thisContent");
+        Set<ContentBlock> contentBlocks = new HashSet<>();
+        contentBlocks.add(cb);
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         var eventPublication = new EventPublication(
                 "Title3",
                 "Description3",
                 "Type3",
                 null,
-                null,
+                contentBlocks,
                 "event/banner3",
                 LocalDate.now(),
                 LocalDate.now().plusDays(10));
 
         // when:
-        Event eventDelete = eventService.save(eventPublication, httpSession.getId());
+        Event eventDelete = eventService.save(eventPublication, session.getId());
         String id = eventDelete.getId();
         eventService.deleteEventById(id);
 
