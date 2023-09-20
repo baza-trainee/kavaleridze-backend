@@ -46,7 +46,6 @@ public class FileSystemStorageUtils {
     public static Path loadPath(final String filename, final Path root) {
         try (var pathStream = Files.walk(root, Integer.MAX_VALUE)) {
             return pathStream
-                    .filter(Files::isRegularFile)
                     .filter(path -> path.getFileName().equals(Paths.get(filename)))
                     .findFirst()
                     .orElseThrow(() -> new StorageException("Failed to find files"));
