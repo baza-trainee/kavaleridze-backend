@@ -36,3 +36,11 @@ resources:
       original: 'original'
       compressed: 'compressed'
       temporary: 'temp'
+
+images:
+  preview:
+    width: 640
+    quality: 0.5
+  preview:
+    width: 640
+    quality: 0.5
