@@ -14,10 +14,16 @@ import baza.trainee.service.ImageService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controller class for managing image-related HTTP requests and responses.
+ * This controller provides endpoints for retrieving and saving temporary images.
+ *
+ * @author Evhen Malysh
+ */
 @RestController
 @RequestMapping("/api/admin/images")
 @RequiredArgsConstructor
-public class AdminImageController {
+public class ImageAdminController {
 
     private final ImageService imageService;
 

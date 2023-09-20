@@ -38,9 +38,9 @@ resources:
       temporary: 'temp'
 
 images:
-  preview:
-    width: 640
-    quality: 0.5
+  desktop:
+    width: 1024
+    quality: 1
   preview:
     width: 640
     quality: 0.5

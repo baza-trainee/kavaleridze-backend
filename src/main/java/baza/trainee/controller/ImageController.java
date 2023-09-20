@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Controller class for managing image-related HTTP requests and responses.
- * This controller provides endpoints for retrieving images and saving temporary images.
+ * This controller provides endpoints for retrieving images.
  *
  * @author Evhen Malysh
  */
