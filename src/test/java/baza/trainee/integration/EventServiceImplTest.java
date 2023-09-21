@@ -6,6 +6,7 @@ import baza.trainee.domain.model.ContentBlock;
 import baza.trainee.domain.model.Event;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.service.EventService;
+import baza.trainee.service.ImageService;
 import baza.trainee.service.SearchService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,9 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static baza.trainee.domain.enums.BlockType.PICTURE_BLOCK;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Import({EventTestDataInitializer.class})
 class EventServiceImplTest extends AbstractIntegrationTest {
@@ -36,6 +35,9 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
     @MockBean
     private SearchService searchService;
+
+    @MockBean
+    private ImageService imageService;
 
     @Test
     @DisplayName("Checking number of pages and objects found.")
@@ -68,25 +70,28 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         cb.setColumns(5);
         cb.setBlockType(PICTURE_BLOCK);
         cb.setTextContent("thisContent");
-        Set<ContentBlock> contentBlocks = new HashSet<>();
-        contentBlocks.add(cb);
         MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         EventPublication eventPublication = new EventPublication(
                 "Title1",
                 "Description1",
                 "Type1",
                 null,
-                contentBlocks,
+                Set.of(cb),
                 "event/banner1",
                 LocalDate.now(),
                 LocalDate.now().plusDays(10));
 
         // when:
-        Event newEvent = eventService.save(eventPublication, session.getId());
-        Event checkEvent = eventService.getById(newEvent.getId());
+        Event createdEvent = eventService.save(eventPublication, session.getId());
+        System.out.println(createdEvent);
 
         // then:
-        assertEquals(newEvent, checkEvent);
+        assertFalse(createdEvent.getId().isEmpty());
+        assertNotNull(createdEvent.getCreated());
+        assertEquals(eventPublication.title(), createdEvent.getTitle());
+        assertEquals(eventPublication.description(), createdEvent.getDescription());
+        assertEquals(eventPublication.begin(), createdEvent.getBegin());
+        assertEquals(eventPublication.end(), createdEvent.getEnd());
     }
 
 
