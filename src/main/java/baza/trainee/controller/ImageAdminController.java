@@ -16,7 +16,8 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Controller class for managing image-related HTTP requests and responses.
- * This controller provides endpoints for retrieving and saving temporary images.
+ * This controller provides endpoints for retrieving and saving temporary
+ * images.
  *
  * @author Evhen Malysh
  */
@@ -32,6 +33,7 @@ public class ImageAdminController {
      *
      * @param session  The HTTP session associated with the request.
      * @param filename The name of the temporary image file.
+     * @param type     The type of the image (either "preview" or "original").
      * @return A byte array containing the temporary image data.
      */
     @GetMapping(value = "/temp", produces = MediaType.IMAGE_JPEG_VALUE)
