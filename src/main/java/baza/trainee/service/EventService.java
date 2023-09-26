@@ -24,7 +24,7 @@ public interface EventService {
      * Create a new event based on the provided EventPublicationDto.
      *
      * @param newEvent The EventPublicationDto containing information about the event to be created.
-     * @param id
+     * @param id - user id
      * @return Saved event.
      */
     Event save(EventPublication newEvent, String id);

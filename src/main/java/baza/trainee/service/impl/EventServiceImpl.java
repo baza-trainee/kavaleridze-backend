@@ -42,7 +42,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event save(EventPublication newEvent, String sessionId) {
         Event eventToSave = eventMapper.toEvent(newEvent);
-        Event savedEvent = eventRepository.save(eventToSave);
+        //Event savedEvent = eventRepository.save(eventToSave);
 
         var fileNames = newEvent.content().stream()
                 .filter(cb -> cb.getBlockType().equals(BlockType.PICTURE_BLOCK)
@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService {
 
         imageService.persist(fileNames, sessionId);
 
-        return eventRepository.save(savedEvent);
+        return eventRepository.save(eventToSave);
     }
 
     @Override

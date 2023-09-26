@@ -83,7 +83,6 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
         // when:
         Event createdEvent = eventService.save(eventPublication, session.getId());
-        System.out.println(createdEvent);
 
         // then:
         assertFalse(createdEvent.getId().isEmpty());
