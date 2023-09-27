@@ -7,5 +7,5 @@ import com.redis.om.spring.repository.RedisDocumentRepository;
 public interface AdminRepository extends RedisDocumentRepository<Admin, String> {
 
 
-    Admin findByEmailAndPassword(String email, String password);
+    Admin findByEmail(String email);
 }

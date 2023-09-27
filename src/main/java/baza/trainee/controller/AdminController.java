@@ -1,30 +1,33 @@
 package baza.trainee.controller;
 
-import baza.trainee.domain.model.Admin;
 import baza.trainee.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+
+        /**
+        * AdminController handles all the admin-specific functionalities.
+        */
 
 @RestController
 @RequestMapping("/admin")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
 
     private final AdminService adminService;
 
+    /**
+     * Constructor-based Dependency Injection.
+     *
+     * @param adminService the admin service
+     */
     @Autowired
     public AdminController(AdminService adminService) {
         this.adminService = adminService;
     }
 
-    // Define endpoints for admin operations (login, authorization) here
-
-    @PostMapping("/login")
-    public Admin login(@RequestParam String email, @RequestParam String password) {
-        // Implement the admin login endpoint using AdminService
-        return adminService.authenticate(email, password);
-    }
-
+    // The login endpoint has been removed as it is handled by Spring Security.
 }
+

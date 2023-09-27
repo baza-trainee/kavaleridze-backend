@@ -4,28 +4,30 @@ import baza.trainee.domain.model.Admin;
 import baza.trainee.repository.AdminRepository;
 import baza.trainee.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AdminServiceImpl implements AdminService {
+
     private final AdminRepository adminRepository;
+    private PasswordEncoder passwordEncoder;
+
+    public Admin createAdmin(String email, String rawPassword) {
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
+        Admin admin = new Admin();
+        admin.setEmail(email);
+        admin.setPassword(encodedPassword);
+
+        return adminRepository.save(admin);
+    }
 
     @Autowired
-    public AdminServiceImpl(AdminRepository adminRepository) {
+    public AdminServiceImpl(AdminRepository adminRepository, PasswordEncoder passwordEncoder) {
         this.adminRepository = adminRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
-    public Admin authenticate(String email, String password) {
-        Admin admin = adminRepository.findByEmailAndPassword(email, password);
-        if (admin == null || admin.getPassword() == null) {
-            throw new IllegalArgumentException("Invalid email or password");
-        }
-
-        if (!admin.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Invalid email or password");
-        }
-
-        return admin;
-    }
+    // Removed authenticate method
 }

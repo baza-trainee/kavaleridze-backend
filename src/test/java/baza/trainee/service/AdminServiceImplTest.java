@@ -1,67 +1,50 @@
 package baza.trainee.service;
 
 import baza.trainee.domain.model.Admin;
-import baza.trainee.repository.AdminRepository;
 import baza.trainee.service.impl.AdminServiceImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import baza.trainee.repository.AdminRepository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AdminServiceImplTest {
-    @InjectMocks
-    private AdminServiceImpl adminService;
 
     @Mock
     private AdminRepository adminRepository;
 
-    @Test
-    public void testAuthenticate_ValidAdmin() {
-        // Create a test admin user with known email and password values
-        String testEmail = "testadmin@example.com";
-        String testPassword = "testpassword";
-        Admin testAdmin = new Admin();
-        testAdmin.setEmail(testEmail);
-        testAdmin.setPassword(testPassword);
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
-        // Set up your repository mock to return this test admin when findByEmailAndPassword is called
-        when(adminRepository.findByEmailAndPassword(testEmail, testPassword)).thenReturn(testAdmin);
-
-        // Perform the authentication
-        Admin authenticatedAdmin = adminService.authenticate(testEmail, testPassword);
-
-        // Assert that the authentication was successful
-        assertNotNull(authenticatedAdmin);
-        assertEquals(testAdmin.getEmail(), authenticatedAdmin.getEmail());
-        assertEquals(testAdmin.getPassword(), authenticatedAdmin.getPassword());
-    }
+    @InjectMocks
+    private AdminServiceImpl adminService;
 
     @Test
-    public void testAuthenticate_InvalidAdmin() {
-        // Define your mock behavior for an invalid admin
+    public void testCreateAdmin() {
+        // Given
         String email = "admin@example.com";
-        String password = "password";
+        String rawPassword = "password";
+        String encodedPassword = "encodedPassword";
 
-        when(adminRepository.findByEmailAndPassword(email, password)).thenReturn(null);
+        Admin admin = new Admin();
+        admin.setEmail(email);
+        admin.setPassword(encodedPassword);
 
-        // Call the method to be tested and assert that it throws the expected exception
-        assertThrows(IllegalArgumentException.class, () -> adminService.authenticate(email, "password"));
-    }
+        when(passwordEncoder.encode(rawPassword)).thenReturn(encodedPassword);
+        when(adminRepository.save(any(Admin.class))).thenReturn(admin);
 
-    @Test
-    public void testAuthenticate_NullEmail() {
-        // Test when a null email is provided, it should throw an exception
-        assertThrows(IllegalArgumentException.class, () -> adminService.authenticate(null, "password"));
-    }
+        // When
+        Admin result = adminService.createAdmin(email, rawPassword);
 
-    @Test
-    public void testAuthenticate_NullPassword() {
-        // Test when a null password is provided, it should throw an exception
-        assertThrows(IllegalArgumentException.class, () -> adminService.authenticate("admin@example.com", null));
+        // Then
+        verify(passwordEncoder).encode(rawPassword);
+        verify(adminRepository).save(any(Admin.class));
     }
 }
