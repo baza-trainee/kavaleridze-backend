@@ -1,6 +1,7 @@
 package baza.trainee.controller;
 
 
+import baza.trainee.controller.admin.EventAdminController;
 import baza.trainee.domain.dto.event.EventPublication;
 import baza.trainee.domain.mapper.EventMapper;
 import baza.trainee.domain.model.ContentBlock;
