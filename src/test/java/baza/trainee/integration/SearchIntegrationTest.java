@@ -52,10 +52,10 @@ class SearchIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void byContentTest() {
-        var q = "Унікальний контент 0 - 0";
+        var q = "Унікальний контент";
 
         var responses = searchService.search(q);
 
-        assertEquals(1, responses.size());
+        assertEquals(20, responses.size());
     }
 }

@@ -1,7 +1,5 @@
 package baza.trainee.integration;
 
-import baza.trainee.domain.enums.BlockType;
-import baza.trainee.domain.model.ContentBlock;
 import baza.trainee.domain.model.Event;
 import baza.trainee.repository.EventRepository;
 import lombok.Getter;
@@ -54,21 +52,9 @@ class EventTestDataInitializer {
                 event.addTag("null");
 
                 IntStream.range(0, CONTENT_BLOCKS_COUNT).forEach(j -> {
-                    var block = new ContentBlock();
-
-                    block.setOrder(j);
-
-                    var type = (j % 2 == 0) ? BlockType.PICTURE_BLOCK
-                            : BlockType.PICTURE_TEXT_BLOCK;
-                    block.setBlockType(type);
-
-                    int column = ThreadLocalRandom.current().nextInt(1) + 1;
-                    block.setColumns(column);
-
-                    block.setPictureLink("https://example.com/api/image/" + j);
-                    block.setTextContent("Унікальний контент " + i + " - " + j);
-
-                    event.addContentBlock(block);
+                    String content = "Унікальний контент " + i + j;
+                    event.setContent(content);
+                    System.out.println(content);
                 });
 
                 repository.save(event);

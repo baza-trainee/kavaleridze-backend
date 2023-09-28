@@ -1,8 +1,9 @@
 package baza.trainee.domain.mapper;
 
 
-import baza.trainee.domain.dto.event.EventPublication;
 import baza.trainee.domain.model.Event;
+import baza.trainee.dto.EventPublication;
+import baza.trainee.dto.EventResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -25,4 +26,7 @@ public interface EventMapper {
     @Mapping(target = "bannerPreviewURI", ignore = true)
     @Mapping(target = "id", ignore = true)
     Event toEvent(EventPublication publication);
+
+    EventResponse toResponse(Event event);
+
 }

@@ -1,9 +1,10 @@
 package baza.trainee.service.impl;
 
-import baza.trainee.domain.dto.event.EventPublication;
-import baza.trainee.domain.enums.BlockType;
+
 import baza.trainee.domain.mapper.EventMapper;
 import baza.trainee.domain.model.Event;
+import baza.trainee.dto.EventPublication;
+import baza.trainee.dto.EventResponse;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.repository.EventRepository;
 import baza.trainee.service.EventService;
@@ -12,7 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.function.Supplier;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -34,39 +36,44 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event getById(String id) {
-        return eventRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Event", "ID: " + id));
+    public EventResponse getById(String id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(getNotFoundExceptionSupplier(id));
+        return eventMapper.toResponse(event);
     }
 
     @Override
-    public Event save(EventPublication newEvent, String sessionId) {
+    public EventResponse save(EventPublication newEvent, String sessionId) {
         Event eventToSave = eventMapper.toEvent(newEvent);
 
-        var fileNames = newEvent.content().stream()
-                .filter(cb -> cb.getBlockType().equals(BlockType.PICTURE_BLOCK)
-                || cb.getBlockType().equals(BlockType.PICTURE_TEXT_BLOCK))
-                .map(cb-> cb.getPictureLink())
-                .collect(Collectors.toList());
+        var fileNames = newEvent.getBannerTempURI();
 
-        imageService.persist(fileNames, sessionId);
+        imageService.persist(List.of(fileNames), sessionId);
+        Event savedEvent = eventRepository.save(eventToSave);
 
-        return eventRepository.save(eventToSave);
+        return eventMapper.toResponse(savedEvent);
     }
 
     @Override
-    public Event update(String id, EventPublication updatedEvent) {
-        var eventToUpdate = getById(id);
-        var eventForUpdate = eventMapper.toEvent(updatedEvent);
+    public EventResponse update(String id, EventPublication publication) {
+        var eventToUpdate = eventRepository.findById(id)
+                .orElseThrow(getNotFoundExceptionSupplier(id));
+        var eventForUpdate = eventMapper.toEvent(publication);
         eventForUpdate.setId(eventToUpdate.getId());
         eventForUpdate.setCreated(eventToUpdate.getCreated());
 
-        return eventRepository.update(eventForUpdate);
+        var updatedEvent = eventRepository.update(eventForUpdate);
+
+        return eventMapper.toResponse(updatedEvent);
     }
 
     @Override
     public void deleteEventById(String id) {
-        var event = getById(id);
-        eventRepository.delete(event);
+        getById(id);
+        eventRepository.deleteById(id);
+    }
+
+    private static Supplier<EntityNotFoundException> getNotFoundExceptionSupplier(String id) {
+        return () -> new EntityNotFoundException("Event", "ID: " + id);
     }
 }

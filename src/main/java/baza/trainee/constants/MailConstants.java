@@ -12,9 +12,9 @@ public final class MailConstants {
     public static final int MIN_MSG_LENGTH = 10;
     public static final int MAX_MSG_LENGTH = 300;
     public static final String FIELD_NAME_ERROR_MSG =
-            "Name should be between " + MIN_NAME_LENGTH + " and " + MAX_NAME_LENGTH + " characters";
-    public static final String FIELD_EMAIL_ERROR_MSG = "Invalid email";
+            "size must be between " + MIN_NAME_LENGTH + " and " + MAX_NAME_LENGTH;
+    public static final String FIELD_EMAIL_ERROR_MSG = "must be a well-formed email address";
     public static final String FIELD_MESSAGE_ERROR_MSG =
-            "Message should be between " + MIN_MSG_LENGTH + " and " + MAX_MSG_LENGTH + " characters";
-    public static final String NULL_FIELD_ERROR_MSG = "Filed cant be empty";
+            "size must be between " + MIN_MSG_LENGTH + " and " + MAX_MSG_LENGTH;
+    public static final String NULL_FIELD_ERROR_MSG = "must not be null";
 }

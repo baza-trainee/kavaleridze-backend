@@ -1,6 +1,6 @@
 package baza.trainee.controller;
 
-import baza.trainee.domain.dto.MailDto;
+import baza.trainee.dto.MailDto;
 import baza.trainee.service.MailService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -54,10 +54,10 @@ public class MailController {
         handleFieldsErrors(bindingResult);
 
         String msgForUser = mailService.buildMsgForUser();
-        mailService.sendEmail(mailDto.email(), msgForUser, MUSEUM_SUBJECT);
+        mailService.sendEmail(mailDto.getEmail(), msgForUser, MUSEUM_SUBJECT);
 
-        String msgForMuseum = mailService.buildMsgForMuseum(mailDto.firstName(), mailDto.lastName(),
-                mailDto.email(), mailDto.message());
+        String msgForMuseum = mailService.buildMsgForMuseum(mailDto.getFirstName(), mailDto.getLastName(),
+                mailDto.getEmail(), mailDto.getMessage());
         mailService.sendEmail(museumEmail, msgForMuseum, MUSEUM_SUBJECT);
 
         return ResponseEntity.ok().build();

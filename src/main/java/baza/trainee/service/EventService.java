@@ -1,7 +1,8 @@
 package baza.trainee.service;
 
-import baza.trainee.domain.dto.event.EventPublication;
 import baza.trainee.domain.model.Event;
+import baza.trainee.dto.EventPublication;
+import baza.trainee.dto.EventResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,7 +19,7 @@ public interface EventService {
      * @param id The unique identifier of the event.
      * @return An Event with given ID.
      */
-    Event getById(String id);
+    EventResponse getById(String id);
 
     /**
      * Create a new event based on the provided EventPublicationDto.
@@ -27,7 +28,7 @@ public interface EventService {
      * @param id - user id
      * @return Saved event.
      */
-    Event save(EventPublication newEvent, String id);
+    EventResponse save(EventPublication newEvent, String id);
 
     /**
      * Update an existing event identified by id.
@@ -35,7 +36,7 @@ public interface EventService {
      * @param id The unique identifier of the event to be updated.
      * @return Updated event.
      */
-    Event update(String id, EventPublication updatedEvent);
+    EventResponse update(String id, EventPublication updatedEvent);
 
     /**
      * Delete an event identified by its id.

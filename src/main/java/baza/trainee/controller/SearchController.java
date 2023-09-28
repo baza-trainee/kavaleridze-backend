@@ -1,6 +1,6 @@
 package baza.trainee.controller;
 
-import baza.trainee.domain.dto.SearchResponse;
+import baza.trainee.dto.SearchResponse;
 import baza.trainee.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

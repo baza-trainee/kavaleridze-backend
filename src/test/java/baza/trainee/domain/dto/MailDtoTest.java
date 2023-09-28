@@ -1,5 +1,6 @@
 package baza.trainee.domain.dto;
 
+import baza.trainee.dto.MailDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -38,7 +39,7 @@ public class MailDtoTest {
     @Test
     void createInvalidMailDto() {
         Set<ConstraintViolation<MailDto>> violations = validator.validate(invalidMailDto);
-        assertEquals(6, violations.size());
+        assertEquals(4, violations.size());
     }
 
     @Test

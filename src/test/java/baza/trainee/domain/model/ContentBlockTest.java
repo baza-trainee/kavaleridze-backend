@@ -1,6 +1,6 @@
 package baza.trainee.domain.model;
 
-import baza.trainee.domain.enums.BlockType;
+import baza.trainee.dto.ContentBlock.BlockTypeEnum;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ContentBlockTest {
+class ContentBlockTest {
 
     private Validator validator;
     private ContentBlock validBlock;
@@ -24,7 +24,7 @@ public class ContentBlockTest {
         validator = factory.getValidator();
         validBlock = new ContentBlock();
         validBlock.setId("12");
-        validBlock.setBlockType(BlockType.PICTURE_TEXT_BLOCK);
+        validBlock.setBlockType(BlockTypeEnum.PICTURE_TEXT_BLOCK);
         validBlock.setOrder(2);
         validBlock.setColumns(4);
         validBlock.setPictureLink("https://example.com/banner.jpg");
@@ -32,7 +32,7 @@ public class ContentBlockTest {
     }
 
     @Test
-    public void testContentBlockWithValidData() {
+    void testContentBlockWithValidData() {
         // given:
         ContentBlock contentBlock = validBlock;
 
@@ -43,7 +43,7 @@ public class ContentBlockTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(ints = {-1})
-    public void testEventWithInvalidOrder(Integer order) {
+    void testEventWithInvalidOrder(Integer order) {
         // given:
         ContentBlock contentBlock = new ContentBlock();
         contentBlock.setOrder(order);
@@ -55,7 +55,7 @@ public class ContentBlockTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(ints = {-1})
-    public void testEventWithInvalidColumns(Integer columns) {
+    void testEventWithInvalidColumns(Integer columns) {
         // given:
         ContentBlock contentBlock = new ContentBlock();
         contentBlock.setColumns(columns);
@@ -66,7 +66,7 @@ public class ContentBlockTest {
 
     @ParameterizedTest
     @NullSource
-    public void testEventWithInvalidColumns(BlockType type) {
+    void testEventWithInvalidColumns(BlockTypeEnum type) {
         // given:
         ContentBlock contentBlock = new ContentBlock();
         contentBlock.setBlockType(type);

@@ -1,18 +1,16 @@
 package baza.trainee.controller;
 
 
-import baza.trainee.domain.dto.event.EventPublication;
 import baza.trainee.domain.mapper.EventMapper;
-import baza.trainee.domain.model.ContentBlock;
-import baza.trainee.domain.model.Event;
+import baza.trainee.dto.EventPublication;
 import baza.trainee.service.EventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -23,16 +21,15 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
+class EventAdminControllerTest {
 
-@WebMvcTest(EventAdminController.class)
-public class EventAdminControllerTest {
-
-    private final EventMapper eventMapper = Mappers.getMapper(EventMapper.class);
+    @Autowired
+    private EventMapper eventMapper;
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,24 +41,26 @@ public class EventAdminControllerTest {
     private EventService eventService;
 
     @Test
-    public void testCreateEventStatusIsCreated() throws Exception {
+    void testCreateEventStatusIsCreated() throws Exception {
         // given:
         MockHttpSession session = new MockHttpSession(null, "httpSessionId");
-        var eventDto = new EventPublication(
-                "Title",
-                "Short Description",
-                "PAINTING",
-                Set.of("tag1", "tag2"),
-                Set.of(new ContentBlock()),
-                "http://example.com/banner.jpg",
-                LocalDate.now(),
-                LocalDate.now().plusDays(1)
-        );
+        var eventDto = new EventPublication();
+        eventDto.title("Title");
+        eventDto.description("Short Description");
+        eventDto.type("PAINTING");
+        eventDto.tags(Set.of("tag1", "tag2"));
+        eventDto.content("content size is between 30 and 3000 characters");
+        eventDto.bannerTempURI("http://example.com/banner.jpg");
+        eventDto.begin(LocalDate.now());
+        eventDto.end(LocalDate.now().plusDays(1));
+
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
         var event = eventMapper.toEvent(eventDto);
+        var response = eventMapper.toResponse(event);
+
 
         // when:
-        when(eventService.save(any(EventPublication.class), anyString())).thenReturn(event);
+        when(eventService.save(any(EventPublication.class), anyString())).thenReturn(response);
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
@@ -69,29 +68,31 @@ public class EventAdminControllerTest {
                         .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
-                        .andExpect(status().isCreated());
+                .andExpect(status().isCreated());
     }
 
     @ParameterizedTest
     @NullAndEmptySource
-    public void testCreateEventStatusBadRequest(String validatedField) throws Exception {
+    void testCreateEventStatusBadRequest(String validatedField) throws Exception {
         // given:
         MockHttpSession session = new MockHttpSession(null, "httpSessionId");
-        var eventDto = new EventPublication(
-                validatedField,
-                validatedField,
-                validatedField,
-                Set.of("tag1", "tag2"),
-                Set.of(new ContentBlock()),
-                "http://example.com/banner.jpg",
-                LocalDate.now(),
-                LocalDate.now().plusDays(1)
-        );
+
+        var eventDto = new EventPublication();
+        eventDto.title(validatedField);
+        eventDto.description(validatedField);
+        eventDto.type(validatedField);
+        eventDto.tags(Set.of("tag1", "tag2"));
+        eventDto.content("content");
+        eventDto.bannerTempURI("http://example.com/banner.jpg");
+        eventDto.begin(LocalDate.now());
+        eventDto.end(LocalDate.now().plusDays(1));
+
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
         var event = eventMapper.toEvent(eventDto);
+        var response = eventMapper.toResponse(event);
 
         // when:
-        when(eventService.save(eventDto, session.getId())).thenReturn(event);
+        when(eventService.save(eventDto, session.getId())).thenReturn(response);
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
@@ -102,25 +103,26 @@ public class EventAdminControllerTest {
     }
 
     @Test
-    public void testUpdateEvent() throws Exception {
+    void testUpdateEvent() throws Exception {
         // given:
         String id = "12";
-        var eventRequest = new EventPublication(
-                "Title",
-                "Short Description",
-                "PAINTING",
-                Set.of("tag1", "tag2"),
-                Set.of(new ContentBlock()),
-                "http://example.com/banner.jpg",
-                LocalDate.now(),
-                LocalDate.now().plusDays(1)
-        );
+        var eventRequest = new EventPublication();
+        eventRequest.title("Title");
+        eventRequest.description("Short Description");
+        eventRequest.type("PAINTING");
+        eventRequest.tags(Set.of("tag1", "tag2"));
+        eventRequest.content("updated content size is between 30 and 3000 characters");
+        eventRequest.bannerTempURI("http://example.com/banner.jpg");
+        eventRequest.begin(LocalDate.now());
+        eventRequest.end(LocalDate.now().plusDays(1));
         var event = eventMapper.toEvent(eventRequest);
+        var response = eventMapper.toResponse(event);
+
 
         String eventDtoJson = objectMapper.writeValueAsString(eventRequest);
 
         // when:
-        when(eventService.update(id, eventRequest)).thenReturn(event);
+        when(eventService.update(id, eventRequest)).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/admin/events/{id}", id)
@@ -131,25 +133,27 @@ public class EventAdminControllerTest {
 
     @ParameterizedTest
     @NullAndEmptySource
-    public void testUpdateEventStatusBadRequest(String validatedField) throws Exception {
+    void testUpdateEventStatusBadRequest(String validatedField) throws Exception {
         // given:
         String id = "12";
 
-        var eventDto = new EventPublication(
-                validatedField,
-                validatedField,
-                validatedField,
-                Set.of("tag1", "tag2"),
-                Set.of(new ContentBlock()),
-                "http://example.com/banner.jpg",
-                LocalDate.now(),
-                LocalDate.now().plusDays(1)
-        );
+        var eventDto = new EventPublication();
+        eventDto.title(validatedField);
+        eventDto.description(validatedField);
+        eventDto.type(validatedField);
+        eventDto.tags(Set.of("tag1", "tag2"));
+        eventDto.content("content");
+        eventDto.bannerTempURI("http://example.com/banner.jpg");
+        eventDto.begin(LocalDate.now());
+        eventDto.end(LocalDate.now().plusDays(1));
+
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
         var event = eventMapper.toEvent(eventDto);
+        var response = eventMapper.toResponse(event);
+
 
         // when:
-        when(eventService.update(id, eventDto)).thenReturn(event);
+        when(eventService.update(id, eventDto)).thenReturn(response);
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
@@ -160,7 +164,7 @@ public class EventAdminControllerTest {
     }
 
     @Test
-    public void testDeleteEvent() throws Exception {
+    void testDeleteEvent() throws Exception {
         String eventId = "12";
 
         mockMvc.perform(MockMvcRequestBuilders

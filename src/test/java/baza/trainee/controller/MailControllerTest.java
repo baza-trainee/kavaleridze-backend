@@ -1,6 +1,6 @@
 package baza.trainee.controller;
 
-import baza.trainee.domain.dto.MailDto;
+import baza.trainee.dto.MailDto;
 import baza.trainee.exceptions.custom.EmailSendingException;
 import baza.trainee.service.MailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(MailController.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class MailControllerTest {
+class MailControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -46,7 +46,7 @@ public class MailControllerTest {
     }
 
     @Test
-    public void testSubmitContactFormWithValidData() throws Exception {
+    void testSubmitContactFormWithValidData() throws Exception {
         when(mailService.buildMsgForUser()).thenReturn("Message for user");
         when(mailService.buildMsgForMuseum(any(), any(), any(), any())).thenReturn("Message for museum");
 
@@ -57,24 +57,24 @@ public class MailControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
 
-        verify(mailService).sendEmail(validMailDto.email(), "Message for user", MUSEUM_SUBJECT);
+        verify(mailService).sendEmail(validMailDto.getEmail(), "Message for user", MUSEUM_SUBJECT);
         verify(mailService).sendEmail(museumEmail, "Message for museum", MUSEUM_SUBJECT);
     }
 
     @Test
-    public void testSubmitContactFormWithInvalidData() throws Exception {
+    void testSubmitContactFormWithInvalidData() throws Exception {
         mockMvc.perform(post("/api/feedback/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(notValidMailDto))
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message", is("email - Invalid email;")))
+                .andExpect(jsonPath("$.message", is("email - must be a well-formed email address;")))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void SubmitContactFormWithSendingError() throws Exception {
+    void SubmitContactFormWithSendingError() throws Exception {
         doThrow(new EmailSendingException(FAIL_SEND_MSG))
                 .when(mailService).sendEmail(any(), any(),any());
 

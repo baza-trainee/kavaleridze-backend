@@ -2,12 +2,15 @@ package baza.trainee.domain.model;
 
 import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -49,8 +52,9 @@ public class Event implements Post {
     @Setter(AccessLevel.PROTECTED)
     private Set<String> tags = new HashSet<>();
 
-    @Setter(AccessLevel.PROTECTED)
-    private Set<ContentBlock> content = new HashSet<>();
+    @Indexed
+    @NotBlank
+    private String content;
 
     private String bannerURI;
 
@@ -94,10 +98,6 @@ public class Event implements Post {
         this.tags.add(tag);
     }
 
-    public void addContentBlock(@Valid ContentBlock block) {
-        this.content.add(block);
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(id, title, description, type, tags, content, bannerURI, bannerPreviewURI, begin, end);
@@ -108,10 +108,9 @@ public class Event implements Post {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Event)) {
+        if (!(obj instanceof Event other)) {
             return false;
         }
-        Event other = (Event) obj;
         return Objects.equals(id, other.id) && Objects.equals(title, other.title)
                 && Objects.equals(description, other.description) && Objects.equals(type, other.type)
                 && Objects.equals(tags, other.tags) && Objects.equals(content, other.content)

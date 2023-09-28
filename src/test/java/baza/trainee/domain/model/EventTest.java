@@ -21,7 +21,7 @@ import static baza.trainee.domain.TestConstraints.UNDERSIZED_TITLE;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class EventTest {
+class EventTest {
 
     private Validator validator;
     private Event validEvent;
@@ -40,13 +40,13 @@ public class EventTest {
         validEvent.setDescription("Valid Description");
         validEvent.setBannerURI("https://example.com/banner.jpg");
         validEvent.setBannerPreviewURI("https://example.com/banner-preview.jpg");
-        validEvent.addContentBlock(new ContentBlock());
+        validEvent.setContent("Test-content");
         validEvent.setBegin(LocalDate.now());
         validEvent.setEnd(LocalDate.now().plusDays(1));
     }
 
     @Test
-    public void testEventWithValidData() {
+    void testEventWithValidData() {
         // given:
         Event event = validEvent;
 
@@ -57,7 +57,7 @@ public class EventTest {
     @ParameterizedTest
     @NullAndEmptySource
     @MethodSource
-    public void testEventWithInvalidTitle(String title) {
+    void testEventWithInvalidTitle(String title) {
         // given:
         Event event = validEvent;
         event.setTitle(title);
@@ -79,7 +79,7 @@ public class EventTest {
     @ParameterizedTest
     @NullAndEmptySource
     @MethodSource
-    public void testEventWithInvalidDescription(String description) {
+    void testEventWithInvalidDescription(String description) {
         // given:
         Event event = validEvent;
         event.setDescription(description);
@@ -101,7 +101,7 @@ public class EventTest {
     @ParameterizedTest
     @NullSource
     @MethodSource
-    public void testEventWithInvalidDates(LocalDate date) {
+    void testEventWithInvalidDates(LocalDate date) {
         // given:
         Event event = validEvent;
         event.setBegin(date);

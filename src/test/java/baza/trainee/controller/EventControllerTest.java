@@ -1,12 +1,16 @@
 package baza.trainee.controller;
 
+import baza.trainee.domain.mapper.EventMapper;
 import baza.trainee.domain.model.Event;
+import baza.trainee.dto.EventResponse;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.exceptions.custom.MethodArgumentNotValidException;
 import baza.trainee.service.EventService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(EventController.class)
-public class EventControllerTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+class EventControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -30,8 +35,11 @@ public class EventControllerTest {
     @MockBean
     private EventService eventService;
 
+    @Autowired
+    private EventMapper eventMapper;
+
     @Test
-    public void testGetEvents() throws Exception {
+    void testGetEvents() throws Exception {
         // given:
         var pageable = Pageable.ofSize(10).withPage(0);
         Page<Event> events = Page.empty(pageable);
@@ -49,7 +57,7 @@ public class EventControllerTest {
     }
 
     @Test
-    public void testGetEvent() throws Exception {
+    void testGetEvent() throws Exception {
         // given:
         final LocalDate begin = LocalDate.of(2023, 9, 3);
         final LocalDate end = LocalDate.of(2023, 9, 12);
@@ -64,9 +72,10 @@ public class EventControllerTest {
                 "/images/compressed/image1.jpeg",
                 begin,
                 end);
+        var response = eventMapper.toResponse(event);
 
         // when:
-        when(eventService.getById(eventId)).thenReturn(event);
+        when(eventService.getById(eventId)).thenReturn(response);
 
         // then:
         mockMvc.perform(get("/events/{id}", eventId)
@@ -76,7 +85,7 @@ public class EventControllerTest {
     }
 
     @Test
-    public void testGetEventWithInvalidId() throws Exception {
+    void testGetEventWithInvalidId() throws Exception {
         // given:
         final String invalidEventId = "999";
         final String expectedMessage = "Event with `id: 999` was not found!";
@@ -93,7 +102,7 @@ public class EventControllerTest {
     }
 
     @Test
-    public void testBadRequest() throws Exception {
+    void testBadRequest() throws Exception {
         // given:
         String id = "ID";
         String message = "Event not valid!";
