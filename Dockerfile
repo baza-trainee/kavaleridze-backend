@@ -1,7 +1,3 @@
-#FROM openjdk:17-alpine
-#ADD target/*.jar /app/app.jar
-#ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-
 FROM openjdk:17.0.2-slim-bullseye AS builder
 WORKDIR /app
 COPY . .
