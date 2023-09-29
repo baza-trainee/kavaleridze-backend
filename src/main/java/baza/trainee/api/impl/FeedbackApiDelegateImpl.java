@@ -10,11 +10,6 @@ import org.springframework.stereotype.Service;
 
 import static baza.trainee.constants.MailConstants.MUSEUM_SUBJECT;
 
-/**
- * Spring MVC REST controller for handling feedback submission.
- *
- * @author Anatolii Omelchenko
- */
 @Service
 @RequiredArgsConstructor
 public class FeedbackApiDelegateImpl implements FeedbackApiDelegate {
@@ -24,13 +19,6 @@ public class FeedbackApiDelegateImpl implements FeedbackApiDelegate {
 
     private final MailService mailService;
 
-    /**
-     * Handles the submission of a contact form. Sends emails to the user and the museum.
-     *
-     * @param mailDto       An object containing data from the feedback form,
-     *                      including first name, last name, email, message.
-     * @return A ResponseEntity with a status of 200 (OK) if the email sending is successful.
-     */
     @Override
     public ResponseEntity<Object> submitContactForm(MailDto mailDto) {
         String msgForUser = mailService.buildMsgForUser();

@@ -72,6 +72,7 @@ public class Logger {
             case "[ERROR]" -> log.error(formattedMessage);
             case "[WARNING]" -> log.warn(formattedMessage);
             case "[INFO]" -> log.info(formattedMessage);
+            // deepcode ignore LogLevelCheck: <please specify a reason of ignoring this>
             default -> log.debug(formattedMessage);
         }
     }

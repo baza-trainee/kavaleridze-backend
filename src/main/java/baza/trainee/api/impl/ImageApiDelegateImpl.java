@@ -7,12 +7,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-/**
- * Controller class for managing image-related HTTP requests and responses.
- * This controller provides endpoints for retrieving images and saving temporary images.
- *
- * @author Evhen Malysh
- */
 @Service
 @RequiredArgsConstructor
 public class ImageApiDelegateImpl implements ImagesApiDelegate {
