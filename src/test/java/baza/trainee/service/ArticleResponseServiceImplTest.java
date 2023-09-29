@@ -69,7 +69,7 @@ class ArticleResponseServiceImplTest {
         when(articleRepository.findByTitle(title)).thenReturn(Optional.empty());
 
         // Call the service method and expect an EntityNotFoundException.
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> articleService.findByTitle(title), "Article was not found");
 
 
