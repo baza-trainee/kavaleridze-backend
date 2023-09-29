@@ -419,7 +419,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Article'
+                $ref: '#/components/schemas/ArticleResponse'
         400:
           description: Title request is invalid
           content:
@@ -595,7 +595,7 @@ components:
           maxLength: 300
           nullable: false
       description: Feedback form data
-    Article:
+    ArticleResponse:
       required:
         - content
         - description
