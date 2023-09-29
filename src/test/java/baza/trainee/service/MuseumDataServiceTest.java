@@ -7,9 +7,9 @@ import baza.trainee.service.impl.MuseumDataServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Collections;
 
@@ -25,7 +25,7 @@ public class MuseumDataServiceTest {
     @Autowired
     private MuseumDataServiceImpl museumDataService;
 
-    @Mock
+    @MockBean
     private MuseumDataRepository museumDataRepository;
 
     private MuseumData museumData;
@@ -67,7 +67,7 @@ public class MuseumDataServiceTest {
 
     @Test
     public void testUpdateMuseumData() {
-        when(museumDataRepository.save(any(MuseumData.class))).thenReturn(museumData);
+        when(museumDataRepository.update(any(MuseumData.class))).thenReturn(museumData);
 
         MuseumData updatedData = museumDataService.update(museumData);
 
