@@ -1,9 +1,8 @@
 package baza.trainee.service;
 
-import baza.trainee.domain.model.Event;
 import baza.trainee.dto.EventPublication;
 import baza.trainee.dto.EventResponse;
-import org.springframework.data.domain.Page;
+import baza.trainee.dto.PageEvent;
 import org.springframework.data.domain.Pageable;
 
 public interface EventService {
@@ -12,7 +11,7 @@ public interface EventService {
      * @param pageable {@link Pageable} object.
      * @return A Page of events.
      */
-    Page<Event> getAll(Pageable pageable);
+    PageEvent getAll(Pageable pageable);
 
     /**
      * Retrieve detailed information about a specific event by its id.
@@ -24,7 +23,7 @@ public interface EventService {
     /**
      * Create a new event based on the provided EventPublicationDto.
      *
-     * @param newEvent The EventPublicationDto containing information about the event to be created.
+     * @param newEvent The EventPublication containing information about the event to be created.
      * @param id - user id
      * @return Saved event.
      */

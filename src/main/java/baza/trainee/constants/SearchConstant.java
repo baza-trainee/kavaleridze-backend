@@ -1,8 +1,10 @@
 package baza.trainee.constants;
 
+import baza.trainee.api.impl.SearchApiDelegateImpl;
+
 /**
  * This class defines constants related to
- * {@link baza.trainee.controller.SearchController}.
+ * {@link SearchApiDelegateImpl}.
  * It includes constants for minimum and maximum query sizes,
  * as well as error messages.
  */

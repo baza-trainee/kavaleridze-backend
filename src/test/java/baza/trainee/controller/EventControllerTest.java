@@ -1,18 +1,17 @@
 package baza.trainee.controller;
 
 import baza.trainee.domain.mapper.EventMapper;
+import baza.trainee.domain.mapper.PageableMapper;
 import baza.trainee.domain.model.Event;
-import baza.trainee.dto.EventResponse;
+import baza.trainee.dto.PageEvent;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.exceptions.custom.MethodArgumentNotValidException;
 import baza.trainee.service.EventService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,9 +20,7 @@ import java.time.LocalDate;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,17 +35,21 @@ class EventControllerTest {
     @Autowired
     private EventMapper eventMapper;
 
+    @Autowired
+    private PageableMapper pageableMapper;
+
     @Test
     void testGetEvents() throws Exception {
         // given:
         var pageable = Pageable.ofSize(10).withPage(0);
-        Page<Event> events = Page.empty(pageable);
+        PageEvent events = new PageEvent();
+        events.setPageable(pageableMapper.toPageableObject(pageable));
 
         // when:
         when(eventService.getAll(pageable)).thenReturn(events);
 
         // then:
-        mockMvc.perform(get("/events")
+        mockMvc.perform(get("/api/events")
                         .param("size", "10")
                         .param("page", "0")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -78,7 +79,7 @@ class EventControllerTest {
         when(eventService.getById(eventId)).thenReturn(response);
 
         // then:
-        mockMvc.perform(get("/events/{id}", eventId)
+        mockMvc.perform(get("/api/events/{id}", eventId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(eventId));
@@ -95,7 +96,7 @@ class EventControllerTest {
                 new EntityNotFoundException("Event", "id: " + invalidEventId));
 
         // then:
-        mockMvc.perform(get("/events/{id}", invalidEventId))
+        mockMvc.perform(get("/api/events/{id}", invalidEventId))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(expectedMessage));
@@ -112,7 +113,7 @@ class EventControllerTest {
                 new MethodArgumentNotValidException(message));
 
         // then:
-        mockMvc.perform(get("/events/{id}", id))
+        mockMvc.perform(get("/api/events/{id}", id))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(message));

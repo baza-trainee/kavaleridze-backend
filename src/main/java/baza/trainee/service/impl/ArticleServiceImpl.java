@@ -1,5 +1,8 @@
 package baza.trainee.service.impl;
 
+import baza.trainee.domain.mapper.ArticleMapper;
+import baza.trainee.dto.ArticleResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import baza.trainee.domain.model.Article;
@@ -8,18 +11,16 @@ import baza.trainee.repository.ArticleRepository;
 import baza.trainee.service.ArticleService;
 
 @Service
+@RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-
-    public ArticleServiceImpl(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
+    private final ArticleMapper articleMapper;
 
     @Override
-    public Article findByTitle(String title) {
-        // Implement the logic to fetch the article by title from the repository
+    public ArticleResponse findByTitle(String title) {
         return articleRepository.findByTitle(title)
+                .map(articleMapper::toResponse)
                 .orElseThrow(() -> new EntityNotFoundException(Article.class.getSimpleName(), "with title" + title));
     }
 }

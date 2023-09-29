@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class EventAdminControllerTest {
 
@@ -64,7 +64,7 @@ class EventAdminControllerTest {
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/admin/events")
+                        .post("/api/admin/events")
                         .session(session)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
@@ -96,7 +96,7 @@ class EventAdminControllerTest {
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/admin/events")
+                        .post("/api/admin/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
                 .andExpect(status().isBadRequest());
@@ -125,7 +125,7 @@ class EventAdminControllerTest {
         when(eventService.update(id, eventRequest)).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/admin/events/{id}", id)
+                        .put("/api/admin/events/{id}", id)
                         .content(eventDtoJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -157,7 +157,7 @@ class EventAdminControllerTest {
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
-                        .post("/admin/events")
+                        .post("/api/admin/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
                 .andExpect(status().isBadRequest());
@@ -168,7 +168,7 @@ class EventAdminControllerTest {
         String eventId = "12";
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/admin/events/{id}", eventId))
+                        .delete("/api/admin/events/{id}", eventId))
                 .andExpect(status().isNoContent());
 
         verify(eventService, times(1)).deleteEventById(eq(eventId));

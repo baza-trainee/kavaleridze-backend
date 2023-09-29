@@ -14,7 +14,7 @@ import static baza.trainee.constants.ArticleModelConstants.VALID_ARTICLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ArticleTest {
+class ArticleResponseTest {
 
     private Validator validator;
 

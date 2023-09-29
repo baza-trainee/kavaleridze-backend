@@ -4,17 +4,17 @@ import baza.trainee.domain.mapper.EventMapper;
 import baza.trainee.domain.model.ContentBlock;
 import baza.trainee.domain.model.Event;
 import baza.trainee.dto.EventPublication;
-import baza.trainee.dto.EventResponse;
+import baza.trainee.dto.PageEvent;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.service.EventService;
 import baza.trainee.service.ImageService;
 import baza.trainee.service.SearchService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockHttpSession;
 
@@ -38,6 +38,9 @@ class EventServiceImplTest extends AbstractIntegrationTest {
     private SearchService searchService;
 
     @MockBean
+    private HttpServletRequest httpServletRequest;
+
+    @MockBean
     private ImageService imageService;
 
     @Test
@@ -46,7 +49,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
         // given:
         var pageable = Pageable.ofSize(10).withPage(0);
-        Page<Event> result = eventService.getAll(pageable);
+        PageEvent result = eventService.getAll(pageable);
 
         // when:
         int numberOfElements = result.getNumberOfElements();
@@ -54,7 +57,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         // then:
         assertEquals(10, numberOfElements);
 
-        for (var event : result) {
+        for (var event : result.getContent()) {
             assertNotNull(event.getId());
             assertNotNull(event.getCreated());
         }
@@ -135,7 +138,10 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         var actual = eventService.update(id, eventPublication);
 
         // then:
-        assertEquals(expected, actual);
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getType(), actual.getType());
+        assertEquals(expected.getBannerURI(), actual.getBannerURI());
 
     }
 

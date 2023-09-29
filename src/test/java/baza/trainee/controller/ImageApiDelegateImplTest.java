@@ -3,7 +3,8 @@ package baza.trainee.controller;
 import baza.trainee.service.ImageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
@@ -21,8 +22,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ImageController.class)
-class ImageControllerTest {
+@SpringBootTest
+@AutoConfigureMockMvc
+class ImageApiDelegateImplTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -48,7 +50,7 @@ class ImageControllerTest {
     }
 
     @Test
-    public void testGetTempImage() throws Exception {
+    void testGetTempImage() throws Exception {
         var file = new File("src/test/resources/test-images/test.jpg");
         var resource = new UrlResource(file.toURI());
         byte[] imageBytes = resource.getContentAsByteArray();
@@ -57,7 +59,7 @@ class ImageControllerTest {
 
         MockHttpSession session = new MockHttpSession(null, "session123");
 
-        mockMvc.perform(get("/api/images/temp")
+        mockMvc.perform(get("/api/admin/images/temp")
                         .session(session)
                         .param("filename", "temp.jpg")
                         .contentType(MediaType.IMAGE_JPEG_VALUE))
@@ -67,7 +69,7 @@ class ImageControllerTest {
     }
 
     @Test
-    public void testSaveImage() throws Exception {
+    void testSaveImage() throws Exception {
         MockHttpSession session = new MockHttpSession(null, "session123");
 
         var file = new File("src/test/resources/test-images/test.jpg");
@@ -78,7 +80,7 @@ class ImageControllerTest {
 
         when(imageService.storeToTemp(eq(mockFile), anyString())).thenReturn("example.jpg");
 
-        mockMvc.perform(multipart("/api/images").file(mockFile).session(session))
+        mockMvc.perform(multipart("/api/admin/images").file(mockFile).session(session))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("example.jpg"));
     }

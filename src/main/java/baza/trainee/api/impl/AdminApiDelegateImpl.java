@@ -69,6 +69,6 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
         var sessionId = httpServletRequest.getSession().getId();
         return new ResponseEntity<>(
                 imageService.storeToTemp(file, sessionId),
-                HttpStatusCode.valueOf(200));
+                HttpStatusCode.valueOf(201));
     }
 }

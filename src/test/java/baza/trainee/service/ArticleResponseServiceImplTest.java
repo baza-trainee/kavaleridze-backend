@@ -1,48 +1,64 @@
 package baza.trainee.service;
 
+import baza.trainee.domain.mapper.ArticleMapper;
 import baza.trainee.domain.model.Article;
+import baza.trainee.domain.model.ContentBlock;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.repository.ArticleRepository;
-import baza.trainee.service.impl.ArticleServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 
+import static baza.trainee.dto.ContentBlock.BlockTypeEnum.TEXT_BLOCK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-class ArticleServiceImplTest {
+@SpringBootTest
+class ArticleResponseServiceImplTest {
 
-    @Mock
+    @MockBean
     private ArticleRepository articleRepository;
 
-    @InjectMocks
-    private ArticleServiceImpl articleService;
+    @Autowired
+    private ArticleMapper articleMapper;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    @Autowired
+    private ArticleService articleService;
+
 
     @Test
     void testFindByTitle() {
         // Define the expected article
-        Article expectedArticle = new Article();
         String title = "Title #1";
+        var contentBlock = new ContentBlock();
+        contentBlock.setId("2312312");
+        contentBlock.setBlockType(TEXT_BLOCK);
+        contentBlock.setColumns(1);
+        contentBlock.setOrder(1);
+        contentBlock.setTextContent("Some text content");
+        contentBlock.setPictureLink("URL");
+
+        var expectedArticle = new Article();
+        expectedArticle.setId("123123");
+        expectedArticle.setTitle(title);
+        expectedArticle.setDescription("Some valid description");
+        expectedArticle.setCreated(LocalDate.now());
+        expectedArticle.setContent(Set.of(contentBlock));
 
         // Mock the behavior of the ArticleRepository.
         when(articleRepository.findByTitle(title)).thenReturn(Optional.of(expectedArticle));
 
         // Call the service method
-        Article resultArticle = articleService.findByTitle(title);
+        var resultArticle = articleService.findByTitle(title);
 
         // Check if the result matches the expected article
-        assertEquals(expectedArticle, resultArticle);
+        assertEquals(articleMapper.toResponse(expectedArticle), resultArticle);
     }
 
     @Test

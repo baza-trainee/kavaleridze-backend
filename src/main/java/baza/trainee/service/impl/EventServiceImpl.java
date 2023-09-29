@@ -2,14 +2,16 @@ package baza.trainee.service.impl;
 
 
 import baza.trainee.domain.mapper.EventMapper;
+import baza.trainee.domain.mapper.PageEventMapper;
 import baza.trainee.domain.model.Event;
 import baza.trainee.dto.EventPublication;
 import baza.trainee.dto.EventResponse;
+import baza.trainee.dto.PageEvent;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.repository.EventRepository;
 import baza.trainee.service.EventService;
 import baza.trainee.service.ImageService;
-import org.springframework.data.domain.Page;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,22 +19,18 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @Service
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-    private final EventMapper eventMapper;
-
     private final ImageService imageService;
-
-    public EventServiceImpl(EventRepository eventRepository, EventMapper eventMapper, ImageService imageService) {
-        this.eventRepository = eventRepository;
-        this.eventMapper = eventMapper;
-        this.imageService = imageService;
-    }
+    private final EventMapper eventMapper;
+    private final PageEventMapper pageMapper;
 
     @Override
-    public Page<Event> getAll(Pageable pageable) {
-        return eventRepository.findAll(pageable);
+    public PageEvent getAll(Pageable pageable) {
+        return pageMapper.toPageEvent(eventRepository.findAll(pageable)
+                .map(eventMapper::toResponse));
     }
 
     @Override
