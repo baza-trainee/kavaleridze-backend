@@ -178,6 +178,7 @@ class ImageServiceTest {
 
         // when:
         String generatedFileName = imageService.storeToTemp(file, sessionId);
+        System.out.println(generatedFileName);
         imageService.persist(List.of(generatedFileName), sessionId);
 
         byte[] previewsResource = imageService.loadResource(generatedFileName, "preview");

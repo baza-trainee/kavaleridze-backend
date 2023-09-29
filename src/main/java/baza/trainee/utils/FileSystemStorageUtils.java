@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -26,6 +23,8 @@ import baza.trainee.exceptions.custom.StorageFileNotFoundException;
  */
 public class FileSystemStorageUtils {
 
+    private static final String FAILED_TO_FIND_FILES = "Failed to find files";
+
     /**
      * Private constructor to prevent instantiation of this utility class.
      *
@@ -38,19 +37,29 @@ public class FileSystemStorageUtils {
     /**
      * Load the file path by filename in the provided directory.
      *
-     * @param filename The name of the file.
      * @param root     The root directory where the file is located.
      * @return The {@link Path} of the file.
      * @throws StorageException If an error occurs while reading the stored files.
      */
-    public static Path loadPath(final String filename, final Path root) {
-        try (var pathStream = Files.walk(root, Integer.MAX_VALUE)) {
+    public static Path loadPath(final Path root) {
+        try (var pathStream = Files.walk(root, FileVisitOption.FOLLOW_LINKS)) {
             return pathStream
-                    .filter(path -> path.getFileName().equals(Paths.get(filename)))
+                    .filter(path -> path.toFile().isDirectory())
                     .findFirst()
-                    .orElseThrow(() -> new StorageException("Failed to find files"));
+                    .orElseThrow(() -> new StorageException(FAILED_TO_FIND_FILES));
         } catch (IOException e) {
-            throw new StorageException("Failed to find files");
+            throw new StorageException(FAILED_TO_FIND_FILES);
+        }
+    }
+
+    public static Path loadFilePath(final Path root) {
+        try (var pathStream = Files.walk(root, FileVisitOption.FOLLOW_LINKS)) {
+            return pathStream
+                    .filter(path -> !path.toFile().isDirectory())
+                    .findFirst()
+                    .orElseThrow(() -> new StorageException(FAILED_TO_FIND_FILES));
+        } catch (IOException e) {
+            throw new StorageException(FAILED_TO_FIND_FILES);
         }
     }
 
@@ -132,10 +141,10 @@ public class FileSystemStorageUtils {
     }
 
     /**
-     * Create {@link UriResource} based on given {@link URI} object.
+     * Create {@link UrlResource} based on given {@link URI} object.
      *
      * @param uri {@link URI} to resource.
-     * @return {@link UriResource}.
+     * @return {@link UrlResource}.
      * @throws StorageFileNotFoundException if the given URI path is not
      *                valid.
      */

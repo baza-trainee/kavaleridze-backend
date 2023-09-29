@@ -1,16 +1,5 @@
 package baza.trainee.service.impl;
 
-import static baza.trainee.service.impl.ImageServiceImpl.ImageType.DESKTOP;
-import static baza.trainee.service.impl.ImageServiceImpl.ImageType.PREVIEW;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import baza.trainee.config.ImageCompressionConfig;
 import baza.trainee.config.StorageProperties;
 import baza.trainee.service.ImageService;
@@ -18,6 +7,16 @@ import baza.trainee.utils.FileSystemStorageUtils;
 import baza.trainee.utils.ImageCompressor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.UUID;
+
+import static baza.trainee.service.impl.ImageServiceImpl.ImageType.DESKTOP;
+import static baza.trainee.service.impl.ImageServiceImpl.ImageType.PREVIEW;
 
 /**
  * Implementation of the {@link ImageService} interface for managing
@@ -75,9 +74,9 @@ public class ImageServiceImpl implements ImageService {
      */
     @Override
     public byte[] loadResource(final String fileId, final String type) {
-        var currentPath = getCurrentPath(rootPath, fileId, type);
+        var currentPath = getCurrentPath(imagesPath, fileId, type);
 
-        return getResourceFromPath(fileId, currentPath);
+        return getResourceFromPath(currentPath);
     }
 
     /**
@@ -94,9 +93,10 @@ public class ImageServiceImpl implements ImageService {
             final String sessionId,
             final String type
     ) {
-        var currentPath = getCurrentPath(tempPath, fileId, type);
+        var tempSessionPath = tempPath.resolve(sessionId);
+        var currentPath = getCurrentPath(tempSessionPath, fileId, type);
 
-        return getResourceFromPath(fileId, currentPath);
+        return getResourceFromPath(currentPath);
     }
 
     /**
@@ -106,7 +106,7 @@ public class ImageServiceImpl implements ImageService {
      * @param sessionId The ID of the session associated with the temporary
      *                  resource.
      * @return The ID of the stored file that represent name of subfolder
-     *         with converted images.
+     * with converted images.
      */
     @Override
     public String storeToTemp(final MultipartFile file, final String sessionId) {
@@ -128,7 +128,7 @@ public class ImageServiceImpl implements ImageService {
         var sessionPath = tempPath.resolve(sessionId);
 
         for (var imageId : imageIds) {
-            var imageTempPath = FileSystemStorageUtils.loadPath(imageId, sessionPath);
+            var imageTempPath = FileSystemStorageUtils.loadPath(sessionPath).resolve(imageId);
             var destPath = imagesPath.resolve(imageId);
             FileSystemStorageUtils.copyRecursively(imageTempPath, destPath);
         }
@@ -166,8 +166,8 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-    private byte[] getResourceFromPath(final String filename, final Path currentPath) {
-        var file = FileSystemStorageUtils.loadPath(filename, currentPath);
+    private byte[] getResourceFromPath(final Path currentPath) {
+        var file = FileSystemStorageUtils.loadFilePath(currentPath);
         var resource = FileSystemStorageUtils.getResource(file.toUri());
 
         return FileSystemStorageUtils.getByteArrayFromResource(resource);
