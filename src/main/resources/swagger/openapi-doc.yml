@@ -6,6 +6,10 @@ info:
     The Kavaleridze Museum API is a comprehensive RESTful API that serves as the backbone of the Kavaleridze Museum's digital platform. It provides a wide range of endpoints for managing museum events, images, articles, email communications, and search functionalities. This API empowers administrators, visitors, and staff to interact with museum-related content, enhancing the overall visitor experience and facilitating efficient museum management.
   version: v0.0.1
 
+servers:
+  - url: http://127.0.0.1/api
+    description: Service for managing website of the Kavaleridze museum
+
 tags:
   - name: Admin Event Controller
     description: |
@@ -42,10 +46,6 @@ tags:
       Endpoints for performing article-related operations. Provides access to articles and allows users to interact with them.
     externalDocs:
       url: /articles
-
-servers:
-  - url: http://127.0.0.1/api
-    description: Service for managing website of the Kavaleridze museum
 
 paths:
   /admin/events:
@@ -475,6 +475,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
 components:
   schemas:
     ErrorResponse:
