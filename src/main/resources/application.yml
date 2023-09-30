@@ -1,4 +1,3 @@
-#Mail
 spring:
   data:
     redis:
@@ -45,3 +44,9 @@ resources:
       original: 'original'
       compressed: 'compressed'
       temporary: 'temp'
+
+users:
+  root:
+    credentials:
+      username: 'root'
+      password: 'password'
