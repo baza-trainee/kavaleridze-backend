@@ -2,6 +2,7 @@ package baza.trainee.controller;
 
 import baza.trainee.domain.dto.MailDto;
 import baza.trainee.exceptions.custom.EmailSendingException;
+import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.MailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,19 +22,24 @@ import static baza.trainee.constants.MailConstants.MUSEUM_SUBJECT;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(MailController.class)
+@SpringBootTest(webEnvironment = MOCK)
+@AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class MailControllerTest {
+class MailControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private MailService mailService;
+
+    @MockBean
+    private RootUserInitializer rootUserInitializer;
 
     private MailDto validMailDto;
     private MailDto notValidMailDto;
@@ -46,7 +54,7 @@ public class MailControllerTest {
     }
 
     @Test
-    public void testSubmitContactFormWithValidData() throws Exception {
+    void testSubmitContactFormWithValidData() throws Exception {
         when(mailService.buildMsgForUser()).thenReturn("Message for user");
         when(mailService.buildMsgForMuseum(any(), any(), any(), any())).thenReturn("Message for museum");
 
@@ -62,7 +70,7 @@ public class MailControllerTest {
     }
 
     @Test
-    public void testSubmitContactFormWithInvalidData() throws Exception {
+    void testSubmitContactFormWithInvalidData() throws Exception {
         mockMvc.perform(post("/api/feedback/submit")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(notValidMailDto))
@@ -74,7 +82,7 @@ public class MailControllerTest {
     }
 
     @Test
-    public void SubmitContactFormWithSendingError() throws Exception {
+    void SubmitContactFormWithSendingError() throws Exception {
         doThrow(new EmailSendingException(FAIL_SEND_MSG))
                 .when(mailService).sendEmail(any(), any(),any());
 
