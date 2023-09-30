@@ -10,18 +10,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PageEventMapper {
 
-    private final PageableMapper pageableMapper;
-    private final SortMapper sortMapper;
-
     public PageEvent toPageEvent(Page<EventResponse> page) {
         var pageEvent = new PageEvent();
 
-        var sortObject = sortMapper.toSortObject(page.getSort());
-        var pageableObject = pageableMapper.toPageableObject(page.getPageable());
-
         pageEvent.setTotalPages(page.getTotalPages());
-        pageEvent.setSort(sortObject);
-        pageEvent.setPageable(pageableObject);
+        pageEvent.setSort(page.getSort());
+        pageEvent.setPageable(page.getPageable());
         pageEvent.setNumber(page.getNumber());
         pageEvent.setLast(page.isLast());
         pageEvent.setEmpty(page.isEmpty());

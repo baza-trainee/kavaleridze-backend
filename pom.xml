@@ -219,6 +219,10 @@
                                 <delegatePattern>true</delegatePattern>
                                 <serializableModel>true</serializableModel>
                             </configOptions>
+                            <typeMappings>
+                                <typeMapping>PageableObject=org.springframework.data.domain.Pageable</typeMapping>
+                                <typeMapping>SortObject=org.springframework.data.domain.Sort</typeMapping>
+                            </typeMappings>
                         </configuration>
                     </execution>
                 </executions>

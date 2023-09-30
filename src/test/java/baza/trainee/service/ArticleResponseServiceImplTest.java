@@ -2,7 +2,7 @@ package baza.trainee.service;
 
 import baza.trainee.domain.mapper.ArticleMapper;
 import baza.trainee.domain.model.Article;
-import baza.trainee.domain.model.ContentBlock;
+import baza.trainee.dto.ContentBlock;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.repository.ArticleRepository;
 import org.junit.jupiter.api.Test;

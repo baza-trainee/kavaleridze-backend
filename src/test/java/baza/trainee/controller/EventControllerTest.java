@@ -1,7 +1,6 @@
 package baza.trainee.controller;
 
 import baza.trainee.domain.mapper.EventMapper;
-import baza.trainee.domain.mapper.PageableMapper;
 import baza.trainee.domain.model.Event;
 import baza.trainee.dto.PageEvent;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
@@ -35,15 +34,12 @@ class EventControllerTest {
     @Autowired
     private EventMapper eventMapper;
 
-    @Autowired
-    private PageableMapper pageableMapper;
-
     @Test
     void testGetEvents() throws Exception {
         // given:
         var pageable = Pageable.ofSize(10).withPage(0);
         PageEvent events = new PageEvent();
-        events.setPageable(pageableMapper.toPageableObject(pageable));
+        events.setPageable(pageable);
 
         // when:
         when(eventService.getAll(pageable)).thenReturn(events);

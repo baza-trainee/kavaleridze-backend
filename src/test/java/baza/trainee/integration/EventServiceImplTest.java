@@ -1,8 +1,8 @@
 package baza.trainee.integration;
 
 import baza.trainee.domain.mapper.EventMapper;
-import baza.trainee.domain.model.ContentBlock;
 import baza.trainee.domain.model.Event;
+import baza.trainee.dto.ContentBlock;
 import baza.trainee.dto.EventPublication;
 import baza.trainee.dto.PageEvent;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
