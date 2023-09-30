@@ -1,7 +1,15 @@
 package baza.trainee.controller;
 
-import static baza.trainee.utils.ControllerUtils.handleFieldsErrors;
-
+import baza.trainee.domain.dto.event.EventPublication;
+import baza.trainee.domain.model.Event;
+import baza.trainee.service.EventService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,17 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import baza.trainee.domain.dto.event.EventPublication;
-import baza.trainee.domain.model.Event;
-import baza.trainee.service.EventService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+
+import static baza.trainee.utils.ControllerUtils.handleFieldsErrors;
 
 /**
  * Spring MVC REST controller serving event operations for admin users.
@@ -50,13 +50,14 @@ public class EventAdminController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     public Event createEvent(
+            HttpSession httpSession,
             @Parameter(description = "Event data to be created")
             @RequestBody @Valid final EventPublication request,
             final BindingResult bindingResult
     ) {
         handleFieldsErrors(bindingResult);
 
-        return eventService.save(request);
+        return eventService.save(request, httpSession.getId());
     }
 
     /**

@@ -4,7 +4,6 @@ package baza.trainee.controller;
 import baza.trainee.domain.dto.event.EventPublication;
 import baza.trainee.domain.mapper.EventMapper;
 import baza.trainee.domain.model.ContentBlock;
-import baza.trainee.domain.model.Event;
 import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.EventService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -64,16 +64,17 @@ class EventAdminControllerTest {
                 LocalDate.now().plusDays(1)
         );
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
+        var event = eventMapper.toEvent(eventDto);
 
         // when:
-        when(eventService.save(any(EventPublication.class))).thenReturn(any(Event.class));
+        when(eventService.save(any(EventPublication.class), anyString())).thenReturn(event);
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/admin/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
-                .andExpect(status().isCreated());
+                        .andExpect(status().isCreated());
     }
 
     @ParameterizedTest
@@ -81,6 +82,7 @@ class EventAdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void testCreateEventStatusBadRequest(String validatedField) throws Exception {
         // given:
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         var eventDto = new EventPublication(
                 validatedField,
                 validatedField,
@@ -95,7 +97,7 @@ class EventAdminControllerTest {
         var event = eventMapper.toEvent(eventDto);
 
         // when:
-        when(eventService.save(eventDto)).thenReturn(event);
+        when(eventService.save(eventDto, session.getId())).thenReturn(event);
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders
