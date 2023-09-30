@@ -1,10 +1,8 @@
 package baza.trainee.integration;
 
-import baza.trainee.config.SecurityConfig;
 import baza.trainee.security.RootUserInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;

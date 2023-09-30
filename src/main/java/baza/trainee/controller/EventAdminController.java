@@ -1,14 +1,7 @@
 package baza.trainee.controller;
 
-import baza.trainee.domain.dto.event.EventPublication;
-import baza.trainee.domain.model.Event;
-import baza.trainee.service.EventService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import static baza.trainee.utils.ControllerUtils.handleFieldsErrors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,14 +13,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import static baza.trainee.utils.ControllerUtils.handleFieldsErrors;
+import baza.trainee.domain.dto.event.EventPublication;
+import baza.trainee.domain.model.Event;
+import baza.trainee.service.EventService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Spring MVC REST controller serving event operations for admin users.
  *
  * @author Oleksandr Korkach
  */
-//@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@SecurityRequirement(name = "basicAuth")
 @RestController
 @RequestMapping("/api/admin/events")
 @RequiredArgsConstructor

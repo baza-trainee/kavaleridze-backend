@@ -2,7 +2,6 @@ package baza.trainee.controller;
 
 
 import baza.trainee.domain.dto.event.EventPublication;
-import baza.trainee.domain.enums.Role;
 import baza.trainee.domain.mapper.EventMapper;
 import baza.trainee.domain.model.ContentBlock;
 import baza.trainee.domain.model.Event;
@@ -253,8 +252,6 @@ class EventAdminControllerTest {
     @NullAndEmptySource
     void testUpdateEventStatusIsUnauthorized(String validatedField) throws Exception {
         // given:
-        String id = "12";
-
         var eventDto = new EventPublication(
                 validatedField,
                 validatedField,

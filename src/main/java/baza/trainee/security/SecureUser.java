@@ -18,6 +18,7 @@ public class SecureUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.user.getRoles().stream()
+                .map(s -> "ROLE_" + s)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }

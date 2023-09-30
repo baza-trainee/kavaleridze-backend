@@ -1,7 +1,5 @@
 package baza.trainee.config;
 
-import baza.trainee.security.CustomUserDetailsService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -12,6 +10,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * SecurityConfig handles the security configurations.
@@ -24,8 +24,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService userDetailsService;
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -36,16 +34,15 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/api/user/register").permitAll()
                         .requestMatchers("/api/auth/logout/**").permitAll()
                         .requestMatchers("/api/events/**").permitAll()
                         .requestMatchers("/api/articles/**").permitAll()
                         .requestMatchers("/api/search/**").permitAll()
                         .requestMatchers("/api/feedback/**").permitAll()
                         .requestMatchers("/api/images/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                )
-                .userDetailsService(userDetailsService)
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "ROOT")
+                        .requestMatchers("/api/admin/**").authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .logout(flc -> flc.logoutUrl("/api/auth/logout"))
                 .build();
