@@ -27,8 +27,9 @@ import static baza.trainee.utils.ControllerUtils.handleFieldsErrors;
  *
  * @author Oleksandr Korkach
  */
+//@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @RestController
-@RequestMapping("/admin/events")
+@RequestMapping("/api/admin/events")
 @RequiredArgsConstructor
 public class EventAdminController {
 
