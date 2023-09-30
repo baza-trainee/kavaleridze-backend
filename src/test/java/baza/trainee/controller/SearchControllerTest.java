@@ -20,7 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SearchApiDelegateImplTest {
+class SearchControllerTest {
+
     @Autowired
     MockMvc mockMvc;
 
