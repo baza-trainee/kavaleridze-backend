@@ -42,8 +42,7 @@ class EventTestDataInitializer {
                 int typeIndex = ThreadLocalRandom.current().nextInt(types.length);
                 event.setType(types[typeIndex].getValue());
 
-                event.setBannerPreviewURI("null");
-                event.setBannerURI("null");
+                event.setBannerId("null");
 
                 LocalDate begin = LocalDate.now().plusDays(i);
                 event.setBegin(begin);

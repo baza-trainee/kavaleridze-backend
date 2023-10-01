@@ -38,8 +38,8 @@ class EventTest {
         validEvent.addTag("tag");
         validEvent.setTitle("Valid Title");
         validEvent.setDescription("Valid Description");
-        validEvent.setBannerURI("https://example.com/banner.jpg");
-        validEvent.setBannerPreviewURI("https://example.com/banner-preview.jpg");
+        validEvent.setBannerId("https://example.com/banner.jpg");
+        validEvent.setBannerId("https://example.com/banner-preview.jpg");
         validEvent.setContent("Test-content");
         validEvent.setBegin(LocalDate.now());
         validEvent.setEnd(LocalDate.now().plusDays(1));

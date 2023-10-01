@@ -44,7 +44,7 @@ public class EventServiceImpl implements EventService {
     public EventResponse save(EventPublication newEvent, String sessionId) {
         Event eventToSave = eventMapper.toEvent(newEvent);
 
-        var fileNames = newEvent.getBannerTempURI();
+        var fileNames = newEvent.getBannerId();
 
         imageService.persist(List.of(fileNames), sessionId);
         Event savedEvent = eventRepository.save(eventToSave);

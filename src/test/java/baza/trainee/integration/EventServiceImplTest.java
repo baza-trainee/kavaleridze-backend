@@ -68,12 +68,6 @@ class EventServiceImplTest extends AbstractIntegrationTest {
     void getByIdTest() {
 
         // given:
-        ContentBlock cb = new ContentBlock();
-        cb.setId("thisId");
-        cb.setOrder(14);
-        cb.setColumns(5);
-        cb.setBlockType(PICTURE_BLOCK);
-        cb.setTextContent("thisContent");
         MockHttpSession session = new MockHttpSession(null, "httpSessionId");
 
         var eventPublication = new EventPublication();
@@ -82,7 +76,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         eventPublication.type("PAINTING");
         eventPublication.tags(Set.of("tag1", "tag2"));
         eventPublication.content("content");
-        eventPublication.bannerTempURI("http://example.com/banner.jpg");
+        eventPublication.bannerId("http://example.com/banner.jpg");
         eventPublication.begin(LocalDate.now());
         eventPublication.end(LocalDate.now().plusDays(10));
 
@@ -104,14 +98,6 @@ class EventServiceImplTest extends AbstractIntegrationTest {
     void updateTest() {
 
         // given:
-        ContentBlock cb = new ContentBlock();
-        cb.setId("thisId");
-        cb.setOrder(14);
-        cb.setColumns(5);
-        cb.setBlockType(PICTURE_BLOCK);
-        cb.setTextContent("thisContent");
-        Set<ContentBlock> contentBlocks = new HashSet<>();
-        contentBlocks.add(cb);
         MockHttpSession session = new MockHttpSession(null, "httpSessionId");
 
         var eventPublication = new EventPublication();
@@ -120,7 +106,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         eventPublication.type("PAINTING");
         eventPublication.tags(Set.of("tag1", "tag2"));
         eventPublication.content("content");
-        eventPublication.bannerTempURI("http://example.com/banner.jpg");
+        eventPublication.bannerId("http://example.com/banner.jpg");
         eventPublication.begin(LocalDate.now());
         eventPublication.end(LocalDate.now().plusDays(10));
         var eventToUpdate = eventService.save(eventPublication, session.getId());
@@ -128,7 +114,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         eventPublication.setTitle("TitleUpdate");
         eventPublication.setDescription("DescriptionUpdate");
         eventPublication.setType("TypeUpdate");
-        eventPublication.setBannerTempURI("event/bannerUpdate");
+        eventPublication.setBannerId("event/bannerUpdate");
 
         // when:
         String id = eventToUpdate.getId();
@@ -141,7 +127,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         assertEquals(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getType(), actual.getType());
-        assertEquals(expected.getBannerURI(), actual.getBannerURI());
+        assertEquals(expected.getBannerId(), actual.getBannerId());
 
     }
 
@@ -158,7 +144,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         eventPublication.type("PAINTING");
         eventPublication.tags(Set.of("tag1", "tag2"));
         eventPublication.content("content");
-        eventPublication.bannerTempURI("http://example.com/banner.jpg");
+        eventPublication.bannerId("http://example.com/banner.jpg");
         eventPublication.begin(LocalDate.now());
         eventPublication.end(LocalDate.now().plusDays(10));
 

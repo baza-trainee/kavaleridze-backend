@@ -56,9 +56,7 @@ public class Event implements Post {
     @NotBlank
     private String content;
 
-    private String bannerURI;
-
-    private String bannerPreviewURI;
+    private String bannerId;
 
     @NotNull
     @FutureOrPresent
@@ -79,8 +77,7 @@ public class Event implements Post {
             @NotNull @NotBlank @Size(min = MIN_TITLE_SIZE, max = MAX_TITLE_SIZE) String title,
             @NotNull @NotBlank @Size(min = MIN_DESCRIPTION_SIZE, max = MAX_DESCRIPTION_SIZE) String description,
             String type,
-            String bannerURI,
-            String bannerPreviewURI,
+            String bannerId,
             @FutureOrPresent LocalDate begin,
             @FutureOrPresent LocalDate end
     ) {
@@ -88,8 +85,7 @@ public class Event implements Post {
         this.title = title;
         this.description = description;
         this.type = type;
-        this.bannerURI = bannerURI;
-        this.bannerPreviewURI = bannerPreviewURI;
+        this.bannerId = bannerId;
         this.begin = begin;
         this.end = end;
     }
@@ -100,7 +96,7 @@ public class Event implements Post {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, type, tags, content, bannerURI, bannerPreviewURI, begin, end);
+        return Objects.hash(id, title, description, type, tags, content, bannerId, begin, end);
     }
 
     @Override
@@ -114,8 +110,7 @@ public class Event implements Post {
         return Objects.equals(id, other.id) && Objects.equals(title, other.title)
                 && Objects.equals(description, other.description) && Objects.equals(type, other.type)
                 && Objects.equals(tags, other.tags) && Objects.equals(content, other.content)
-                && Objects.equals(bannerURI, other.bannerURI)
-                && Objects.equals(bannerPreviewURI, other.bannerPreviewURI) && Objects.equals(begin, other.begin)
+                && Objects.equals(bannerId, other.bannerId)
                 && Objects.equals(end, other.end);
     }
 

@@ -512,7 +512,7 @@ components:
           minLength: 30
           maxLength: 3000
           nullable: false
-        bannerTempURI:
+        bannerId:
           type: string
         begin:
           type: string
@@ -552,9 +552,7 @@ components:
           type: string
           minLength: 30
           maxLength: 3000
-        bannerURI:
-          type: string
-        bannerPreviewURI:
+        bannerId:
           type: string
         begin:
           type: string

@@ -50,7 +50,7 @@ class EventAdminControllerTest {
         eventDto.type("PAINTING");
         eventDto.tags(Set.of("tag1", "tag2"));
         eventDto.content("content size is between 30 and 3000 characters");
-        eventDto.bannerTempURI("http://example.com/banner.jpg");
+        eventDto.bannerId("http://example.com/banner.jpg");
         eventDto.begin(LocalDate.now());
         eventDto.end(LocalDate.now().plusDays(1));
 
@@ -83,7 +83,7 @@ class EventAdminControllerTest {
         eventDto.type(validatedField);
         eventDto.tags(Set.of("tag1", "tag2"));
         eventDto.content("content");
-        eventDto.bannerTempURI("http://example.com/banner.jpg");
+        eventDto.bannerId("http://example.com/banner.jpg");
         eventDto.begin(LocalDate.now());
         eventDto.end(LocalDate.now().plusDays(1));
 
@@ -112,7 +112,7 @@ class EventAdminControllerTest {
         eventRequest.type("PAINTING");
         eventRequest.tags(Set.of("tag1", "tag2"));
         eventRequest.content("updated content size is between 30 and 3000 characters");
-        eventRequest.bannerTempURI("http://example.com/banner.jpg");
+        eventRequest.bannerId("http://example.com/banner.jpg");
         eventRequest.begin(LocalDate.now());
         eventRequest.end(LocalDate.now().plusDays(1));
         var event = eventMapper.toEvent(eventRequest);
@@ -143,7 +143,7 @@ class EventAdminControllerTest {
         eventDto.type(validatedField);
         eventDto.tags(Set.of("tag1", "tag2"));
         eventDto.content("content");
-        eventDto.bannerTempURI("http://example.com/banner.jpg");
+        eventDto.bannerId("http://example.com/banner.jpg");
         eventDto.begin(LocalDate.now());
         eventDto.end(LocalDate.now().plusDays(1));
 
