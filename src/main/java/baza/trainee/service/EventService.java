@@ -24,18 +24,20 @@ public interface EventService {
      * Create a new event based on the provided EventPublicationDto.
      *
      * @param newEvent The EventPublication containing information about the event to be created.
-     * @param id - user id
+     * @param sessionId - user sessionId
      * @return Saved event.
      */
-    EventResponse save(EventPublication newEvent, String id);
+    EventResponse save(EventPublication newEvent, String sessionId);
 
     /**
      * Update an existing event identified by id.
      * @param updatedEvent The EventPublication containing updated information for the event.
      * @param id The unique identifier of the event to be updated.
+     * @param sessionId - user sessionId
      * @return Updated event.
      */
-    EventResponse update(String id, EventPublication updatedEvent);
+    EventResponse update(String id, EventPublication updatedEvent, String sessionId
+    );
 
     /**
      * Delete an event identified by its id.
