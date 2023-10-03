@@ -105,6 +105,8 @@ class EventAdminControllerTest {
     @Test
     void testUpdateEvent() throws Exception {
         // given:
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
+
         String id = "12";
         var eventRequest = new EventPublication();
         eventRequest.title("Title");
@@ -122,7 +124,7 @@ class EventAdminControllerTest {
         String eventDtoJson = objectMapper.writeValueAsString(eventRequest);
 
         // when:
-        when(eventService.update(id, eventRequest)).thenReturn(response);
+        when(eventService.update(id, eventRequest, session.getId())).thenReturn(response);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/api/admin/events/{id}", id)
@@ -135,6 +137,8 @@ class EventAdminControllerTest {
     @NullAndEmptySource
     void testUpdateEventStatusBadRequest(String validatedField) throws Exception {
         // given:
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
+
         String id = "12";
 
         var eventDto = new EventPublication();
@@ -153,7 +157,7 @@ class EventAdminControllerTest {
 
 
         // when:
-        when(eventService.update(id, eventDto)).thenReturn(response);
+        when(eventService.update(id, eventDto, session.getId())).thenReturn(response);
 
         // then:
         mockMvc.perform(MockMvcRequestBuilders

@@ -121,7 +121,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         Event event = mapper.toEvent(eventPublication);
         event.setId(id);
         var expected = mapper.toResponse(event);
-        var actual = eventService.update(id, eventPublication);
+        var actual = eventService.update(id, eventPublication, session.getId());
 
         // then:
         assertEquals(expected.getTitle(), actual.getTitle());

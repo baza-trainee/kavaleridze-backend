@@ -33,11 +33,7 @@ public class ArticlesApiDelegateImpl implements ArticlesApiDelegate {
      * @return {@link ArticleResponse} object containing an existing article with its full content.
      */
     @Override
-    public ResponseEntity<ArticleResponse> findByTitle(
-            @Parameter(description = "Title of the article")
-            @PathVariable(name = "title")
-            @NotBlank final String title
-    ) {
+    public ResponseEntity<ArticleResponse> findByTitle(final String title) {
         return new ResponseEntity<>(articleService.findByTitle(title), HttpStatusCode.valueOf(200));
     }
 }
