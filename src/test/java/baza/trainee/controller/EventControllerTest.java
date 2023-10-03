@@ -66,7 +66,6 @@ class EventControllerTest {
                 "shortDesc",
                 "CINEMA",
                 "/images/image1.jpeg",
-                "/images/compressed/image1.jpeg",
                 begin,
                 end);
         var response = eventMapper.toResponse(event);

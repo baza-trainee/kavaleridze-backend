@@ -251,6 +251,9 @@ paths:
           required: true
           schema:
             type: string
+            enum:
+              - ORIGINAL
+              - COMPRESSED
       responses:
         200:
           description: OK
