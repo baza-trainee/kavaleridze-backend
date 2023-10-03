@@ -56,13 +56,17 @@ public class ImageServiceImpl implements ImageService {
      * Load a resource (image) by filename and type.
      *
      * @param filename The name of the file.
-     * @param type     The type of the resource (either "preview" or "original").
+     * @param type     The type of the resource (either "ORIGINAL" or "COMPRESSED").
      * @return A byte array containing the resource data.
      * @throws StorageFileNotFoundException If the resource file cannot be found or read.
      */
     @Override
     public byte[] loadResource(final String filename, final String type) {
-        var currentPath = type.equals("preview") ? previewLocation : originalLocation;
+        var currentPath = switch (type) {
+            case ("ORIGINAL") -> originalLocation;
+            case ("COMPRESSED") -> previewLocation;
+            default -> throw new IllegalArgumentException("Not valid type: '" + type + "'");
+        };
         return getResourceFromPath(filename, currentPath);
     }
 

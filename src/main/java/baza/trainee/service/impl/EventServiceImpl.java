@@ -14,6 +14,7 @@ import baza.trainee.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -41,6 +42,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventResponse save(EventPublication newEvent, String sessionId) {
         Event eventToSave = eventMapper.toEvent(newEvent);
 
@@ -53,19 +55,22 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventResponse update(String id, EventPublication publication) {
+    @Transactional
+    public EventResponse update(String id, EventPublication publication, String sessionId) {
         var eventToUpdate = eventRepository.findById(id)
                 .orElseThrow(getNotFoundExceptionSupplier(id));
         var eventForUpdate = eventMapper.toEvent(publication);
         eventForUpdate.setId(eventToUpdate.getId());
         eventForUpdate.setCreated(eventToUpdate.getCreated());
 
+        imageService.persist(List.of(eventForUpdate.getBannerId()), sessionId);
         var updatedEvent = eventRepository.update(eventForUpdate);
 
         return eventMapper.toResponse(updatedEvent);
     }
 
     @Override
+    @Transactional
     public void deleteEventById(String id) {
         getById(id);
         eventRepository.deleteById(id);

@@ -135,8 +135,8 @@ class ImageServiceTest {
         String generatedFileName = imageService.storeToTemp(file, sessionId);
         imageService.persist(List.of(generatedFileName), sessionId);
 
-        byte[] previewsResource = imageService.loadResource(generatedFileName, "preview");
-        byte[] originalsResource = imageService.loadResource(generatedFileName, "original");
+        byte[] previewsResource = imageService.loadResource(generatedFileName, "COMPRESSED");
+        byte[] originalsResource = imageService.loadResource(generatedFileName, "ORIGINAL");
 
         // then:
         assertTrue(previewsResource.length > 0);

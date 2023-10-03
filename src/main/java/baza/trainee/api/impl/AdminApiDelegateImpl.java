@@ -45,8 +45,9 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
 
     @Override
     public ResponseEntity<EventResponse> updateEvent(String id, EventPublication eventPublication) {
+        var sessionId = httpServletRequest.getSession().getId();
         return new ResponseEntity<>(
-                eventService.update(id, eventPublication),
+                eventService.update(id, eventPublication, sessionId),
                 HttpStatusCode.valueOf(200));
     }
 
