@@ -71,13 +71,13 @@ class ImageServiceTest {
         var destinationDirectory = rootImageLocation.resolve(TEMP_IMAGES_LOCATION).resolve(sessionId);
 
         // when:
-        String generatedFileName = imageService.storeToTemp(file, sessionId);
+        var response = imageService.storeToTemp(file, sessionId);
 
         // then:
-        assertFalse(generatedFileName.isBlank());
+        assertFalse(response.getImageId().isBlank());
 
         // when:
-        File createdFile = destinationDirectory.resolve(generatedFileName).toFile();
+        File createdFile = destinationDirectory.resolve(response.getImageId()).toFile();
 
         // then:
         assertTrue(createdFile.exists());
@@ -94,12 +94,13 @@ class ImageServiceTest {
 
 
         // when:
-        String generatedFileName = imageService.storeToTemp(file, sessionId);
-        imageService.persist(List.of(generatedFileName), sessionId);
+        var response = imageService.storeToTemp(file, sessionId);
+        String imageId = response.getImageId();
+        imageService.persist(List.of(imageId), sessionId);
 
-        var createdOriginalFile = originalDirectory.resolve(generatedFileName).toFile();
+        var createdOriginalFile = originalDirectory.resolve(imageId).toFile();
         var createdCompressedFile = compressedDirectory
-                .resolve(generatedFileName.replaceFirst("\\..+$", ".webp"))
+                .resolve(imageId.replaceFirst("\\..+$", ".webp"))
                 .toFile();
 
         // then:
@@ -115,8 +116,8 @@ class ImageServiceTest {
         var sessionId = "fakeSessionId";
 
         // when:
-        String generatedFileName = imageService.storeToTemp(file, sessionId);
-        byte[] tempResource = imageService.loadTempResource(generatedFileName, sessionId);
+        var response = imageService.storeToTemp(file, sessionId);
+        byte[] tempResource = imageService.loadTempResource(response.getImageId(), sessionId);
 
         // then:
         assertTrue(tempResource.length > 0);
@@ -132,11 +133,12 @@ class ImageServiceTest {
         var sessionId = "fakeSessionId";
 
         // when:
-        String generatedFileName = imageService.storeToTemp(file, sessionId);
-        imageService.persist(List.of(generatedFileName), sessionId);
+        var generatedFileName = imageService.storeToTemp(file, sessionId);
+        String imageId = generatedFileName.getImageId();
+        imageService.persist(List.of(imageId), sessionId);
 
-        byte[] previewsResource = imageService.loadResource(generatedFileName, "COMPRESSED");
-        byte[] originalsResource = imageService.loadResource(generatedFileName, "ORIGINAL");
+        byte[] previewsResource = imageService.loadResource(imageId, "COMPRESSED");
+        byte[] originalsResource = imageService.loadResource(imageId, "ORIGINAL");
 
         // then:
         assertTrue(previewsResource.length > 0);

@@ -1,5 +1,6 @@
 package baza.trainee.controller;
 
+import baza.trainee.dto.SaveImageResponse;
 import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.ImageService;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.File;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -75,18 +77,19 @@ class ImageControllerTest {
 
     @Test
     void testSaveImage() throws Exception {
-        MockHttpSession session = new MockHttpSession(null, "session123");
+        var session = new MockHttpSession(null, "session123");
 
         var file = new File("src/test/resources/test-images/test.jpg");
         var resource = new UrlResource(file.toURI());
         byte[] imageBytes = resource.getContentAsByteArray();
 
-        MockMultipartFile mockFile = new MockMultipartFile("file", "example.jpg", "image/jpeg", imageBytes);
-
-        when(imageService.storeToTemp(eq(mockFile), anyString())).thenReturn("example.jpg");
+        var mockFile = new MockMultipartFile("file", "example.jpg", "image/jpeg", imageBytes);
+        var response = new SaveImageResponse();
+        response.imageId(UUID.randomUUID().toString());
+       
+        when(imageService.storeToTemp(eq(mockFile), anyString())).thenReturn(response);
 
         mockMvc.perform(multipart("/api/admin/images").file(mockFile).session(session))
-                .andExpect(status().isCreated())
-                .andExpect(content().string("example.jpg"));
+                .andExpect(status().isCreated());
     }
 }

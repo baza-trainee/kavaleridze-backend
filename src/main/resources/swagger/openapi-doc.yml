@@ -179,15 +179,9 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: '#/components/schemas/SaveImageResponse'
         400:
           description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        404:
-          description: Entity not found
           content:
             application/json:
               schema:
@@ -482,6 +476,7 @@ paths:
 components:
   schemas:
     ErrorResponse:
+      description: Error message with timestamp
       type: object
       properties:
         message:
@@ -490,72 +485,79 @@ components:
           type: integer
           format: int64
     EventPublication:
+      description: Event publication form
       required:
-        - description
         - title
+        - description
         - type
       type: object
       properties:
         title:
           type: string
+          maxLength: 100
           nullable: false
         description:
           type: string
           nullable: false
+          maxLength: 2000
+        summary:
+          type: string
+          nullable: false
+          maxLength: 150
         type:
           type: string
           nullable: false
-        tags:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        content:
-          type: string
-          minLength: 30
-          maxLength: 3000
-          nullable: false
-        bannerId:
+          enum:
+            - EXHIBITION
+            - EXCURSION
+            - PRESENTATION
+            - CONTEST
+            - LECTURE
+            - MASTER_CLASS
+            - CREATIVE_EVENING
+            - OTHER
+        banner:
           type: string
         begin:
           type: string
           format: date
-          nullable: false
         end:
           type: string
           format: date
-          nullable: false
-      description: Event data to be created
     EventResponse:
+      description: Event information
       required:
-        - begin
-        - description
-        - end
         - title
+        - description
       type: object
       properties:
         id:
           type: string
         title:
           type: string
-          minLength: 3
-          maxLength: 300
+          maxLength: 100
+          nullable: false
+        summary:
+          type: string
+          nullable: false
+          maxLength: 150
         description:
           type: string
-          minLength: 3
-          maxLength: 300
+          nullable: false
+          maxLength: 2000
         type:
           type: string
-        tags:
-          type: array
-          uniqueItems: true
-          items:
-            type: string
-        content:
-          type: string
-          minLength: 30
-          maxLength: 3000
-        bannerId:
+          nullable: false
+          enum:
+            - EXHIBITION
+            - EXCURSION
+            - PRESENTATION
+            - CONTEST
+            - LECTURE
+            - MASTER_CLASS
+            - CREATIVE_EVENING
+            - OTHER
+        banner:
           type: string
         begin:
           type: string
@@ -563,13 +565,8 @@ components:
         end:
           type: string
           format: date
-        created:
-          type: string
-          format: date
-        updated:
-          type: string
-          format: date
     MailDto:
+      description: Feedback form
       required:
         - email
         - firstName
@@ -596,7 +593,12 @@ components:
           minLength: 10
           maxLength: 300
           nullable: false
-      description: Feedback form data
+    SaveImageResponse:
+      description: Id of saved image
+      type: object
+      properties:
+        imageId:
+          type: string
     ArticleResponse:
       required:
         - content

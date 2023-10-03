@@ -1,6 +1,7 @@
 package baza.trainee.service.impl;
 
 import baza.trainee.config.StorageProperties;
+import baza.trainee.dto.SaveImageResponse;
 import baza.trainee.exceptions.custom.StorageException;
 import baza.trainee.exceptions.custom.StorageFileNotFoundException;
 import baza.trainee.service.ImageService;
@@ -93,7 +94,7 @@ public class ImageServiceImpl implements ImageService {
      * @throws StorageException If an error occurs while storing the file.
      */
     @Override
-    public String storeToTemp(final MultipartFile file, final String sessionId) {
+    public SaveImageResponse storeToTemp(final MultipartFile file, final String sessionId) {
         String name = UUID.randomUUID() + file.getName();
         Path sessionTempPath = this.tempLocation
                 .resolve(Paths.get(sessionId))
@@ -107,7 +108,10 @@ public class ImageServiceImpl implements ImageService {
                     file.getInputStream());
             FileSystemStorageUtils.storeToPath(updatedFile, sessionTempPath);
 
-            return name;
+            var response = new SaveImageResponse();
+            response.imageId(name);
+            
+            return response;
         } catch (IOException e) {
             throw new StorageException("Failed to read MultipartFile data.");
         }

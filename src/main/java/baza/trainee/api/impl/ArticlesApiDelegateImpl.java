@@ -3,13 +3,10 @@ package baza.trainee.api.impl;
 import baza.trainee.api.ArticlesApiDelegate;
 import baza.trainee.dto.ArticleResponse;
 import baza.trainee.service.ArticleService;
-import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * Spring MVC REST controller serving article operations for non-admin users.

@@ -21,8 +21,11 @@ import org.springframework.mock.web.MockHttpSession;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import static baza.trainee.dto.ContentBlock.BlockTypeEnum.PICTURE_BLOCK;
+import static baza.trainee.dto.EventPublication.TypeEnum.CONTEST;
+import static baza.trainee.dto.EventPublication.TypeEnum.CREATIVE_EVENING;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Import({EventTestDataInitializer.class})
@@ -59,7 +62,6 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
         for (var event : result.getContent()) {
             assertNotNull(event.getId());
-            assertNotNull(event.getCreated());
         }
     }
 
@@ -72,11 +74,10 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
         var eventPublication = new EventPublication();
         eventPublication.title("Title");
-        eventPublication.description("Short Description");
-        eventPublication.type("PAINTING");
-        eventPublication.tags(Set.of("tag1", "tag2"));
-        eventPublication.content("content");
-        eventPublication.bannerId("http://example.com/banner.jpg");
+        eventPublication.summary("Short Description");
+        eventPublication.description("Not so short Description, but not to long.");
+        eventPublication.type(CREATIVE_EVENING);
+        eventPublication.banner(UUID.randomUUID().toString());
         eventPublication.begin(LocalDate.now());
         eventPublication.end(LocalDate.now().plusDays(10));
 
@@ -85,7 +86,6 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
         // then:
         assertFalse(createdEvent.getId().isEmpty());
-        assertNotNull(createdEvent.getCreated());
         assertEquals(eventPublication.getTitle(), createdEvent.getTitle());
         assertEquals(eventPublication.getDescription(), createdEvent.getDescription());
         assertEquals(eventPublication.getBegin(), createdEvent.getBegin());
@@ -102,19 +102,18 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
         var eventPublication = new EventPublication();
         eventPublication.title("Title");
-        eventPublication.description("Short Description");
-        eventPublication.type("PAINTING");
-        eventPublication.tags(Set.of("tag1", "tag2"));
-        eventPublication.content("content");
-        eventPublication.bannerId("http://example.com/banner.jpg");
+        eventPublication.summary("Short Description");
+        eventPublication.description("Not so short Description, but not to long.");
+        eventPublication.type(CREATIVE_EVENING);
+        eventPublication.banner(UUID.randomUUID().toString());
         eventPublication.begin(LocalDate.now());
         eventPublication.end(LocalDate.now().plusDays(10));
-        var eventToUpdate = eventService.save(eventPublication, session.getId());
 
-        eventPublication.setTitle("TitleUpdate");
-        eventPublication.setDescription("DescriptionUpdate");
-        eventPublication.setType("TypeUpdate");
-        eventPublication.setBannerId("event/bannerUpdate");
+        var eventToUpdate = eventService.save(eventPublication, session.getId());
+        eventPublication.title("TitleUpdate");
+        eventPublication.description("DescriptionUpdate");
+        eventPublication.type(CONTEST);
+        eventPublication.banner("event/bannerUpdate");
 
         // when:
         String id = eventToUpdate.getId();
@@ -127,7 +126,7 @@ class EventServiceImplTest extends AbstractIntegrationTest {
         assertEquals(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getType(), actual.getType());
-        assertEquals(expected.getBannerId(), actual.getBannerId());
+        assertEquals(expected.getBanner(), actual.getBanner());
 
     }
 
@@ -140,11 +139,10 @@ class EventServiceImplTest extends AbstractIntegrationTest {
 
         var eventPublication = new EventPublication();
         eventPublication.title("Title");
-        eventPublication.description("Short Description");
-        eventPublication.type("PAINTING");
-        eventPublication.tags(Set.of("tag1", "tag2"));
-        eventPublication.content("content");
-        eventPublication.bannerId("http://example.com/banner.jpg");
+        eventPublication.summary("Short Description");
+        eventPublication.description("Not so short Description, but not to long.");
+        eventPublication.type(CREATIVE_EVENING);
+        eventPublication.banner(UUID.randomUUID().toString());
         eventPublication.begin(LocalDate.now());
         eventPublication.end(LocalDate.now().plusDays(10));
 

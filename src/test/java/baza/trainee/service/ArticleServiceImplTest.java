@@ -5,6 +5,8 @@ import baza.trainee.domain.model.Article;
 import baza.trainee.dto.ContentBlock;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.repository.ArticleRepository;
+import baza.trainee.security.RootUserInitializer;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +32,9 @@ class ArticleServiceImplTest {
 
     @Autowired
     private ArticleService articleService;
+
+    @MockBean
+    private RootUserInitializer rootUserInitializer;
 
 
     @Test
@@ -71,7 +76,5 @@ class ArticleServiceImplTest {
         // Call the service method and expect an EntityNotFoundException.
         assertThrows(EntityNotFoundException.class,
                 () -> articleService.findByTitle(title), "Article was not found");
-
-
     }
 }

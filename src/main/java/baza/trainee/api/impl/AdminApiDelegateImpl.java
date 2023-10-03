@@ -3,6 +3,7 @@ package baza.trainee.api.impl;
 import baza.trainee.api.AdminApiDelegate;
 import baza.trainee.dto.EventPublication;
 import baza.trainee.dto.EventResponse;
+import baza.trainee.dto.SaveImageResponse;
 import baza.trainee.service.EventService;
 import baza.trainee.service.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -66,7 +67,7 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
     }
 
     @Override
-    public ResponseEntity<String> saveImage(MultipartFile file) {
+    public ResponseEntity<SaveImageResponse> saveImage(MultipartFile file) {
         var sessionId = httpServletRequest.getSession().getId();
         return new ResponseEntity<>(
                 imageService.storeToTemp(file, sessionId),
