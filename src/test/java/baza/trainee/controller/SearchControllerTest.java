@@ -1,5 +1,6 @@
 package baza.trainee.controller;
 
+import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.SearchService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
@@ -14,11 +15,12 @@ import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = MOCK)
 @AutoConfigureMockMvc
 class SearchControllerTest {
 
@@ -27,6 +29,9 @@ class SearchControllerTest {
 
     @MockBean
     SearchService searchService;
+
+    @MockBean
+    RootUserInitializer rootUserInitializer;
 
     @Test
     @SneakyThrows

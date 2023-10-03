@@ -1,5 +1,6 @@
 package baza.trainee.controller;
 
+import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.ImageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,13 @@ import java.io.File;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = MOCK)
 @AutoConfigureMockMvc
 class ImageControllerTest {
 
@@ -31,6 +33,9 @@ class ImageControllerTest {
 
     @MockBean
     private ImageService imageService;
+
+    @MockBean
+    private RootUserInitializer rootUserInitializer;
 
     @Test
     void testGetImage() throws Exception {

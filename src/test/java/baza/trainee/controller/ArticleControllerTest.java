@@ -2,6 +2,7 @@ package baza.trainee.controller;
 
 import baza.trainee.domain.mapper.ArticleMapper;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
+import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.ArticleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import static baza.trainee.constants.ArticleModelConstants.GET_BY_TITLE_URL;
 import static baza.trainee.constants.ArticleModelConstants.VALID_ARTICLE;
 import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = MOCK)
 @AutoConfigureMockMvc
 class ArticleControllerTest {
 
@@ -29,6 +31,9 @@ class ArticleControllerTest {
 
     @MockBean
     ArticleService articleService;
+
+    @MockBean
+    RootUserInitializer rootUserInitializer;
 
     @Test
     void findById() throws Exception {

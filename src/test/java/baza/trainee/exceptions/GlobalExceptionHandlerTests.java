@@ -2,6 +2,7 @@ package baza.trainee.exceptions;
 
 import baza.trainee.exceptions.custom.*;
 import baza.trainee.exceptions.errors.ErrorResponse;
+import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.EventService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ class GlobalExceptionHandlerTests {
 
     @MockBean
     private EventService eventService;
+
+    @MockBean
+    private RootUserInitializer rootUserInitializer;
 
     @Test
     void testNotFoundExceptionHandling() {
