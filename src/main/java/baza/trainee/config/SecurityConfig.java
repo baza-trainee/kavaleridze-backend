@@ -35,15 +35,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/api/user/register").permitAll()
-                        .requestMatchers("/api/auth/logout/**").permitAll()
-                        .requestMatchers("/api/events/**").permitAll()
-                        .requestMatchers("/api/articles/**").permitAll()
-                        .requestMatchers("/api/search/**").permitAll()
-                        .requestMatchers("/api/feedback/**").permitAll()
-                        .requestMatchers("/api/images/**").permitAll()
-                        .requestMatchers("/api/museum_data/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "ROOT")
-                        .requestMatchers("/api/admin/**").authenticated())
+                        .requestMatchers("/api/admin/**").authenticated()
+                        .requestMatchers("/api/**").permitAll()
+                )
                 .httpBasic(Customizer.withDefaults())
                 .logout(flc -> flc.logoutUrl("/api/auth/logout"))
                 .build();

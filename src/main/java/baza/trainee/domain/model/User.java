@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import nonapi.io.github.classgraph.json.Id;
+import org.springframework.data.annotation.Id;
 
 @Data
 @Document
