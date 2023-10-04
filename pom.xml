@@ -228,6 +228,7 @@
                                 <delegatePattern>true</delegatePattern>
                                 <serializableModel>true</serializableModel>
                                 <useBeanValidation>true</useBeanValidation>
+                                <performBeanValidation>true</performBeanValidation>
                             </configOptions>
                             <typeMappings>
                                 <typeMapping>PageableObject=org.springframework.data.domain.Pageable</typeMapping>

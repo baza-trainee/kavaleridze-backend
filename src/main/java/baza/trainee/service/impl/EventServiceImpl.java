@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 @Service
@@ -63,7 +64,9 @@ public class EventServiceImpl implements EventService {
         eventForUpdate.setId(eventToUpdate.getId());
         eventForUpdate.setCreated(eventToUpdate.getCreated());
 
-        imageService.persist(List.of(eventForUpdate.getBannerId()), sessionId);
+        Optional.ofNullable(eventForUpdate.getBannerId())
+                .ifPresent(i -> imageService.persist(List.of(i), sessionId));
+
         var updatedEvent = eventRepository.update(eventForUpdate);
 
         return eventMapper.toResponse(updatedEvent);

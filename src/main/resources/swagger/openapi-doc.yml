@@ -494,15 +494,16 @@ components:
       properties:
         title:
           type: string
-          maxLength: 100
           nullable: false
+          minLength: 1
+          maxLength: 100
         description:
           type: string
           nullable: false
+          minLength: 1
           maxLength: 2000
         summary:
           type: string
-          nullable: false
           maxLength: 150
         type:
           type: string

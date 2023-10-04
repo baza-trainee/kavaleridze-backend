@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex The custom application exception to handle.
      * @return A ResponseEntity containing an error response
-     * with the exception message and timestamp.
+     *         with the exception message and timestamp.
      */
     @ExceptionHandler(BasicApplicationException.class)
     @ApiResponses(value = {
@@ -42,10 +42,10 @@ public class GlobalExceptionHandler {
      *
      * @param ex The {@link MethodArgumentNotValidException} exception to handle.
      * @return A ResponseEntity containing an error response
-     * with the exception message and timestamp.
+     *         with the exception message and timestamp.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    @ApiResponse(responseCode = "400", description = "Invalid Input")
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidExceptionException(final Exception ex) {
         Logger.error(ex.getClass().getSimpleName(), ex.getMessage());
 
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
      *
      * @param ex The server exception to handle.
      * @return A ResponseEntity containing an error response
-     * with the exception message and timestamp.
+     *         with the exception message and timestamp.
      */
     @ExceptionHandler(Exception.class)
     @ApiResponse(responseCode = "500", description = "Internal Server Error")

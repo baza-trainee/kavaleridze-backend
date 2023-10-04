@@ -82,7 +82,7 @@ class EventAdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void testCreateEventStatusBadRequest(String validatedField) throws Exception {
         // given:
-        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
+        var session = new MockHttpSession(null, "httpSessionId");
         var eventDto = new EventPublication();
         eventDto.title(validatedField);
         eventDto.description(validatedField);
@@ -110,7 +110,7 @@ class EventAdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void testUpdateEvent() throws Exception {
         // given:
-        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
+        var session = new MockHttpSession(null, "httpSessionId");
         String id = "12";
         var eventDto = new EventPublication();
         eventDto.title("Title");
@@ -140,14 +140,14 @@ class EventAdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void testUpdateEventStatusBadRequest(String validatedField) throws Exception {
         // given:
-        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
+        var session = new MockHttpSession(null, "httpSessionId");
         String id = "12";
         var eventDto = new EventPublication();
-        eventDto.title("Title");
-        eventDto.description("Short Description");
+        eventDto.title(validatedField);
+        eventDto.description(validatedField);
         eventDto.type(CONTEST);
         eventDto.banner(UUID.randomUUID().toString());
-        eventDto.summary("Some valid content");
+        eventDto.summary(validatedField);
         eventDto.begin(LocalDate.now());
         eventDto.end(LocalDate.now().plusDays(1));
         var event = eventMapper.toEvent(eventDto);
