@@ -13,39 +13,40 @@ servers:
 tags:
   - name: Admin Event Controller
     description: |
-      Endpoints for administrators to manage museum events. Includes creating, updating, deleting events, and more.
-    externalDocs:
-      url: /admin/events
+      Endpoints for administrators to manage museum events.
+      Includes creating, updating, deleting events, and more.
   - name: Admin Images Controller
     description: |
-      Endpoints for administrators to manage images on the website. Provides operations for uploading, deleting, and organizing images.
-    externalDocs:
-      url: /admin/images
+      Endpoints for administrators to manage images on the website.
+      Provides operations for uploading, deleting, and organizing images.
   - name: Event Controller
     description: |
-      Endpoints for retrieving museum events. Allows users to view event details, search for events, and more.
-    externalDocs:
-      url: /events
+      Endpoints for retrieving museum events.
+      Allows users to view event details, search for events, and more.
   - name: Image Controller
     description: |
-      Endpoints to retrieve and display images from the storage. Provides access to images for use on the website.
-    externalDocs:
-      url: /images
+      Endpoints to retrieve and display images from the storage.
+      Provides access to images for use on the website.
   - name: Mail Controller
     description: |
-      Endpoints for email communications, including sending feedback and inquiries. Enables communication with museum staff.
-    externalDocs:
-      url: /feedback
+      Endpoints for email communications, including sending feedback and inquiries.
+      Enables communication with museum staff.
   - name: Search Controller
     description: |
-      Endpoints for performing searches on the website. Allows users to search for events, articles, and more.
-    externalDocs:
-      url: /search
+      Endpoints for performing searches on the website.
+      Allows users to search for events, articles, and more.
   - name: Article Controller
     description: |
-      Endpoints for performing article-related operations. Provides access to articles and allows users to interact with them.
-    externalDocs:
-      url: /articles
+      Endpoints for performing article-related operations.
+      Provides access to articles and allows users to interact with them.
+  - name: Admin Museum Data Controller
+    description: |
+      Endpoints for managing museum data in the admin API.
+      This controller handles operations such as adding and updating museum data.
+  - name: Museum Data Controller
+    description: |
+      Endpoints for retrieving museum data in the public API.
+      This controller handles public operations with museum data.
 
 paths:
   /admin/events:
@@ -219,6 +220,65 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         404:
           description: Entity not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /admin/museum_data:
+    post:
+      tags:
+        - Admin Museum Data Controller
+      description:  'Adds new museum data'
+      operationId: addData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MuseumInfo'
+      responses:
+        201:
+          description: Museum data is posted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuseumInfo'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Admin Museum Data Controller
+      description:  'Updates existing museum data.'
+      operationId: updateData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MuseumInfo'
+      responses:
+        200:
+          description: Museum data is updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuseumInfo'
+        400:
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -462,6 +522,31 @@ paths:
                   $ref: '#/components/schemas/SearchResponse'
         400:
           description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /museum_data:
+    get:
+      tags:
+        - Museum Data Controller
+      description: 'Retrieves available museum data'
+      operationId: getMuseumData
+      responses:
+        200:
+          description: Data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MuseumInfo'
+        404:
+          description: Data not found
           content:
             application/json:
               schema:
@@ -726,3 +811,26 @@ components:
           enum:
             - ARTICLE
             - EVENT
+    MuseumInfo:
+      description: 'Represents museum data'
+      type: object
+      properties:
+        id:
+          description: 'The unique identifier for the museum data'
+          type: string
+        phoneNumber:
+          description: 'The phone number associated with the museum'
+          type: string
+        email:
+          description: 'The email address associated with the museum'
+          type: string
+          format: email
+        subwayRoute:
+          description: 'The subway route information for reaching the museum'
+          type: string
+        busRoute:
+          description: 'The bus route information for reaching the museum'
+          type: string
+        funicularRoute:
+          description: 'The funicular route information for reaching the museum'
+          type: string

@@ -233,6 +233,7 @@
                             <typeMappings>
                                 <typeMapping>PageableObject=org.springframework.data.domain.Pageable</typeMapping>
                                 <typeMapping>SortObject=org.springframework.data.domain.Sort</typeMapping>
+                                <typeMapping>MuseumInfo=baza.trainee.domain.model.MuseumData</typeMapping>
                             </typeMappings>
                         </configuration>
                     </execution>

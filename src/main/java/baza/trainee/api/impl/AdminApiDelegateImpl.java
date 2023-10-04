@@ -1,12 +1,19 @@
 package baza.trainee.api.impl;
 
 import baza.trainee.api.AdminApiDelegate;
+import baza.trainee.domain.mapper.MuseumDataMapper;
+import baza.trainee.domain.model.MuseumData;
 import baza.trainee.dto.EventPublication;
 import baza.trainee.dto.EventResponse;
+import baza.trainee.dto.MuseumInfo;
 import baza.trainee.dto.SaveImageResponse;
 import baza.trainee.service.EventService;
 import baza.trainee.service.ImageService;
+import baza.trainee.service.MuseumDataService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,20 +23,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AdminApiDelegateImpl implements AdminApiDelegate {
 
     private final EventService eventService;
     private final ImageService imageService;
     private final HttpServletRequest httpServletRequest;
-
-    public AdminApiDelegateImpl(
-            EventService eventService,
-            ImageService imageService,
-            HttpServletRequest httpServletRequest) {
-        this.eventService = eventService;
-        this.imageService = imageService;
-        this.httpServletRequest = httpServletRequest;
-    }
+    private final MuseumDataService museumDataService;
+    private final MuseumDataMapper museumDataMapper;
 
     @Override
     public Optional<NativeWebRequest> getRequest() {
@@ -72,5 +73,19 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
         return new ResponseEntity<>(
                 imageService.storeToTemp(file, sessionId),
                 HttpStatusCode.valueOf(201));
+    }
+
+    @Override
+    public ResponseEntity<MuseumData> addData(MuseumInfo museumInfo) {
+        var museumData = museumDataMapper.toMuseumData(museumInfo);
+        return new ResponseEntity<>(museumDataService.add(museumData),
+                HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<MuseumData> updateData(MuseumInfo museumInfo) {
+        var museumData = museumDataMapper.toMuseumData(museumInfo);
+        return new ResponseEntity<>(museumDataService.update(museumData),
+                HttpStatus.OK);
     }
 }
