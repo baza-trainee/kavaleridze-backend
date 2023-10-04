@@ -2,11 +2,14 @@ package baza.trainee.controller;
 
 import baza.trainee.domain.mapper.EventMapper;
 import baza.trainee.domain.model.Event;
+import baza.trainee.dto.EventResponse;
 import baza.trainee.dto.PageEvent;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.exceptions.custom.MethodArgumentNotValidException;
 import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.EventService;
+import baza.trainee.service.MailService;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,7 +37,10 @@ class EventControllerTest {
     private EventService eventService;
 
     @MockBean
-    RootUserInitializer rootUserInitializer;
+    private RootUserInitializer rootUserInitializer;
+
+    @MockBean
+    private MailService mailService;
 
     @Autowired
     private EventMapper eventMapper;
@@ -68,8 +74,9 @@ class EventControllerTest {
         Event event = new Event(
                 eventId,
                 "cool title",
+                "shortSumm",
                 "shortDesc",
-                "CINEMA",
+                EventResponse.TypeEnum.CONTEST.getValue(),
                 "/images/image1.jpeg",
                 begin,
                 end);

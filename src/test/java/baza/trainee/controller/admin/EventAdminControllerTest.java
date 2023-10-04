@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -27,6 +26,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -69,8 +71,7 @@ class EventAdminControllerTest {
         when(eventService.save(any(EventPublication.class), anyString())).thenReturn(eventResponse);
 
         // then:
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/admin/events")
+        mockMvc.perform(post("/api/admin/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
                         .andExpect(status().isCreated());
@@ -83,11 +84,11 @@ class EventAdminControllerTest {
         // given:
         MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         var eventDto = new EventPublication();
-        eventDto.title("Title");
-        eventDto.description("Short Description");
+        eventDto.title(validatedField);
+        eventDto.description(validatedField);
         eventDto.type(CONTEST);
         eventDto.banner(UUID.randomUUID().toString());
-        eventDto.summary("Some valid content");
+        eventDto.summary(validatedField);
         eventDto.begin(LocalDate.now());
         eventDto.end(LocalDate.now().plusDays(1));
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
@@ -98,10 +99,10 @@ class EventAdminControllerTest {
         when(eventService.save(eventDto, session.getId())).thenReturn(eventResponse);
 
         // then:
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/admin/events")
+        mockMvc.perform(post("/api/admin/events")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(eventDtoJson))
+                        .content(eventDtoJson)
+                        .session(session))
                 .andExpect(status().isBadRequest());
     }
 
@@ -109,6 +110,7 @@ class EventAdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void testUpdateEvent() throws Exception {
         // given:
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         String id = "12";
         var eventDto = new EventPublication();
         eventDto.title("Title");
@@ -124,12 +126,12 @@ class EventAdminControllerTest {
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
         // when:
-        when(eventService.update(id, eventDto, anyString())).thenReturn(eventResponse);
+        when(eventService.update(id, eventDto, "httpSessionId")).thenReturn(eventResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put("/api/admin/events/{id}", id)
+        mockMvc.perform(put("/api/admin/events/{id}", id)
                         .content(eventDtoJson)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .session(session))
                 .andExpect(status().isOk());
     }
 
@@ -138,6 +140,7 @@ class EventAdminControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void testUpdateEventStatusBadRequest(String validatedField) throws Exception {
         // given:
+        MockHttpSession session = new MockHttpSession(null, "httpSessionId");
         String id = "12";
         var eventDto = new EventPublication();
         eventDto.title("Title");
@@ -152,13 +155,13 @@ class EventAdminControllerTest {
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
         // when:
-        when(eventService.update(id, eventDto, anyString())).thenReturn(eventResponse);
+        when(eventService.update(id, eventDto, "httpSessionId")).thenReturn(eventResponse);
 
         // then:
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/admin/events")
+        mockMvc.perform(post("/api/admin/events")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(eventDtoJson))
+                        .content(eventDtoJson)
+                        .session(session))
                 .andExpect(status().isBadRequest());
     }
 
@@ -167,8 +170,7 @@ class EventAdminControllerTest {
     void testDeleteEvent() throws Exception {
         String eventId = "12";
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/api/admin/events/{id}", eventId))
+        mockMvc.perform(delete("/api/admin/events/{id}", eventId))
                 .andExpect(status().isNoContent());
 
         verify(eventService, times(1)).deleteEventById(eq(eventId));
@@ -189,8 +191,7 @@ class EventAdminControllerTest {
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
         // then:
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/admin/events")
+        mockMvc.perform(post("/api/admin/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
                 .andExpect(status().isUnauthorized());
@@ -211,8 +212,7 @@ class EventAdminControllerTest {
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
         // then:
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/admin/events")
+        mockMvc.perform(post("/api/admin/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
                 .andExpect(status().isUnauthorized());
@@ -232,8 +232,7 @@ class EventAdminControllerTest {
         eventDto.end(LocalDate.now().plusDays(1));
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put("/api/admin/events/{id}", id)
+        mockMvc.perform(put("/api/admin/events/{id}", id)
                         .content(eventDtoJson)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
@@ -254,8 +253,7 @@ class EventAdminControllerTest {
         String eventDtoJson = objectMapper.writeValueAsString(eventDto);
 
         // then:
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/api/admin/events")
+        mockMvc.perform(post("/api/admin/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(eventDtoJson))
                 .andExpect(status().isUnauthorized());
@@ -265,8 +263,7 @@ class EventAdminControllerTest {
     void testDeleteEventIsUnauthorized() throws Exception {
         String eventId = "12";
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/api/admin/events/{id}", eventId))
+        mockMvc.perform(delete("/api/admin/events/{id}", eventId))
                 .andExpect(status().isUnauthorized());
 
         verify(eventService, times(0)).deleteEventById(eq(eventId));
