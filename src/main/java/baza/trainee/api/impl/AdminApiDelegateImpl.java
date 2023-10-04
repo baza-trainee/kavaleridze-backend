@@ -60,10 +60,10 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
     }
 
     @Override
-    public ResponseEntity<byte[]> getTempImage(String filename) {
+    public ResponseEntity<byte[]> getTempImage(String filename, String type) {
         var sessionId = httpServletRequest.getSession().getId();
         return new ResponseEntity<>(
-                imageService.loadTempResource(filename, sessionId),
+                imageService.loadTempResource(filename, sessionId, type),
                 HttpStatusCode.valueOf(200));
     }
 

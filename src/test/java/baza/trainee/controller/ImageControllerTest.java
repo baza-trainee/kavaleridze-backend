@@ -3,6 +3,8 @@ package baza.trainee.controller;
 import baza.trainee.dto.SaveImageResponse;
 import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.ImageService;
+import baza.trainee.service.impl.ImageServiceImpl.ImageType;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -48,7 +50,8 @@ class ImageControllerTest {
 
         when(imageService.loadResource(anyString(), anyString())).thenReturn(imageBytes);
 
-        mockMvc.perform(get("/api/images")
+        mockMvc.perform(
+                get("/api/images")
                         .param("filename", "example.jpg")
                         .param("type", "preview")
                         .contentType(MediaType.IMAGE_JPEG_VALUE))
@@ -64,13 +67,14 @@ class ImageControllerTest {
         var resource = new UrlResource(file.toURI());
         byte[] imageBytes = resource.getContentAsByteArray();
 
-        when(imageService.loadTempResource(anyString(), anyString())).thenReturn(imageBytes);
+        when(imageService.loadTempResource(anyString(), anyString(), anyString())).thenReturn(imageBytes);
 
         MockHttpSession session = new MockHttpSession(null, "session123");
 
         mockMvc.perform(get("/api/admin/images/temp")
                         .session(session)
                         .param("filename", "temp.jpg")
+                        .param("type", ImageType.PREVIEW.getValue())
                         .contentType(MediaType.IMAGE_JPEG_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.IMAGE_JPEG))

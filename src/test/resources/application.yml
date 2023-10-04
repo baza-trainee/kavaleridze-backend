@@ -31,7 +31,8 @@ mail:
 resources:
   files:
     images:
-      root: 'images'
+      root: 'files'
+      images: 'images'
       original: 'original'
       compressed: 'compressed'
       temporary: 'temp'
@@ -41,3 +42,11 @@ users:
     credentials:
       username: 'root'
       password: 'password'
+
+images:
+  desktop:
+    width: 1024
+    quality: 1
+  preview:
+    width: 640
+    quality: 0.5

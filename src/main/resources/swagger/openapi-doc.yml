@@ -204,6 +204,14 @@ paths:
           required: true
           schema:
             type: string
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - ORIGINAL
+              - PREVIEW
       responses:
         200:
           description: OK
@@ -234,7 +242,7 @@ paths:
     post:
       tags:
         - Admin Museum Data Controller
-      description:  'Adds new museum data'
+      description: 'Adds new museum data'
       operationId: addData
       requestBody:
         content:
@@ -307,7 +315,7 @@ paths:
             type: string
             enum:
               - ORIGINAL
-              - COMPRESSED
+              - PREVIEW
       responses:
         200:
           description: OK
