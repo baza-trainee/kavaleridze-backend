@@ -12,6 +12,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.File;
@@ -57,6 +58,7 @@ class ImageControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void testGetTempImage() throws Exception {
         var file = new File("src/test/resources/test-images/test.jpg");
         var resource = new UrlResource(file.toURI());
@@ -76,6 +78,7 @@ class ImageControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     void testSaveImage() throws Exception {
         var session = new MockHttpSession(null, "session123");
 
