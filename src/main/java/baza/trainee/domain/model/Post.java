@@ -26,12 +26,12 @@ public interface Post {
      *
      * @return post description.
      */
-    String getDescription();
+    String getSummary();
 
     /**
      * Getter for content field.
      *
      * @return collection of {@link ContentBlock}.
      */
-    String getContent();
+    String getDescription();
 }

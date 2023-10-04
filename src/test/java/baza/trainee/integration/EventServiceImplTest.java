@@ -2,7 +2,6 @@ package baza.trainee.integration;
 
 import baza.trainee.domain.mapper.EventMapper;
 import baza.trainee.domain.model.Event;
-import baza.trainee.dto.ContentBlock;
 import baza.trainee.dto.EventPublication;
 import baza.trainee.dto.PageEvent;
 import baza.trainee.exceptions.custom.EntityNotFoundException;
@@ -19,11 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
-import static baza.trainee.dto.ContentBlock.BlockTypeEnum.PICTURE_BLOCK;
 import static baza.trainee.dto.EventPublication.TypeEnum.CONTEST;
 import static baza.trainee.dto.EventPublication.TypeEnum.CREATIVE_EVENING;
 import static org.junit.jupiter.api.Assertions.*;

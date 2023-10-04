@@ -58,8 +58,8 @@ public class SearchServiceImpl implements SearchService {
 
     private <T extends Post> Predicate<T> searchPredicate(CharSequence sequence) {
         return post -> matchSequence(post.getTitle(), sequence)
-                || matchSequence(post.getDescription(), sequence)
-                || matchSequence(post.getContent(), sequence);
+                || matchSequence(post.getSummary(), sequence)
+                || matchSequence(post.getDescription(), sequence);
     }
 
     private boolean matchSequence(String string, CharSequence sequence) {
@@ -71,7 +71,7 @@ public class SearchServiceImpl implements SearchService {
         SearchResponse response = new SearchResponse();
         response.id(post.getId());
         response.title(post.getTitle());
-        response.description(post.getDescription());
+        response.description(post.getSummary());
         response.contentType(type);
 
         return response;

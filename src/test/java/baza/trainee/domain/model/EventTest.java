@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 
 import java.time.LocalDate;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static baza.trainee.domain.TestConstraints.OVERSIZED_DESCRIPTION;
@@ -35,12 +36,10 @@ class EventTest {
         validEvent = new Event();
         validEvent.setId("123");
         validEvent.setType("valid-type");
-        validEvent.addTag("tag");
         validEvent.setTitle("Valid Title");
-        validEvent.setDescription("Valid Description");
-        validEvent.setBannerId("https://example.com/banner.jpg");
-        validEvent.setBannerId("https://example.com/banner-preview.jpg");
-        validEvent.setContent("Test-content");
+        validEvent.setSummary("Valid Description");
+        validEvent.setDescription("Test-content");
+        validEvent.setBannerId(UUID.randomUUID().toString());
         validEvent.setBegin(LocalDate.now());
         validEvent.setEnd(LocalDate.now().plusDays(1));
     }
@@ -82,7 +81,7 @@ class EventTest {
     void testEventWithInvalidDescription(String description) {
         // given:
         Event event = validEvent;
-        event.setDescription(description);
+        event.setSummary(description);
 
         // when:
         var constraintViolations = validator.validate(event);
