@@ -64,7 +64,7 @@ public class EventServiceImpl implements EventService {
         eventForUpdate.setId(eventToUpdate.getId());
         eventForUpdate.setCreated(eventToUpdate.getCreated());
 
-        Optional.ofNullable(eventForUpdate.getBannerId())
+        Optional.ofNullable(eventForUpdate.getBanner())
                 .ifPresent(i -> imageService.persist(List.of(i), sessionId));
 
         var updatedEvent = eventRepository.update(eventForUpdate);

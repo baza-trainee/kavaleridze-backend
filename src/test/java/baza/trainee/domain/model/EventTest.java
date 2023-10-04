@@ -39,7 +39,7 @@ class EventTest {
         validEvent.setTitle("Valid Title");
         validEvent.setSummary("Valid Description");
         validEvent.setDescription("Test-content");
-        validEvent.setBannerId(UUID.randomUUID().toString());
+        validEvent.setBanner(UUID.randomUUID().toString());
         validEvent.setBegin(LocalDate.now());
         validEvent.setEnd(LocalDate.now().plusDays(1));
     }

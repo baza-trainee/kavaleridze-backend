@@ -51,7 +51,7 @@ public class Event implements Post {
 
     private String type;
 
-    private String bannerId;
+    private String banner;
 
     @NotNull
     @FutureOrPresent
@@ -81,14 +81,14 @@ public class Event implements Post {
         this.summary = summary;
         this.description = description;
         this.type = type;
-        this.bannerId = bannerId;
+        this.banner = bannerId;
         this.begin = begin;
         this.end = end;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, summary, type, description, bannerId, begin, end);
+        return Objects.hash(id, title, summary, type, description, banner, begin, end);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Event implements Post {
                 && Objects.equals(summary, other.summary)
                 && Objects.equals(type, other.type)
                 && Objects.equals(description, other.description)
-                && Objects.equals(bannerId, other.bannerId)
+                && Objects.equals(banner, other.banner)
                 && Objects.equals(end, other.end);
     }
 
