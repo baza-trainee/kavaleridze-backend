@@ -227,6 +227,7 @@
                                 <useJakartaEe>true</useJakartaEe>
                                 <delegatePattern>true</delegatePattern>
                                 <serializableModel>true</serializableModel>
+                                <useBeanValidation>true</useBeanValidation>
                             </configOptions>
                             <typeMappings>
                                 <typeMapping>PageableObject=org.springframework.data.domain.Pageable</typeMapping>
