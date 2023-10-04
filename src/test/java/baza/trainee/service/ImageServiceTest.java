@@ -183,7 +183,7 @@ class ImageServiceTest {
         imageService.persist(List.of(imageId), sessionId);
 
         byte[] previewsResource = imageService.loadResource(imageId, ImageType.PREVIEW.getValue());
-        byte[] originalsResource = imageService.loadResource(imageId, ImageType.DESKTOP.getValue());
+        byte[] originalsResource = imageService.loadResource(imageId, ImageType.ORIGINAL.getValue());
 
         // then:
         assertTrue(previewsResource.length > 0);
