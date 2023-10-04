@@ -1,4 +1,4 @@
-package baza.trainee.controller;
+package baza.trainee.controller.admin;
 
 import baza.trainee.domain.dto.event.EventPublication;
 import baza.trainee.domain.model.Event;
@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import static baza.trainee.utils.ControllerUtils.handleFieldsErrors;
 
@@ -27,8 +29,9 @@ import static baza.trainee.utils.ControllerUtils.handleFieldsErrors;
  *
  * @author Oleksandr Korkach
  */
+@SecurityRequirement(name = "basicAuth")
 @RestController
-@RequestMapping("/admin/events")
+@RequestMapping("/api/admin/events")
 @RequiredArgsConstructor
 public class EventAdminController {
 
@@ -47,13 +50,14 @@ public class EventAdminController {
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     public Event createEvent(
+            HttpSession httpSession,
             @Parameter(description = "Event data to be created")
             @RequestBody @Valid final EventPublication request,
             final BindingResult bindingResult
     ) {
         handleFieldsErrors(bindingResult);
 
-        return eventService.save(request);
+        return eventService.save(request, httpSession.getId());
     }
 
     /**
