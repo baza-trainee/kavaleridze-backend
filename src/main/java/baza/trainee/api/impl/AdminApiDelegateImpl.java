@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +33,7 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
         var sessionId = httpServletRequest.getSession().getId();
         return new ResponseEntity<>(
                 eventService.save(eventPublication, sessionId),
-                HttpStatusCode.valueOf(201));
+                HttpStatus.CREATED);
     }
 
     @Override
@@ -42,13 +41,13 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
         var sessionId = httpServletRequest.getSession().getId();
         return new ResponseEntity<>(
                 eventService.update(id, eventPublication, sessionId),
-                HttpStatusCode.valueOf(200));
+                HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> deleteEvent(String id) {
         eventService.deleteEventById(id);
-        return new ResponseEntity<>(HttpStatusCode.valueOf(204));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
         var sessionId = httpServletRequest.getSession().getId();
         return new ResponseEntity<>(
                 imageService.loadTempResource(filename, sessionId, type),
-                HttpStatusCode.valueOf(200));
+                HttpStatus.OK);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
         var sessionId = httpServletRequest.getSession().getId();
         return new ResponseEntity<>(
                 imageService.storeToTemp(file, sessionId),
-                HttpStatusCode.valueOf(201));
+                HttpStatus.CREATED);
     }
 
     @Override

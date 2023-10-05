@@ -4,7 +4,8 @@ import baza.trainee.api.ArticlesApiDelegate;
 import baza.trainee.dto.ArticleResponse;
 import baza.trainee.service.ArticleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,6 @@ public class ArticlesApiDelegateImpl implements ArticlesApiDelegate {
      */
     @Override
     public ResponseEntity<ArticleResponse> findByTitle(final String title) {
-        return new ResponseEntity<>(articleService.findByTitle(title), HttpStatusCode.valueOf(200));
+        return new ResponseEntity<>(articleService.findByTitle(title), HttpStatus.OK);
     }
 }

@@ -4,7 +4,8 @@ import baza.trainee.api.SearchApiDelegate;
 import baza.trainee.dto.SearchResponse;
 import baza.trainee.service.SearchService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,6 @@ public class SearchApiDelegateImpl implements SearchApiDelegate {
 
     @Override
     public ResponseEntity<List<SearchResponse>> search(String query) {
-        return new ResponseEntity<>(searchService.search(query), HttpStatusCode.valueOf(200));
+        return new ResponseEntity<>(searchService.search(query), HttpStatus.OK);
     }
 }
