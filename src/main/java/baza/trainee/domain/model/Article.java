@@ -5,8 +5,6 @@ import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
 
 import baza.trainee.dto.ContentBlock;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,7 +53,6 @@ public class Article {
     /**
      * Article content.
      */
-    @NotEmpty
     @Builder.Default
     private Set<ContentBlock> content = new HashSet<>();
 
@@ -75,7 +72,7 @@ public class Article {
      * Add block of content to the article.
      * @param block block of content
      */
-    public void addContentBlock(@Valid final ContentBlock block) {
+    public void addContentBlock(final ContentBlock block) {
         this.content.add(block);
     }
 }
