@@ -3,13 +3,16 @@ package baza.trainee.controller;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.io.File;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +76,9 @@ public class ImageAdminControllerTest {
 
         MockMultipartFile mockFile = new MockMultipartFile("file", "example.jpg", "image/jpeg", imageBytes);
 
+        var imageId = UUID.randomUUID().toString();
         var response = new SaveImageResponse();
-        response.setImageId("example.jpg");
+        response.setImageId(imageId);
 
         when(imageService.storeToTemp(eq(mockFile), anyString())).thenReturn(response);
 
@@ -83,7 +87,6 @@ public class ImageAdminControllerTest {
                         .file(mockFile)
                         .session(session))
                 .andExpect(status().isCreated())
-                // .andExpect(content().jsonPath("$imageId","example.jpg"))
-                ;
+                .andExpect(jsonPath("$.imageId", is(imageId)));
     }
 }
