@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class ExceptionUtils {
     
 
-    public static Supplier<EntityNotFoundException> getNotFoundExceptionSupplier(Class<?> clazz, String id) {
-        return () -> new EntityNotFoundException(clazz.getSimpleName(), " with: " + id + " not found");
+    public static Supplier<EntityNotFoundException> getNotFoundExceptionSupplier(Class<?> clazz, String details) {
+        return () -> new EntityNotFoundException(clazz.getSimpleName(), details);
     }
 }

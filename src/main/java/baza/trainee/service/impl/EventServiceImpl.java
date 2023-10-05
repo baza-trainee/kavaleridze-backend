@@ -7,7 +7,6 @@ import baza.trainee.domain.model.Event;
 import baza.trainee.dto.EventPublication;
 import baza.trainee.dto.EventResponse;
 import baza.trainee.dto.PageEvent;
-import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.repository.EventRepository;
 import baza.trainee.service.EventService;
 import baza.trainee.service.ImageService;
@@ -39,7 +38,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse getById(String id) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(getNotFoundExceptionSupplier(Event.class ,id));
+                .orElseThrow(getNotFoundExceptionSupplier(Event.class ,"ID: " + id));
         return eventMapper.toResponse(event);
     }
 
@@ -60,7 +59,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventResponse update(String id, EventPublication publication, String sessionId) {
         var eventToUpdate = eventRepository.findById(id)
-                .orElseThrow(getNotFoundExceptionSupplier(Event.class ,id));
+                .orElseThrow(getNotFoundExceptionSupplier(Event.class ,"ID: " + id));
         var eventForUpdate = eventMapper.toEvent(publication);
         eventForUpdate.setId(eventToUpdate.getId());
         eventForUpdate.setCreated(eventToUpdate.getCreated());

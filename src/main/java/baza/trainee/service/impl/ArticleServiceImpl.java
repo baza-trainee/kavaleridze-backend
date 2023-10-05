@@ -23,6 +23,6 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleResponse findByTitle(String title) {
         return articleRepository.findByTitle(title)
                 .map(articleMapper::toResponse)
-                .orElseThrow(getNotFoundExceptionSupplier(Article.class ,title));
+                .orElseThrow(getNotFoundExceptionSupplier(Article.class ,"title: " + title));
     }
 }
