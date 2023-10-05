@@ -3,10 +3,6 @@ package baza.trainee.domain.model;
 import com.redis.om.spring.annotations.Document;
 import com.redis.om.spring.annotations.Indexed;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,11 +13,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.util.Objects;
-
-import static baza.trainee.constants.EventConstant.MAX_DESCRIPTION_SIZE;
-import static baza.trainee.constants.EventConstant.MAX_TITLE_SIZE;
-import static baza.trainee.constants.EventConstant.MIN_DESCRIPTION_SIZE;
-import static baza.trainee.constants.EventConstant.MIN_TITLE_SIZE;
 
 @Getter
 @Setter
@@ -35,30 +26,20 @@ public class Event implements Post {
     private String id;
 
     @Indexed
-    @NotBlank
-    @Size(min = MIN_TITLE_SIZE, max = MAX_TITLE_SIZE)
     private String title;
 
     @Indexed
-    @NotNull
-    @NotBlank
-    @Size(min = MIN_DESCRIPTION_SIZE, max = MAX_DESCRIPTION_SIZE)
     private String summary;
 
     @Indexed
-    @NotBlank
     private String description;
 
     private String type;
 
     private String banner;
 
-    @NotNull
-    @FutureOrPresent
     private LocalDate begin;
 
-    @NotNull
-    @FutureOrPresent
     private LocalDate end;
 
     @CreatedDate
@@ -69,12 +50,12 @@ public class Event implements Post {
 
     public Event(
             String id,
-            @NotBlank @Size(min = 3, max = 300) String title,
-            @NotNull @NotBlank @Size(min = 3, max = 300) String summary,
-            @NotBlank String description, String type,
+            String title,
+            String summary,
+            String description, String type,
             String bannerId,
-            @NotNull @FutureOrPresent LocalDate begin,
-            @NotNull @FutureOrPresent LocalDate end
+            LocalDate begin,
+            LocalDate end
     ) {
         this.id = id;
         this.title = title;
@@ -107,5 +88,4 @@ public class Event implements Post {
                 && Objects.equals(banner, other.banner)
                 && Objects.equals(end, other.end);
     }
-
 }
