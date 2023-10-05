@@ -17,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +28,6 @@ public class AdminApiDelegateImpl implements AdminApiDelegate {
     private final HttpServletRequest httpServletRequest;
     private final MuseumDataService museumDataService;
     private final MuseumDataMapper museumDataMapper;
-
-    @Override
-    public Optional<NativeWebRequest> getRequest() {
-        return AdminApiDelegate.super.getRequest();
-    }
 
     @Override
     public ResponseEntity<EventResponse> createEvent(EventPublication eventPublication) {
