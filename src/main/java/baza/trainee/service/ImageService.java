@@ -33,7 +33,7 @@ public interface ImageService {
      *
      * @param file      {@link MultipartFile} to store.
      * @param sessionId ID of local session.
-     * @return name of the saved file.
+     * @return Response with the image name of the saved file.
      */
     SaveImageResponse storeToTemp(MultipartFile file, String sessionId);
 
