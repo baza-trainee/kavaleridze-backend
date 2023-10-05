@@ -2,6 +2,7 @@ package baza.trainee.controller;
 
 import baza.trainee.dto.MailDto;
 import baza.trainee.exceptions.custom.EmailSendingException;
+import baza.trainee.security.RootUserInitializer;
 import baza.trainee.service.MailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static baza.trainee.constants.MailConstants.FAIL_SEND_MSG;
 import static baza.trainee.constants.MailConstants.MUSEUM_SUBJECT;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
@@ -42,6 +43,9 @@ class FeedbackControllerTest {
 
     @Value("${mail.museum.email}")
     private String museumEmail;
+
+    @MockBean
+    private RootUserInitializer rootUserInitializer;
 
     @BeforeAll
     public void setUp() {
@@ -73,7 +77,7 @@ class FeedbackControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$message", hasItem(notValidMailDto.getEmail())))
+                .andExpect(jsonPath("$.message", containsString(notValidMailDto.getEmail())))
                 .andExpect(status().isBadRequest());
     }
 
