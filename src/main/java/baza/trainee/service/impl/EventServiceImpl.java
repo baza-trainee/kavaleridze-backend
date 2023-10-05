@@ -16,9 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static baza.trainee.utils.ExceptionUtils.getNotFoundExceptionSupplier;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventResponse getById(String id) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(getNotFoundExceptionSupplier(id));
+                .orElseThrow(getNotFoundExceptionSupplier(Event.class ,id));
         return eventMapper.toResponse(event);
     }
 
@@ -59,7 +60,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventResponse update(String id, EventPublication publication, String sessionId) {
         var eventToUpdate = eventRepository.findById(id)
-                .orElseThrow(getNotFoundExceptionSupplier(id));
+                .orElseThrow(getNotFoundExceptionSupplier(Event.class ,id));
         var eventForUpdate = eventMapper.toEvent(publication);
         eventForUpdate.setId(eventToUpdate.getId());
         eventForUpdate.setCreated(eventToUpdate.getCreated());
@@ -77,9 +78,5 @@ public class EventServiceImpl implements EventService {
     public void deleteEventById(String id) {
         getById(id);
         eventRepository.deleteById(id);
-    }
-
-    private static Supplier<EntityNotFoundException> getNotFoundExceptionSupplier(String id) {
-        return () -> new EntityNotFoundException("Event", "ID: " + id);
     }
 }

@@ -3,10 +3,12 @@ package baza.trainee.service.impl;
 import baza.trainee.domain.mapper.ArticleMapper;
 import baza.trainee.dto.ArticleResponse;
 import lombok.RequiredArgsConstructor;
+
+import static baza.trainee.utils.ExceptionUtils.getNotFoundExceptionSupplier;
+
 import org.springframework.stereotype.Service;
 
 import baza.trainee.domain.model.Article;
-import baza.trainee.exceptions.custom.EntityNotFoundException;
 import baza.trainee.repository.ArticleRepository;
 import baza.trainee.service.ArticleService;
 
@@ -21,6 +23,6 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleResponse findByTitle(String title) {
         return articleRepository.findByTitle(title)
                 .map(articleMapper::toResponse)
-                .orElseThrow(() -> new EntityNotFoundException(Article.class.getSimpleName(), "with title" + title));
+                .orElseThrow(getNotFoundExceptionSupplier(Article.class ,title));
     }
 }
