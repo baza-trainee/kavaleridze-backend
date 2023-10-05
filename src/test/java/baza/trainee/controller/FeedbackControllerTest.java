@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static baza.trainee.constants.MailConstants.FAIL_SEND_MSG;
 import static baza.trainee.constants.MailConstants.MUSEUM_SUBJECT;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
@@ -72,6 +73,7 @@ class FeedbackControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$message", hasItem(notValidMailDto.getEmail())))
                 .andExpect(status().isBadRequest());
     }
 
