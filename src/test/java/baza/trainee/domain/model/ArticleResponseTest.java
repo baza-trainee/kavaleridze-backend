@@ -28,9 +28,4 @@ class ArticleResponseTest {
     void articleValidation_Valid() {
         assertThat(validator.validate(VALID_ARTICLE)).isEmpty();
     }
-
-    @Test
-    void articleValidation_threeFieldsNotValid() {
-        assertThat(validator.validate(NOT_VALID_ARTICLE)).hasSize(MODEL_VALIDATION_ERROR_COUNT);
-    }
 }

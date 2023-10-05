@@ -28,6 +28,6 @@ public class MuseumDataServiceImpl implements MuseumDataService {
     @Override
     public MuseumData getData() {
         return museumDataRepo.findAll().stream().findFirst()
-                .orElseThrow(getNotFoundExceptionSupplier(MuseumData.class ,"no details"));
+                .orElseThrow(getNotFoundExceptionSupplier(MuseumData.class, "no details"));
     }
 }
