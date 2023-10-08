@@ -20,19 +20,19 @@ security:
       - basicAuth
 
 tags:
-  - name: Admin Event API
+  - name: Admin Events
     description: |
       Endpoints for administrators to manage museum events.
       Includes creating, updating, deleting events, and more.
-  - name: Admin Images API
+  - name: Admin Images
     description: |
       Endpoints for administrators to manage images on the website.
       Provides operations for uploading, deleting, and organizing images.
-  - name: Admin Museum Data API
+  - name: Admin Museum Data
     description: |
       Endpoints for managing museum data in the admin API.
       This API handles operations such as adding and updating museum data.
-  - name: Authentication API
+  - name: Authentication
     description: |
       Endpoints for admin authentication.
 
@@ -43,7 +43,7 @@ paths:
         - basicAuth:
             - basicAuth
       tags:
-        - Admin Event API
+        - Admin Events
       summary: Create a new Event
       description: Creates a new Event with the provided information.
       operationId: createEvent
@@ -84,7 +84,7 @@ paths:
         - basicAuth:
             - basicAuth
       tags:
-        - Admin Event API
+        - Admin Events
       summary: Update an existing Event
       description: Updates an existing Event with the provided information.
       operationId: updateEvent
@@ -137,7 +137,7 @@ paths:
         - basicAuth:
             - basicAuth
       tags:
-        - Admin Event API
+        - Admin Events
       summary: Delete an existing Event
       description: Deletes an existing Event by its unique identifier.
       operationId: deleteEvent
@@ -181,7 +181,7 @@ paths:
         - basicAuth:
             - basicAuth
       tags:
-        - Admin Images API
+        - Admin Images
       operationId: saveImage
       requestBody:
         content:
@@ -223,7 +223,7 @@ paths:
         - basicAuth:
             - basicAuth
       tags:
-        - Admin Museum Data API
+        - Admin Museum Data
       description: 'Adds new museum data'
       operationId: addData
       requestBody:
@@ -261,7 +261,7 @@ paths:
         - basicAuth:
             - basicAuth
       tags:
-        - Admin Museum Data API
+        - Admin Museum Data
       description:  'Updates existing museum data.'
       operationId: updateData
       requestBody:
@@ -300,7 +300,7 @@ paths:
         - basicAuth:
             - basicAuth
       tags:
-        - Authentication API
+        - Authentication
       description: User login endpoint
       operationId: login
       responses:
@@ -322,7 +322,7 @@ paths:
         - basicAuth:
             - basicAuth
       tags:
-        - Authentication API
+        - Authentication
       description: User logout endpoint
       operationId: logout
       responses:
