@@ -60,3 +60,6 @@ images:
   preview:
     width: 768
     quality: 1
+
+jwt:
+  key: ${JWT_KEY:FDCE463BB7CBE40F45CCE6AB930DFC43849921CA3E0648369ADC203284BE2E68}
