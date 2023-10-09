@@ -18,7 +18,7 @@ spring:
     host: smtp.meta.ua
     username: ${MAIL_USER}
     password: ${MAIL_PASSWORD}
-    port: '465'
+    port: 465
 
 mail:
   template:

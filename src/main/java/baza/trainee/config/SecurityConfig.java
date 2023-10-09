@@ -71,12 +71,10 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/api/user/register").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "ROOT")
                         .requestMatchers("/api/admin/**").authenticated()
-                        .requestMatchers("/api/auth/**").authenticated()
-                        .requestMatchers("/api/auth/**").hasAnyRole("ADMIN", "ROOT")
                         .requestMatchers("/api/**").permitAll())
                 .oauth2ResourceServer(t -> t.jwt(Customizer.withDefaults()))
                 .httpBasic(Customizer.withDefaults())
-                .logout(flc -> flc.logoutUrl("/api/auth/logout"))
+                .logout(flc -> flc.logoutUrl("/api/admin/auth/logout"))
                 .build();
     }
 
