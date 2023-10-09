@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -21,6 +22,9 @@ public class TokenService {
 
     private final JwtEncoder encoder;
 
+    @Value("${jwt.expirationTime}")
+    private int expirationTime;
+
     public String generateToken(Authentication authentication) {
         var now = Instant.now();
         var roles = authentication.getAuthorities()
@@ -31,7 +35,7 @@ public class TokenService {
         var claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.DAYS))
+                .expiresAt(now.plus(expirationTime, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("roles", roles)
                 .build();
