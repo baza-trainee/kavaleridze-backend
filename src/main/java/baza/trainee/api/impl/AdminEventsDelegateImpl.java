@@ -2,7 +2,7 @@ package baza.trainee.api.impl;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import baza.trainee.api.AdminEventsApiDelegate;
@@ -16,11 +16,10 @@ import lombok.RequiredArgsConstructor;
 public class AdminEventsDelegateImpl implements AdminEventsApiDelegate {
 
     private final EventService eventService;
-    private final Authentication authentication;
 
     @Override
     public ResponseEntity<EventResponse> createEvent(EventPublication eventPublication) {
-        var username = authentication.getName();
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return new ResponseEntity<>(
                 eventService.save(eventPublication, username),
                 HttpStatus.CREATED);
@@ -28,7 +27,7 @@ public class AdminEventsDelegateImpl implements AdminEventsApiDelegate {
 
     @Override
     public ResponseEntity<EventResponse> updateEvent(String id, EventPublication eventPublication) {
-        var username = authentication.getName();
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return new ResponseEntity<>(
                 eventService.update(id, eventPublication, username),
                 HttpStatus.OK);

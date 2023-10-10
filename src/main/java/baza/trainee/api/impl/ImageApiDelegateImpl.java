@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class ImageApiDelegateImpl implements ImagesApiDelegate {
 
     private final ImageService imageService;
-    private final Authentication authentication;
 
     @Override
     public ResponseEntity<byte[]> getImage(String filename, String type) {
@@ -23,7 +22,7 @@ public class ImageApiDelegateImpl implements ImagesApiDelegate {
 
     @Override
     public ResponseEntity<byte[]> getTempImage(String filename, String type) {
-        var username = authentication.getName();
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return new ResponseEntity<>(
                 imageService.loadTempResource(filename, username, type),
                 HttpStatus.OK);
