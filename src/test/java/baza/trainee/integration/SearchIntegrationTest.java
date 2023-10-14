@@ -1,19 +1,19 @@
 package baza.trainee.integration;
 
 import baza.trainee.service.SearchService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static baza.trainee.integration.EventTestDataInitializer.*;
+import static baza.trainee.integration.EventTestDataInitializer.EventDescription;
+import static baza.trainee.integration.EventTestDataInitializer.EventSummary;
+import static baza.trainee.integration.EventTestDataInitializer.EventTitles;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -22,9 +22,6 @@ class SearchIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private SearchService searchService;
-
-    @MockBean
-    private HttpServletRequest httpServletRequest;
 
     @Test
     void validQueryTest() {
