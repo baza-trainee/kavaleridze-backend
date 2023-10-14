@@ -48,7 +48,6 @@ class SearchIntegrationTest extends AbstractIntegrationTest {
     @MethodSource
     void searchByFullDescriptionTest(String result) {
         var responses = searchService.search(result);
-        responses.forEach(System.out::println);
         assertEquals(1, responses.size());
     }
 
@@ -62,7 +61,6 @@ class SearchIntegrationTest extends AbstractIntegrationTest {
     @MethodSource
     void searchByFullTitleTest(String result) {
         var responses = searchService.search(result);
-        responses.forEach(System.out::println);
         assertEquals(1, responses.size());
     }
 
@@ -76,7 +74,6 @@ class SearchIntegrationTest extends AbstractIntegrationTest {
     @MethodSource
     void searchByFullSummaryTest(String result) {
         var responses = searchService.search(result);
-        responses.forEach(System.out::println);
         assertEquals(1, responses.size());
     }
 
