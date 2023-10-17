@@ -1,6 +1,5 @@
 package baza.trainee.integration;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
@@ -42,29 +41,5 @@ class EventImageProcessingTest extends AbstractIntegrationTest {
         assertEquals(savedEvent.getTitle(), sameEvent.getTitle());
         assertEquals(savedEvent.getSummary(), sameEvent.getSummary());
         assertEquals(savedEvent.getDescription(), sameEvent.getDescription());
-    }
-
-    @Disabled
-    @Test
-    void saveEventWithNotExistingBanner_shouldThrowAn() {
-        // given:
-        // when:
-        // then:
-    }
-
-    @Disabled
-    @Test
-    void test3() {
-        // given:
-        // when:
-        // then:
-    }
-
-    @Disabled
-    @Test
-    void test4() {
-        // given:
-        // when:
-        // then:
     }
 }

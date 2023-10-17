@@ -67,7 +67,8 @@ public class EventServiceImpl implements EventService {
         if (eventToUpdate.getBanner() != null) {
             var existingBanner = eventToUpdate.getBanner();
 
-            if (eventForUpdate.getBanner() != null && !eventForUpdate.getBanner().equals(existingBanner)) {
+            if (eventForUpdate.getBanner() != null
+                    && !eventForUpdate.getBanner().equals(existingBanner)) {
                 var bannerToUpdate = eventForUpdate.getBanner();
 
                 imageService.deleteImage(existingBanner);
@@ -77,7 +78,7 @@ public class EventServiceImpl implements EventService {
             }
         } else if (eventForUpdate.getBanner() != null) {
             var bannerToUpdate = eventForUpdate.getBanner();
-            
+
             imageService.persist(bannerToUpdate, username);
         }
 
